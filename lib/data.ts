@@ -116,7 +116,7 @@ export const projectsDataEsp: Project[] = [
   {
     title: "Muy pronto...",
     description:
-      "Estoy muy ansioso por tener la oportunidad de demostrar mi talento y seguiré trabajando para conseguirla, por lo tanto, verás nuevos proyectos aquí con frecuencia .",
+      "Estoy muy ansioso por tener la oportunidad de demostrar mi talento y seguiré trabajando para conseguirla, por lo tanto, verás nuevos proyectos aquí con frecuencia :).",
     tags: ["Jamás", "dejaré", "de", "aprender", "y", "programar"],
     imageUrl: PROX,
     linkTo: "",
