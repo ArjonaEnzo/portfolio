@@ -3,9 +3,9 @@ import React from "react";
 import { SectionHeading } from "./section-heading";
 import { projectsData, projectsDataEsp } from "@/lib/data";
 import Project from "./project";
-
 import { useSectioninView } from "@/lib/hooks";
 import { useLanguage } from "@/context/language-context";
+
 export const Projects = () => {
   const { language, toggleLanguage } = useLanguage();
   const sectionName = language === "ENG" ? "Projects" : "Proyectos";

@@ -2,20 +2,17 @@ import React from "react";
 import { CgWorkAlt } from "react-icons/cg";
 import { FaReact } from "react-icons/fa";
 import { LuGraduationCap } from "react-icons/lu";
-import corpcommentImg from "@/public/corpcomment.png";
-import rmtdevImg from "@/public/rmtdev.png";
-import wordanalyticsImg from "@/public/wordanalytics.png";
 import { StaticImageData } from "next/image";
 import ADIP from "@/public/ADIP-home-light.png";
 import PROX from "@/public/asdasd.png";
-
+import FISIO from "@/public/fisio-log.png";
 interface Project {
   title: string;
   description: string;
   tags: string[];
   imageUrl: StaticImageData;
   linkTo?: string;
-  // images: string[];
+  images: string[];
 }
 
 export const links = [
@@ -87,6 +84,21 @@ export const projectsData: Project[] = [
     ],
     imageUrl: ADIP,
     linkTo: "https://youtu.be/OWJFsyPq-LQ?si=o3h9NrvSb8rnA3ir",
+    images: [],
+  },
+  {
+    title: "Fisiom Fulness | HealthTech and Wellness",
+    description:
+      "In my role as a Full Stack Developer, I worked on the Backend, designing tables, relationships, and CRUD operations for users, professionals, and products. I implemented a soft delete to maintain records in the database, using MongoDB, Express, and Node.js for enhanced security and efficiency. On the Frontend, I developed the user interface to create products, manage their stock, and facilitate their sale. I used Tailwind CSS and Next.js to create an attractive and user-friendly interface, improving the user experience and the stock renewal process.",
+    tags: ["Next.js", "MongoDB", "Express.js", "Mongoose", "TailwindCSS"],
+    imageUrl: FISIO,
+    images: [
+      "https://res.cloudinary.com/ddtjwx08b/image/upload/v1716339931/fisiom/Opera_Instant%C3%A1nea_2024-05-21_205543_localhost_l1xbcb.png",
+      "https://res.cloudinary.com/ddtjwx08b/image/upload/v1716339931/fisiom/Opera_Instant%C3%A1nea_2024-05-21_205642_localhost_ql3ady.png",
+      "https://res.cloudinary.com/ddtjwx08b/image/upload/v1716339931/fisiom/Opera_Instant%C3%A1nea_2024-05-21_205746_localhost_ckeqna.png",
+      "https://res.cloudinary.com/ddtjwx08b/image/upload/v1716339931/fisiom/Opera_Instant%C3%A1nea_2024-05-21_205819_localhost_v6bulw.png",
+      "https://res.cloudinary.com/ddtjwx08b/image/upload/v1716339931/fisiom/Opera_Instant%C3%A1nea_2024-05-21_210046_localhost_nnm4qk.png",
+    ],
   },
   {
     title: "Coming soon...",
@@ -95,6 +107,7 @@ export const projectsData: Project[] = [
     tags: ["I", "will", "never", "stop", "learning", "and", "coding"],
     imageUrl: PROX,
     linkTo: "",
+    images: [],
   },
 ];
 export const projectsDataEsp: Project[] = [
@@ -112,6 +125,21 @@ export const projectsDataEsp: Project[] = [
     ],
     imageUrl: ADIP,
     linkTo: "https://youtu.be/OWJFsyPq-LQ?si=o3h9NrvSb8rnA3ir",
+    images: [],
+  },
+  {
+    title: "Fisiom Fulness | Salud y Bienestar",
+    description:
+      "En mi puesto de Full Stack Developer, trabajé en el Backend, diseñando tablas, relaciones y CRUD para usuarios ",
+    tags: ["Next.js", "MongoDB", "Express.js", "Mongoose", "TailwindCSS"],
+    imageUrl: FISIO,
+    images: [
+      "https://res.cloudinary.com/ddtjwx08b/image/upload/v1716339931/fisiom/Opera_Instant%C3%A1nea_2024-05-21_205543_localhost_l1xbcb.png",
+      "https://res.cloudinary.com/ddtjwx08b/image/upload/v1716339931/fisiom/Opera_Instant%C3%A1nea_2024-05-21_205642_localhost_ql3ady.png",
+      "https://res.cloudinary.com/ddtjwx08b/image/upload/v1716339931/fisiom/Opera_Instant%C3%A1nea_2024-05-21_205746_localhost_ckeqna.png",
+      "https://res.cloudinary.com/ddtjwx08b/image/upload/v1716339931/fisiom/Opera_Instant%C3%A1nea_2024-05-21_205819_localhost_v6bulw.png",
+      "https://res.cloudinary.com/ddtjwx08b/image/upload/v1716339931/fisiom/Opera_Instant%C3%A1nea_2024-05-21_210046_localhost_nnm4qk.png",
+    ],
   },
   {
     title: "Muy pronto...",
@@ -120,6 +148,7 @@ export const projectsDataEsp: Project[] = [
     tags: ["Jamás", "dejaré", "de", "aprender", "y", "programar"],
     imageUrl: PROX,
     linkTo: "",
+    images: [],
   },
 ];
 export const skillsData = [
