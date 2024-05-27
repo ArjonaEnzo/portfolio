@@ -89,7 +89,7 @@ export const projectsData: Project[] = [
   {
     title: "Fisiom Fulness | HealthTech and Wellness",
     description:
-      "In my role as a Full Stack Developer, I worked on the Backend, designing tables, relationships, and CRUD operations for users, professionals, and products. I implemented a soft delete to maintain records in the database, using MongoDB, Express, and Node.js for enhanced security and efficiency. On the Frontend, I developed the user interface to create products, manage their stock, and facilitate their sale. I used Tailwind CSS and Next.js to create an attractive and user-friendly interface, improving the user experience and the stock renewal process.",
+      "As a Full Stack Developer, I designed tables, relationships, CRUD, implemented soft delete, and developed an interface to manage products.",
     tags: ["Next.js", "MongoDB", "Express.js", "Mongoose", "TailwindCSS"],
     imageUrl: FISIO,
     images: [
@@ -130,7 +130,7 @@ export const projectsDataEsp: Project[] = [
   {
     title: "Fisiom Fulness | Salud y Bienestar",
     description:
-      "En mi puesto de Full Stack Developer, trabajé en el Backend, diseñando tablas, relaciones y CRUD para usuarios ",
+      "Como Full Stack Developer, diseñé tablas, relaciones, CRUD, implementé soft delete y desarrollé una interfaz para gestionar productos...",
     tags: ["Next.js", "MongoDB", "Express.js", "Mongoose", "TailwindCSS"],
     imageUrl: FISIO,
     images: [
@@ -186,6 +186,13 @@ export const experiencesData = [
     date: "AUG. 2023 | SEPT. 2023",
   },
   {
+    title: "Full Stack Developer | Fisiom Fulness",
+    description:
+      "In my role as a Full Stack Developer, I worked on the Backend, designing tables, relationships, and CRUD operations for users, professionals, and products. I implemented soft delete to maintain records in the database, using MongoDB, Express, and Node.js. On the Frontend, I developed an interface to create products, manage their stock, and facilitate their sale, using Tailwind CSS and Next.js.",
+    icon: React.createElement(CgWorkAlt),
+    date: "FEB. 2024 | MAY. 2024",
+  },
+  {
     title: "Coming soon...",
     description:
       "I'll keep getting experience by working as a freelancer and making personal projects.",
@@ -208,6 +215,13 @@ export const experiencesDataEsp = [
       "Trabajé como desarrollador full stack durante 1 mes para desarrollar una Aplicación de Página Única (SPA) para el Club ADIP, ubicado en Buenos Aires.",
     icon: React.createElement(CgWorkAlt),
     date: "AGO. 2023 | SEPT. 2023",
+  },
+  {
+    title: "Desarrollador Full Stack | Fisiom Fulness",
+    description:
+      "En mi rol como Desarrollador Full Stack, trabajé en el Backend, diseñando tablas, relaciones y operaciones CRUD para usuarios, profesionales y productos. Implementé un borrado suave para mantener registros en la base de datos, utilizando MongoDB, Express y Node.js. En el Frontend, desarrollé una interfaz para crear productos, gestionar su stock y facilitar su venta, usando Tailwind CSS y Next.js.",
+    icon: React.createElement(CgWorkAlt),
+    date: "FEB. 2024 | MAY. 2024",
   },
   {
     title: "Muy pronto...",
