@@ -2,12 +2,13 @@
 import React from "react";
 import { SectionHeading } from "./section-heading";
 import { skillsData } from "@/lib/data";
+import { skillIcons } from "@/lib/skills-icons";
 import { useSectioninView } from "@/lib/hooks";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/context/language-context";
 
 export default function Skills() {
-  const { language, toggleLanguage } = useLanguage();
+  const { language } = useLanguage();
   const sectionName = language === "ENG" ? "Skills" : "Habilidades";
   const { ref } = useSectioninView(sectionName);
 
@@ -34,22 +35,27 @@ export default function Skills() {
       <SectionHeading>
         {language === "ENG" ? "My skills" : "Mis habilidades"}
       </SectionHeading>
-      <ul className="flex flex-wrap justify-center gap-2 text-lg text-black dark:text-white/70">
-        {skillsData.map((skill, index) => (
-          <motion.li
-            className="bg-violet-900 borderBlack rounded-xl px-5 py-3"
-            key={index}
-            variants={fadeInAnimationVariants}
-            initial="initial"
-            whileInView="animate"
-            viewport={{
-              once: true,
-            }}
-            custom={index}
-          >
-            {skill}
-          </motion.li>
-        ))}
+      <ul className="flex flex-wrap justify-center gap-2 text-lg text-white dark:text-white/80">
+        {skillsData.map((skill, index) => {
+          const Icon = skillIcons[skill];
+          return (
+            <motion.li
+              className="bg-frieren-700 borderBlack rounded-xl px-5 py-3 flex items-center gap-2 dark:bg-fern-800 dark:hover:shadow-md dark:hover:shadow-fern-500/25 transition-shadow"
+              key={index}
+              variants={fadeInAnimationVariants}
+              initial="initial"
+              whileInView="animate"
+              whileHover={{ scale: 1.07, transition: { type: "spring", stiffness: 400, damping: 17 } }}
+              viewport={{
+                once: true,
+              }}
+              custom={index}
+            >
+              {Icon && <Icon className="text-base opacity-80" />}
+              {skill}
+            </motion.li>
+          );
+        })}
       </ul>
     </section>
   );

@@ -8,7 +8,7 @@ import { useSectioninView } from "@/lib/hooks";
 import { useActiveSectionContext } from "@/context/active-section-context";
 import { useLanguage } from "@/context/language-context";
 export default function Intro() {
-  const { language, toggleLanguage } = useLanguage();
+  const { language } = useLanguage();
   const sectionName = language === "ENG" ? "Home" : "Início";
 
   const { ref } = useSectioninView(sectionName, 0.5);
@@ -20,7 +20,7 @@ export default function Intro() {
       id="home"
     >
       <div className="flex items-center justify-center ">
-        <div className="relative">
+        <div className="relative animate-float">
           <motion.div
             initial={{ opacity: 0, scale: 0 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -36,7 +36,7 @@ export default function Intro() {
               height="250"
               quality="95"
               priority={true}
-              className="h-48 w-48 rounded-full object-cover border-[0.35rem] border-white shadow-xl"
+              className="h-48 w-48 rounded-full object-cover border-[0.35rem] border-frieren-200 dark:border-fern-700 shadow-[0_0_30px_rgba(148,124,189,0.40)] dark:shadow-[0_0_30px_rgba(65,53,88,0.60)]"
             />
           </motion.div>
           <motion.span
@@ -63,27 +63,28 @@ export default function Intro() {
         {language === "ENG" ? (
           <>
             {" "}
-            <span className="font-bold">Hello! My name is Enzo.</span> I'm a{" "}
-            <span className="font-bold"> full-stack developer</span> and an
-            enthusiastic seeker of{" "}
-            <span className="font-bold">new challenges</span> to showcase my
-            talent. I enjoy programming <span className="italic">and love</span>{" "}
-            tasks constantly motivate me. Currently, I'm focusing on React{" "}
-            <span className="underline">React (Next.js)</span>.
+            Hi, I&apos;m <span className="font-bold">Enzo Arjona</span>. A Full
+            Stack Developer specialized in crafting{" "}
+            <span className="font-bold">
+              high-performance digital experiences
+            </span>
+            . I combine the power of{" "}
+            <span className="font-bold">React (Next.js)</span> with the
+            versatility of <span className="font-bold">WordPress</span> to build
+            fast, scalable, and SEO-optimized websites.
           </>
         ) : (
           <>
             {" "}
+            ¡Hola! Soy <span className="font-bold">Enzo Arjona</span>.
+            Desarrollador Full Stack especializado en crear{" "}
             <span className="font-bold">
-              ¡Hola! Mi nombre es Enzo.
-            </span> Soy{" "}
-            <span className="font-bold">desarrollador full stack</span> y un
-            entusiasta buscador de nuevos{" "}
-            <span className="font-bold">desafíos</span> para demostrar mi
-            talento. Mi pasión por la programación{" "}
-            <span className="italic"> y mi amor </span>por los retos me motivan
-            constantemente. Actualmente me enfoco en{" "}
-            <span className="underline">React (Next.js)</span>.
+              experiencias digitales de alto rendimiento
+            </span>
+            . Combino el poder de{" "}
+            <span className="font-bold">React (Next.js)</span> con la
+            versatilidad de <span className="font-bold">WordPress</span> para
+            construir sitios rápidos, escalables y optimizados para SEO.
           </>
         )}
       </motion.h1>
@@ -98,7 +99,7 @@ export default function Intro() {
       >
         <Link
           href="#contact"
-          className="group bg-violet-900/80 text-black px-7 py-3 flex items-center gap-2 rounded-full outline-none focus:scale-100 hover:scale-105 hover:bg-violet-950/80 active:scale-105 transition dark:text-white"
+          className="group bg-frieren-800/80 text-frieren-50 px-7 py-3 flex items-center gap-2 rounded-full outline-none focus:scale-100 hover:scale-105 hover:bg-frieren-900/80 active:scale-105 transition dark:text-white"
           onClick={() => {
             setActiveSection("Contact"), setTimeOfLastClick(Date.now());
           }}
@@ -118,14 +119,14 @@ export default function Intro() {
         <a
           href="https://www.linkedin.com/in/enzoarjona/"
           target="_blank"
-          className="bg-white/50 p-4 text-gray-700 flex items-center gap-2 text-[1.35rem] rounded-full focus:scale-[1.15] hover:scale-[1.15] hover:text-gray-950  active:scale-105 transition cursor-pointer border border-black/10 dark:bg-white/10 dark:text-white/60"
+          className="bg-frieren-50/50 p-4 text-frieren-700 flex items-center gap-2 text-[1.35rem] rounded-full focus:scale-[1.15] hover:scale-[1.15] hover:text-frieren-950 active:scale-105 transition cursor-pointer border border-frieren-200/60 dark:bg-white/10 dark:text-white/60"
         >
           <BsLinkedin />
         </a>
         <a
           href="https://www.linkedin.com/in/enzoarjona/"
           target="_blank"
-          className="bg-white/50 p-4 text-gray-700 flex items-center gap-2 text-[1.35rem] rounded-full focus:scale-[1.15] hover:scale-[1.15] hover:text-gray-950  active:scale-105 transition cursor-pointer border border-black/10  dark:bg-white/10 dark:text-white/60"
+          className="bg-frieren-50/50 p-4 text-frieren-700 flex items-center gap-2 text-[1.35rem] rounded-full focus:scale-[1.15] hover:scale-[1.15] hover:text-frieren-950 active:scale-105 transition cursor-pointer border border-frieren-200/60  dark:bg-white/10 dark:text-white/60"
         >
           <BsGithub />
         </a>
