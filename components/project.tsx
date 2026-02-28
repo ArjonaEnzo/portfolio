@@ -79,8 +79,8 @@ export default function Project({
 
       <article className="bg-frieren-800 border border-black/5 overflow-hidden relative rounded-xl hover:shadow-2xl hover:shadow-frieren-800/20 hover:-translate-y-2 transition-all duration-300 flex flex-col md:flex-row h-full dark:bg-fern-900 dark:hover:shadow-fern-900/20">
         <div className="pt-4 pb-7 px-5 md:pt-10 md:px-8 md:w-1/2 flex flex-col h-full z-10">
-          <h3 className="text-2xl font-bold text-white">{title}</h3>
-          <p className="mt-4 leading-relaxed text-white/80 mb-6 text-sm md:text-base text-pretty break-words select-text">
+          <h3 className="text-2xl font-bold text-white text-balance">{title}</h3>
+          <p className="mt-4 leading-relaxed text-white/80 mb-6 text-sm md:text-base text-balance break-words select-text">
             {description}
           </p>
           <ul className="flex flex-wrap gap-2 mt-auto">

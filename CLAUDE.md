@@ -36,13 +36,18 @@ The `useSectionInView` hook (`lib/hooks.ts`) uses `react-intersection-observer` 
 
 ### Dark Theme
 
-Tailwind is configured with `darkMode: "class"`. The `fern` color palette (11 shades: `fern-50` → `fern-950`, muted purple/indigo tones) is defined in `tailwind.config.js` and used exclusively for dark mode classes. The light theme uses `violet-*` Tailwind colors throughout — **never replace violet light-mode classes, only add `dark:fern-*` variants alongside them**.
+Tailwind is configured with `darkMode: "class"`. Two custom palettes are defined in `tailwind.config.js`:
+- **`frieren`** (11 shades: `frieren-50` → `frieren-950`, soft lavender tones) — used for light mode accents alongside `violet-*` Tailwind classes.
+- **`fern`** (11 shades: `fern-50` → `fern-950`, muted purple/indigo tones) — used exclusively for dark mode classes.
 
-The `react-vertical-timeline-component` in `components/experience.tsx` uses inline style objects (not Tailwind), so dark mode there is handled via `useTheme()` with conditional style objects — not `dark:` classes.
+**Never replace `violet-*` or `frieren-*` light-mode classes — only add `dark:fern-*` variants alongside them.**
+
+`components/experience.tsx` uses a sticky horizontal scroll pattern (`useScroll` + `useTransform`). Dark mode is handled via `useTheme()` with conditional inline `cardStyle`/`iconStyle` objects — not `dark:` classes. `INITIAL_SLIDE` is a module-level const that seeds the correct section height before `useEffect` fires (avoids `scrollYProgress` miscalibration on first scroll). A `maxSlideRef` keeps the transform stale-closure-free across resizes.
 
 ### Atmosphere Layer
 
-Two global client components are mounted inside `ThemeContextProvider` in `app/layout.tsx` before the other providers:
+Three global client components form the ambient background layer:
+- **`BgOrbs`** (`components/bg-orbs.tsx`) — four large blurred `motion.div` orbs with slow infinite keyframe animations creating a floating gradient atmosphere. Uses `frieren-*` for light mode and `fern-*` / `indigo-*` for dark mode. Fixed positioned, `z-index: -10`, `pointer-events: none`.
 - **`ParticlesBg`** (`components/particles-bg.tsx`) — canvas-based particle system; 28 dust motes at very low alpha/speed; deep violet (`109,40,217`) in dark mode, soft violet (`139,92,246`) in light mode. Reads `theme` via `useTheme()`. Respects `prefers-reduced-motion`. Cleanup via `cancelAnimationFrame` + `removeEventListener`.
 - **`ScrollProgress`** (`components/scroll-progress.tsx`) — 2px `motion.div` at the very top of the viewport driven by `useScroll().scrollYProgress`. Uses `dark:` Tailwind for color, needs no context.
 

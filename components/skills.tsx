@@ -40,7 +40,7 @@ export default function Skills() {
           const Icon = skillIcons[skill];
           return (
             <motion.li
-              className="bg-frieren-700 borderBlack rounded-xl px-5 py-3 flex items-center gap-2 dark:bg-fern-800 dark:hover:shadow-md dark:hover:shadow-fern-500/25 transition-shadow"
+              className="bg-frieren-700 borderBlack rounded-xl px-5 py-3 flex items-center gap-2 whitespace-nowrap dark:bg-fern-800 dark:hover:shadow-md dark:hover:shadow-fern-500/25 transition-shadow"
               key={index}
               variants={fadeInAnimationVariants}
               initial="initial"

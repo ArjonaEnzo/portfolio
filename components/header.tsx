@@ -32,7 +32,7 @@ export default function Header() {
         animate={{ y: 0, x: "-50%", opacity: 1 }}
         style={{ boxShadow: headerShadow }}
       ></motion.div>
-      <nav className="fixed top-0 left-0 right-0 h-[4.5rem] flex items-center overflow-x-auto no-scrollbar sm:top-[1.7rem] sm:left-1/2 sm:right-auto sm:h-[initial] sm:py-0 sm:-translate-x-1/2 sm:overflow-x-visible">
+      <nav className="fixed top-0 left-0 right-0 h-[4.5rem] flex items-center py-3 overflow-x-auto no-scrollbar sm:top-6 sm:left-1/2 sm:right-auto sm:h-[3.25rem] sm:py-0 sm:-translate-x-1/2 sm:overflow-x-visible">
         <ul className="flex flex-nowrap items-center gap-x-1 mx-auto px-2 text-[0.9rem] font-medium text-frieren-950 sm:gap-5 sm:px-0">
           {header.map((link) => (
             <motion.li

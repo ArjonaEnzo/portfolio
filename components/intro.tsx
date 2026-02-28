@@ -124,7 +124,7 @@ export default function Intro() {
           <BsLinkedin />
         </a>
         <a
-          href="https://www.linkedin.com/in/enzoarjona/"
+          href="https://github.com/ArjonaEnzo"
           target="_blank"
           className="bg-frieren-50/50 p-4 text-frieren-700 flex items-center gap-2 text-[1.35rem] rounded-full focus:scale-[1.15] hover:scale-[1.15] hover:text-frieren-950 active:scale-105 transition cursor-pointer border border-frieren-200/60  dark:bg-white/10 dark:text-white/60"
         >
