@@ -3,14 +3,14 @@ import React from "react";
 import { SectionHeading } from "./section-heading";
 import { skillsData } from "@/lib/data";
 import { skillIcons } from "@/lib/skills-icons";
-import { useSectioninView } from "@/lib/hooks";
+import { useSectionInView } from "@/lib/hooks";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/context/language-context";
 
 export default function Skills() {
   const { language } = useLanguage();
   const sectionName = language === "ENG" ? "Skills" : "Habilidades";
-  const { ref } = useSectioninView(sectionName);
+  const { ref } = useSectionInView(sectionName);
 
   const fadeInAnimationVariants = {
     initial: {

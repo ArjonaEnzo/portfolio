@@ -3,7 +3,7 @@ import React, { useRef, useLayoutEffect } from "react";
 import { motion, useMotionValue } from "framer-motion";
 import { SectionHeading } from "./section-heading";
 import { experiencesData, experiencesDataEsp } from "@/lib/data";
-import { useSectioninView } from "@/lib/hooks";
+import { useSectionInView } from "@/lib/hooks";
 import { useLanguage } from "@/context/language-context";
 import { useTheme } from "@/context/theme-context";
 
@@ -23,7 +23,7 @@ export default function Experience() {
   const { language } = useLanguage();
   const { theme } = useTheme();
   const sectionName = language === "ENG" ? "Experience" : "Experiencia";
-  const { ref: sectionRef } = useSectioninView(sectionName, 0.1);
+  const { ref: sectionRef } = useSectionInView(sectionName, 0.1);
   const experience = language === "ENG" ? experiencesData : experiencesDataEsp;
   const isDark = theme === "dark";
 

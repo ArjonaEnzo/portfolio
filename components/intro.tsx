@@ -4,14 +4,14 @@ import React from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { BsArrowRight, BsGithub, BsLinkedin } from "react-icons/bs";
-import { useSectioninView } from "@/lib/hooks";
+import { useSectionInView } from "@/lib/hooks";
 import { useActiveSectionContext } from "@/context/active-section-context";
 import { useLanguage } from "@/context/language-context";
 export default function Intro() {
   const { language } = useLanguage();
-  const sectionName = language === "ENG" ? "Home" : "Início";
+  const sectionName = language === "ENG" ? "Home" : "Inicio";
 
-  const { ref } = useSectioninView(sectionName, 0.5);
+  const { ref } = useSectionInView(sectionName, 0.5);
   const { setActiveSection, setTimeOfLastClick } = useActiveSectionContext();
   return (
     <section

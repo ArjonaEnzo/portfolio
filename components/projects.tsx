@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { SectionHeading } from "./section-heading";
 import { projectsData, projectsDataEsp } from "@/lib/data";
 import Project from "./project";
-import { useSectioninView } from "@/lib/hooks";
+import { useSectionInView } from "@/lib/hooks";
 import { useLanguage } from "@/context/language-context";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
@@ -12,7 +12,7 @@ export const Projects = () => {
   const { language } = useLanguage();
 
   const sectionName = language === "ENG" ? "Projects" : "Proyectos";
-  const { ref } = useSectioninView(sectionName, 0.5);
+  const { ref } = useSectionInView(sectionName, 0.5);
 
   const scrollRef = useRef<HTMLDivElement>(null);
 

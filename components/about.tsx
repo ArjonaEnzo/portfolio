@@ -2,13 +2,13 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { SectionHeading } from "./section-heading";
-import { useSectioninView } from "@/lib/hooks";
+import { useSectionInView } from "@/lib/hooks";
 import { useLanguage } from "@/context/language-context";
 
 export default function About() {
   const { language } = useLanguage();
   const sectionName = language === "ENG" ? "About" : "Sobre mi";
-  const { ref } = useSectioninView(sectionName, 1);
+  const { ref } = useSectionInView(sectionName, 1);
 
   return (
     <motion.section

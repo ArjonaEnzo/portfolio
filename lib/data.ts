@@ -43,7 +43,7 @@ export const links = [
 
 export const linksESP = [
   {
-    name: "Início",
+    name: "Inicio",
     hash: "#home",
   },
   {

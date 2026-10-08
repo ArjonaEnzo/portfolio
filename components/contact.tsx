@@ -2,7 +2,7 @@
 import React from "react";
 import { SectionHeading } from "./section-heading";
 import { motion } from "framer-motion";
-import { useSectioninView } from "@/lib/hooks";
+import { useSectionInView } from "@/lib/hooks";
 import { sendEmail } from "@/actions/sendEmail";
 import { SubmitBtn } from "./submit-btn";
 import toast from "react-hot-toast";
@@ -11,7 +11,7 @@ import { useLanguage } from "@/context/language-context";
 export default function Contact() {
   const { language } = useLanguage();
   const sectionName = language === "ENG" ? "Contact" : "Contacto";
-  const { ref } = useSectioninView(sectionName, 0.5);
+  const { ref } = useSectionInView(sectionName, 0.5);
 
   return (
     <motion.section

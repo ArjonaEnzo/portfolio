@@ -4,9 +4,9 @@ import { Inter } from "next/font/google";
 import ActiveSectionContextProvider from "@/context/active-section-context";
 import { Toaster } from "react-hot-toast";
 import Footer from "@/components/footer";
-import ThemeSwich from "@/components/theme-swich";
+import ThemeSwitch from "@/components/theme-switch";
 import { ThemeContextProvider } from "@/context/theme-context";
-import LanguageSwitch from "@/components/language-swich";
+import LanguageSwitch from "@/components/language-switch";
 import LanguageContextProvider from "@/context/language-context";
 import ParticlesBg from "@/components/particles-bg";
 import ScrollProgress from "@/components/scroll-progress";
@@ -41,7 +41,7 @@ export default function RootLayout({
               <Footer />
               <Toaster position="top-right" />
               <LanguageSwitch />
-              <ThemeSwich />
+              <ThemeSwitch />
             </ActiveSectionContextProvider>
           </LanguageContextProvider>
         </ThemeContextProvider>
