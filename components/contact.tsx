@@ -24,24 +24,24 @@ export default function Contact() {
       viewport={{ once: true }}
     >
       <SectionHeading>
-        {language === "ENG" ? "Contact me" : "Contáctame"}
+        {language === "ENG" ? "Contact me" : "Contactame"}
       </SectionHeading>
       <p className="text-frieren-950 -mt-6 dark:text-white/70">
         {language === "ENG" ? (
           <>
-            You can contact me via email at this address:{" "}
+            Email me at{" "}
             <a className="underline" href="mailto:enzoarjona30@gmail.com">
               enzoarjona30@gmail.com
             </a>{" "}
-            or through the form.
+            or send a message through the form.
           </>
         ) : (
           <>
-            Puedes contactarte conmigo vía email a esta dirección:{" "}
+            Escribime a{" "}
             <a className="underline" href="mailto:enzoarjona30@gmail.com">
               enzoarjona30@gmail.com
             </a>{" "}
-            o a través del formulario.
+            o mandame un mensaje por el formulario.
           </>
         )}
       </p>
@@ -55,11 +55,15 @@ export default function Contact() {
             return;
           }
           toast.success(
-            language === "ENG" ? "Email sent successfully!" : "¡Email enviado!"
+            language === "ENG" ? "Email sent successfully!" : "¡Mensaje enviado!"
           );
         }}
       >
+        <label htmlFor="senderEmail" className="sr-only">
+          {language === "ENG" ? "Your email" : "Tu correo electrónico"}
+        </label>
         <input
+          id="senderEmail"
           type="email"
           name="senderEmail"
           className="h-14 px-4 rounded-lg border border-frieren-200 dark:border-fern-700 bg-white/10 dark:bg-fern-900/50 backdrop-blur-sm text-frieren-950 dark:text-white placeholder:text-frieren-400 dark:placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-frieren-500 dark:focus:ring-fern-500 transition-all"
@@ -69,7 +73,11 @@ export default function Contact() {
           required
           maxLength={500}
         />
+        <label htmlFor="message" className="sr-only">
+          {language === "ENG" ? "Your message" : "Tu mensaje"}
+        </label>
         <textarea
+          id="message"
           className="h-52 my-3 rounded-lg p-4 border border-frieren-200 dark:border-fern-700 bg-white/10 dark:bg-fern-900/50 backdrop-blur-sm text-frieren-950 dark:text-white placeholder:text-frieren-400 dark:placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-frieren-500 dark:focus:ring-fern-500 transition-all"
           name="message"
           placeholder={language === "ENG" ? "Your message" : "Tu mensaje"}
