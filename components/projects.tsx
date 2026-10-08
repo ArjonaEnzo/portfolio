@@ -1,114 +1,44 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React from "react";
 import { SectionHeading } from "./section-heading";
-import { projectsData, projectsDataEsp } from "@/lib/data";
 import Project from "./project";
+import { getProjects } from "@/lib/projects";
 import { useSectionInView } from "@/lib/hooks";
 import { useLanguage } from "@/context/language-context";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 export const Projects = () => {
   const { language } = useLanguage();
+  const isEnglish = language === "ENG";
+  const sectionName = isEnglish ? "Projects" : "Proyectos";
+  const { ref } = useSectionInView(sectionName, 0.3);
 
-  const sectionName = language === "ENG" ? "Projects" : "Proyectos";
-  const { ref } = useSectionInView(sectionName, 0.5);
-
-  const scrollRef = useRef<HTMLDivElement>(null);
-
-  const currentProjects = language === "ENG" ? projectsData : projectsDataEsp;
-  const allLabel = language === "ENG" ? "All" : "Todos";
-
-  const [activeFilter, setActiveFilter] = useState(allLabel);
-
-  useEffect(() => {
-    setActiveFilter(allLabel);
-  }, [language, allLabel]);
-
-  const uniqueTags = [
-    allLabel,
-    ...Array.from(new Set(currentProjects.flatMap((project) => project.tags))),
-  ];
-
-  const filteredProjects =
-    activeFilter === allLabel
-      ? currentProjects
-      : currentProjects.filter((project) =>
-          project.tags.includes(activeFilter),
-        );
-
-  const scroll = (direction: "left" | "right") => {
-    if (scrollRef.current) {
-      const scrollAmount = direction === "left" ? -400 : 400;
-      scrollRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });
-    }
-  };
+  const projects = getProjects(language);
+  const featured = projects.filter((p) => p.featured);
+  const rest = projects.filter((p) => !p.featured);
 
   return (
     <section
       ref={ref}
       id="projects"
-      className="scroll-mt-28 mb-28 w-full max-w-[95vw] mx-auto relative"
+      className="scroll-mt-28 mb-28 w-full max-w-[72rem] mx-auto px-0 sm:px-4"
     >
-      <SectionHeading>
-        {language === "ENG" ? "My Projects" : "Mis proyectos"}
-      </SectionHeading>
+      <SectionHeading>{isEnglish ? "Projects" : "Proyectos"}</SectionHeading>
+      <p className="-mt-4 mb-10 text-center text-frieren-800 dark:text-white/70 max-w-[40rem] mx-auto">
+        {isEnglish
+          ? "Real products with real users. Each card shows the problem, what I built and the result."
+          : "Productos reales con usuarios reales. Cada card muestra el problema, qué construí y el resultado."}
+      </p>
 
-      <div className="flex justify-center mb-8">
-        <div className="relative">
-          <select
-            value={activeFilter}
-            onChange={(e) => setActiveFilter(e.target.value)}
-            className="appearance-none bg-frieren-50 dark:bg-gray-800 border border-frieren-200 dark:border-white/10 rounded-full px-6 py-2 pr-10 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-frieren-500 dark:focus:ring-fern-500 transition-all cursor-pointer shadow-sm"
-          >
-            {uniqueTags.map((tag) => (
-              <option key={tag} value={tag}>
-                {tag}
-              </option>
-            ))}
-          </select>
-          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-frieren-400">
-            <svg
-              className="fill-current h-4 w-4"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 20 20"
-            >
-              <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-            </svg>
-          </div>
-        </div>
-      </div>
-
-      <div className="relative group">
-        <button
-          onClick={() => scroll("left")}
-          className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-2 z-10 bg-frieren-50 dark:bg-gray-800 p-3 rounded-full shadow-lg border border-frieren-200/50 hover:scale-110 transition opacity-0 group-hover:opacity-100 hidden md:flex items-center justify-center text-frieren-600 dark:text-fern-400"
-          aria-label="Scroll left"
-        >
-          <FaChevronLeft />
-        </button>
-
-        <div
-          ref={scrollRef}
-          className="flex overflow-x-auto snap-x snap-mandatory gap-6 pb-8 px-4 w-full no-scrollbar scroll-smooth"
-        >
-          {filteredProjects.map((project, index) => (
-            <div
-              key={index}
-              className="snap-center shrink-0 w-[85vw] md:w-[42rem]"
-            >
-              <Project {...project} />
-            </div>
+      <div className="flex flex-col gap-8">
+        {featured.map((project) => (
+          <Project key={project.slug} project={project} />
+        ))}
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {rest.map((project) => (
+            <Project key={project.slug} project={project} />
           ))}
         </div>
-
-        <button
-          onClick={() => scroll("right")}
-          className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-2 z-10 bg-frieren-50 dark:bg-gray-800 p-3 rounded-full shadow-lg border border-frieren-200/50 hover:scale-110 transition opacity-0 group-hover:opacity-100 hidden md:flex items-center justify-center text-frieren-600 dark:text-fern-400"
-          aria-label="Scroll right"
-        >
-          <FaChevronRight />
-        </button>
       </div>
     </section>
   );
