@@ -4,135 +4,152 @@ import React from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { BsArrowRight, BsGithub, BsLinkedin } from "react-icons/bs";
+import { HiDownload } from "react-icons/hi";
 import { useSectionInView } from "@/lib/hooks";
 import { useActiveSectionContext } from "@/context/active-section-context";
 import { useLanguage } from "@/context/language-context";
+import { SITE } from "@/lib/site";
+
+const CV_PATH = "/cv-enzo-arjona.pdf";
+
 export default function Intro() {
   const { language } = useLanguage();
-  const sectionName = language === "ENG" ? "Home" : "Inicio";
+  const isEnglish = language === "ENG";
+  const sectionName = isEnglish ? "Home" : "Inicio";
 
   const { ref } = useSectionInView(sectionName, 0.5);
   const { setActiveSection, setTimeOfLastClick } = useActiveSectionContext();
+
   return (
     <section
       ref={ref}
       className="mb-28 max-w-[50rem] text-center sm:mb-0 scroll-mt-[100rem]"
       id="home"
     >
-      <div className="flex items-center justify-center ">
+      <div className="flex items-center justify-center">
         <div className="relative animate-float">
           <motion.div
             initial={{ opacity: 0, scale: 0 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{
-              type: "tween",
-              duration: 0.2,
-            }}
+            transition={{ type: "tween", duration: 0.2 }}
           >
             <Image
               src="https://res.cloudinary.com/ddtjwx08b/image/upload/v1697323330/Enzo.jpg"
-              alt="Enzo_Profile"
+              alt={isEnglish ? "Portrait of Enzo Arjona" : "Retrato de Enzo Arjona"}
               width="250"
               height="250"
               quality="95"
               priority={true}
-              className="h-48 w-48 rounded-full object-cover border-[0.35rem] border-frieren-200 dark:border-fern-700 shadow-[0_0_30px_rgba(148,124,189,0.40)] dark:shadow-[0_0_30px_rgba(65,53,88,0.60)]"
+              className="h-40 w-40 sm:h-48 sm:w-48 rounded-full object-cover border-[0.35rem] border-frieren-200 dark:border-fern-700 shadow-[0_0_30px_rgba(148,124,189,0.40)] dark:shadow-[0_0_30px_rgba(65,53,88,0.60)]"
             />
           </motion.div>
           <motion.span
-            className="absolute text-4xl bottom-0 rigth-0"
+            className="absolute text-3xl sm:text-4xl bottom-0 right-0"
+            aria-hidden="true"
             initial={{ opacity: 0, scale: 0 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{
-              type: "spring",
-              stiffness: 125,
-              delay: 0.1,
-              duration: 0.7,
-            }}
+            transition={{ type: "spring", stiffness: 125, delay: 0.1, duration: 0.7 }}
           >
             👋
           </motion.span>
         </div>
       </div>
 
-      <motion.h1
-        className="mb-10 mt-4 px text-2x1 font-medium !leading-[1.5] sm:text-4x1"
+      <motion.div
+        className="mt-6 mb-8 px-4"
         initial={{ opacity: 0, y: 100 }}
         animate={{ opacity: 1, y: 0 }}
       >
-        {language === "ENG" ? (
-          <>
-            {" "}
-            Hi, I&apos;m <span className="font-bold">Enzo Arjona</span>. A Full
-            Stack Developer specialized in crafting{" "}
-            <span className="font-bold">
-              high-performance digital experiences
-            </span>
-            . I combine the power of{" "}
-            <span className="font-bold">React (Next.js)</span> with the
-            versatility of <span className="font-bold">WordPress</span> to build
-            fast, scalable, and SEO-optimized websites.
-          </>
-        ) : (
-          <>
-            {" "}
-            ¡Hola! Soy <span className="font-bold">Enzo Arjona</span>.
-            Desarrollador Full Stack especializado en crear{" "}
-            <span className="font-bold">
-              experiencias digitales de alto rendimiento
-            </span>
-            . Combino el poder de{" "}
-            <span className="font-bold">React (Next.js)</span> con la
-            versatilidad de <span className="font-bold">WordPress</span> para
-            construir sitios rápidos, escalables y optimizados para SEO.
-          </>
-        )}
-      </motion.h1>
+        <h1 className="text-3xl sm:text-5xl font-bold tracking-tight !leading-tight">
+          {isEnglish ? (
+            <>
+              Hi, I&apos;m <span className="text-frieren-700 dark:text-fern-300">Enzo Arjona</span>.
+            </>
+          ) : (
+            <>
+              Hola, soy <span className="text-frieren-700 dark:text-fern-300">Enzo Arjona</span>.
+            </>
+          )}
+        </h1>
+
+        <p className="mt-3 text-lg sm:text-2xl font-semibold text-frieren-900 dark:text-white/90">
+          {isEnglish ? "Full-Stack Developer" : "Desarrollador Full-Stack"}
+          <span className="text-frieren-500 dark:text-fern-400 font-medium">
+            {" "}· Next.js, TypeScript, PostgreSQL
+          </span>
+        </p>
+
+        <p className="mt-5 text-base sm:text-lg leading-relaxed text-frieren-900/90 dark:text-white/80 text-pretty max-w-[40rem] mx-auto">
+          {isEnglish ? (
+            <>
+              I build and run <span className="font-semibold">SaaS products in production</span>:
+              from the data model and auth to payments, PDFs and automated billing.
+            </>
+          ) : (
+            <>
+              Construyo y mantengo <span className="font-semibold">productos SaaS en producción</span>:
+              del modelo de datos y el auth a los pagos, los PDFs y la facturación automática.
+            </>
+          )}
+        </p>
+
+        <p className="mt-3 text-sm sm:text-base text-frieren-700 dark:text-white/60">
+          {isEnglish
+            ? "Mendoza, Argentina · open to remote roles"
+            : "Mendoza, Argentina · abierto a trabajo remoto"}
+        </p>
+      </motion.div>
 
       <motion.div
         initial={{ opacity: 0, y: 100 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{
-          delay: 0.1,
-        }}
-        className="flex flex-col sm:flex-row items-center justify-center gap-2 px-4 text-lg font-medium"
+        transition={{ delay: 0.1 }}
+        className="flex flex-wrap items-center justify-center gap-3 px-4 text-lg font-medium"
       >
         <Link
           href="#contact"
-          className="group bg-frieren-800/80 text-frieren-50 px-7 py-3 flex items-center gap-2 rounded-full outline-none focus:scale-100 hover:scale-105 hover:bg-frieren-900/80 active:scale-105 transition dark:text-white"
+          className="group bg-frieren-800/80 text-frieren-50 px-7 py-3 flex items-center gap-2 rounded-full outline-none focus:scale-100 hover:scale-105 hover:bg-frieren-900/80 active:scale-105 transition dark:bg-fern-700 dark:text-white"
           onClick={() => {
-            setActiveSection("Contact"), setTimeOfLastClick(Date.now());
+            setActiveSection("Contact");
+            setTimeOfLastClick(Date.now());
           }}
         >
-          {language === "ENG" ? (
-            <>
-              {" "}
-              Contact me here <BsArrowRight className="contactMe" />
-            </>
-          ) : (
-            <>
-              {" "}
-              Contáctame <BsArrowRight className="contactMe" />
-            </>
-          )}
+          {isEnglish ? "Contact me" : "Contactame"}
+          <BsArrowRight
+            className="opacity-70 group-hover:translate-x-1 transition"
+            aria-hidden="true"
+          />
         </Link>
+
         <a
-          href="https://www.linkedin.com/in/enzoarjona/"
+          href={CV_PATH}
+          download
+          className="group bg-frieren-50/70 text-frieren-900 px-7 py-3 flex items-center gap-2 rounded-full outline-none focus:scale-100 hover:scale-105 active:scale-105 transition border border-frieren-200/60 dark:bg-white/10 dark:text-white/80 dark:border-white/10"
+        >
+          {isEnglish ? "Download CV" : "Descargar CV"}
+          <HiDownload
+            className="opacity-70 group-hover:translate-y-0.5 transition"
+            aria-hidden="true"
+          />
+        </a>
+
+        <a
+          href={SITE.linkedin}
+          target="_blank"
           aria-label="LinkedIn"
           rel="noopener noreferrer"
-          target="_blank"
-          className="bg-frieren-50/50 p-4 text-frieren-700 flex items-center gap-2 text-[1.35rem] rounded-full focus:scale-[1.15] hover:scale-[1.15] hover:text-frieren-950 active:scale-105 transition cursor-pointer border border-frieren-200/60 dark:bg-white/10 dark:text-white/60"
+          className="bg-frieren-50/50 p-4 text-frieren-700 flex items-center gap-2 text-[1.35rem] rounded-full focus:scale-[1.15] hover:scale-[1.15] hover:text-frieren-950 active:scale-105 transition cursor-pointer border border-frieren-200/60 dark:bg-white/10 dark:text-white/60 dark:border-white/10"
         >
-          <BsLinkedin />
+          <BsLinkedin aria-hidden="true" />
         </a>
         <a
-          href="https://github.com/ArjonaEnzo"
+          href={SITE.github}
+          target="_blank"
           aria-label="GitHub"
           rel="noopener noreferrer"
-          target="_blank"
-          className="bg-frieren-50/50 p-4 text-frieren-700 flex items-center gap-2 text-[1.35rem] rounded-full focus:scale-[1.15] hover:scale-[1.15] hover:text-frieren-950 active:scale-105 transition cursor-pointer border border-frieren-200/60  dark:bg-white/10 dark:text-white/60"
+          className="bg-frieren-50/50 p-4 text-frieren-700 flex items-center gap-2 text-[1.35rem] rounded-full focus:scale-[1.15] hover:scale-[1.15] hover:text-frieren-950 active:scale-105 transition cursor-pointer border border-frieren-200/60 dark:bg-white/10 dark:text-white/60 dark:border-white/10"
         >
-          <BsGithub />
+          <BsGithub aria-hidden="true" />
         </a>
       </motion.div>
     </section>

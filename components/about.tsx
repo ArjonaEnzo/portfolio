@@ -7,7 +7,8 @@ import { useLanguage } from "@/context/language-context";
 
 export default function About() {
   const { language } = useLanguage();
-  const sectionName = language === "ENG" ? "About" : "Sobre mi";
+  const isEnglish = language === "ENG";
+  const sectionName = isEnglish ? "About" : "Sobre mí";
   const { ref } = useSectionInView(sectionName, 1);
 
   return (
@@ -19,47 +20,54 @@ export default function About() {
       transition={{ delay: 0.175 }}
       id="about"
     >
-      <SectionHeading>
-        {language === "ENG" ? "About me" : "Sobre mi"}
-      </SectionHeading>
-      {language === "ENG" ? (
+      <SectionHeading>{isEnglish ? "About me" : "Sobre mí"}</SectionHeading>
+      {isEnglish ? (
         <>
-          <p className="mb-3 text-pretty leading-relaxed break-words select-text">
-            My journey started in a{" "}
-            <span className="font-medium">technical school</span> and was forged
-            through an intensive bootcamp at{" "}
-            <span className="font-medium">Henry</span>. Today, I apply that same
-            discipline to web development. I love{" "}
-            <span className="font-medium">fast technology</span>, clean code,
-            and helping businesses land{" "}
-            <span className="font-medium">real clients</span>.
+          <p className="mb-3 text-pretty leading-relaxed">
+            I&apos;m a full-stack developer from Mendoza, Argentina. I started
+            at a technical high school, trained at the{" "}
+            <span className="font-medium">Henry</span> bootcamp and am now
+            finishing a degree in software development. Since 2023 I&apos;ve
+            shipped work for clients and agencies, and in 2026 I built and
+            launched <span className="font-medium">MyRent</span>, a
+            rental-management SaaS that landlords use every day.
           </p>
-
-          <p className="text-pretty leading-relaxed break-words select-text">
-            <span className="italic">When I&apos;m not coding</span>, I&apos;m
-            likely training, enjoying a good{" "}
-            <span className="font-medium">mate</span>, or building a new side
-            project.
+          <p className="mb-3 text-pretty leading-relaxed">
+            I care about the parts that make software trustworthy:{" "}
+            <span className="font-medium">typed code</span>, database-level
+            security, automated tests and CI, and clear error handling. I like
+            owning a feature end to end, from the Postgres schema to the last
+            pixel.
+          </p>
+          <p className="text-pretty leading-relaxed">
+            <span className="italic">Off the keyboard</span> you&apos;ll find me
+            training, sharing a <span className="font-medium">mate</span> or
+            poking at a new side project.
           </p>
         </>
       ) : (
         <>
-          <p className="mb-3 text-pretty leading-relaxed break-words select-text">
-            Comencé mi camino en una{" "}
-            <span className="font-medium">escuela técnica</span> y me
-            perfeccioné en el bootcamp de{" "}
-            <span className="font-medium">Henry</span>. Hoy aplico esa misma
-            disciplina desarrollando webs. Me gusta la tecnología que funciona{" "}
-            <span className="font-medium">rápido</span>, el código limpio y
-            ayudar a negocios a conseguir{" "}
-            <span className="font-medium">clientes reales</span>.
+          <p className="mb-3 text-pretty leading-relaxed">
+            Soy desarrollador full-stack de Mendoza, Argentina. Arranqué en una
+            escuela técnica, me formé en el bootcamp de{" "}
+            <span className="font-medium">Henry</span> y hoy estoy terminando
+            la tecnicatura en desarrollo de software. Desde 2023 trabajo para
+            clientes y agencias, y en 2026 construí y lancé{" "}
+            <span className="font-medium">MyRent</span>, un SaaS de gestión de
+            alquileres que propietarios usan todos los días.
           </p>
-
-          <p className="text-pretty leading-relaxed break-words select-text">
-            <span className="italic">Cuando no estoy programando</span>,
-            seguramente me encuentres entrenando, tomando unos buenos{" "}
-            <span className="font-medium">mates</span> o armando algún proyecto
-            nuevo.
+          <p className="mb-3 text-pretty leading-relaxed">
+            Me importa lo que hace confiable al software:{" "}
+            <span className="font-medium">código tipado</span>, seguridad a
+            nivel de base de datos, tests automatizados con CI y manejo claro
+            de errores. Me gusta hacerme cargo de una feature de punta a punta,
+            del esquema en Postgres al último píxel.
+          </p>
+          <p className="text-pretty leading-relaxed">
+            <span className="italic">Lejos del teclado</span> me vas a
+            encontrar entrenando, compartiendo unos{" "}
+            <span className="font-medium">mates</span> o metiéndole a algún
+            proyecto nuevo.
           </p>
         </>
       )}

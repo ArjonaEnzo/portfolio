@@ -47,7 +47,7 @@ export const linksESP = [
     hash: "#home",
   },
   {
-    name: "Sobre mi",
+    name: "Sobre mí",
     hash: "#about",
   },
   {
