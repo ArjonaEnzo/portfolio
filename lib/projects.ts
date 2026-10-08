@@ -120,7 +120,7 @@ const copy: Record<Language, Record<string, ProjectCopy>> = {
       solution:
         "Multi-tenant platform where every receipt is an immutable snapshot of a real lease, generated as PDF and emailed. Tenants pay online through Mercado Pago and a signed webhook reconciles the payment. A daily cron drafts receipts and reminders. Tenant portal, roles per account, AI assistant and ES/EN UI.",
       impact:
-        "Live at myrent.lat with paying customers. Account isolation enforced with Postgres Row Level Security and covered by 500+ unit tests, 129 RLS tests and Playwright E2E in CI; security advisories found by those tests were fixed before shipping.",
+        "Live at myrent.lat with real customers. Account isolation enforced with Postgres Row Level Security and covered by 500+ unit tests, 129 RLS tests and Playwright E2E in CI; security advisories found by those tests were fixed before shipping.",
     },
     "club-adip": {
       period: "2023",
@@ -166,7 +166,7 @@ const copy: Record<Language, Record<string, ProjectCopy>> = {
       solution:
         "Plataforma multi-tenant donde cada recibo es un snapshot inmutable de un contrato real, generado en PDF y enviado por email. El inquilino paga online por Mercado Pago y un webhook firmado concilia el pago. Un cron diario genera borradores y recordatorios. Portal del inquilino, roles por cuenta, asistente IA e interfaz ES/EN.",
       impact:
-        "En producción en myrent.lat con clientes que pagan. Aislamiento entre cuentas con Row Level Security de Postgres, cubierto por más de 500 tests unitarios, 129 tests de RLS y E2E con Playwright en CI; las vulnerabilidades que esos tests encontraron se corrigieron antes de salir.",
+        "En producción en myrent.lat con clientes reales. Aislamiento entre cuentas con Row Level Security de Postgres, cubierto por más de 500 tests unitarios, 129 tests de RLS y E2E con Playwright en CI; las vulnerabilidades que esos tests encontraron se corrigieron antes de salir.",
     },
     "club-adip": {
       period: "2023",

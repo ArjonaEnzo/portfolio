@@ -28,7 +28,7 @@ export default function About() {
             at a technical high school, trained at the{" "}
             <span className="font-medium">Henry</span> bootcamp and am now
             finishing a degree in software development. Since 2023 I&apos;ve
-            shipped work for clients and agencies, and in 2026 I built and
+            shipped work for clients and agencies, and I built and
             launched <span className="font-medium">MyRent</span>, a
             rental-management SaaS that landlords use every day.
           </p>
@@ -52,7 +52,7 @@ export default function About() {
             escuela técnica, me formé en el bootcamp de{" "}
             <span className="font-medium">Henry</span> y hoy estoy terminando
             la tecnicatura en desarrollo de software. Desde 2023 trabajo para
-            clientes y agencias, y en 2026 construí y lancé{" "}
+            clientes y agencias, y construí y lancé{" "}
             <span className="font-medium">MyRent</span>, un SaaS de gestión de
             alquileres que propietarios usan todos los días.
           </p>
