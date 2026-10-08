@@ -51,30 +51,3 @@ export const linksESP = [
     hash: "#contact",
   },
 ] as const;
-
-
-
-export const skillsData = [
-  "HTML",
-  "CSS",
-  "JavaScript",
-  "TypeScript",
-  "React",
-  "Next.js",
-  "Node.js",
-  "Tailwind CSS",
-  "Bootstrap",
-  "WordPress",
-  "Elementor",
-  "WooCommerce",
-  "Git",
-  "Redux",
-  "Express",
-  "Nest.js",
-  "PostgreSQL",
-  "MySQL",
-  "MongoDB",
-  "Framer Motion",
-] as const;
-
-
