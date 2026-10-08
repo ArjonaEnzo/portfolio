@@ -16,12 +16,26 @@ export default function LanguageContextProvider({
   children,
 }: LanguageContextProviderProps) {
   const [language, setLanguage] = React.useState<Language>("ESP");
+
+  // Restore the visitor's last choice (default stays Spanish).
+  React.useEffect(() => {
+    try {
+      const stored = window.localStorage.getItem("language");
+      if (stored === "ENG" || stored === "ESP") setLanguage(stored);
+    } catch {}
+  }, []);
+
+  // Keep <html lang> in sync for screen readers and search engines.
+  React.useEffect(() => {
+    document.documentElement.lang = language === "ENG" ? "en" : "es";
+  }, [language]);
+
   const toggleLanguage = () => {
-    if (language === "ESP") {
-      setLanguage("ENG");
-    } else {
-      setLanguage("ESP");
-    }
+    const next: Language = language === "ESP" ? "ENG" : "ESP";
+    setLanguage(next);
+    try {
+      window.localStorage.setItem("language", next);
+    } catch {}
   };
   return (
     <LanguageContext.Provider value={{ language, toggleLanguage }}>
