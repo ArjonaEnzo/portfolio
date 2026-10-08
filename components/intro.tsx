@@ -35,7 +35,9 @@ export default function Intro() {
           >
             <Image
               src="https://res.cloudinary.com/ddtjwx08b/image/upload/v1697323330/Enzo.jpg"
-              alt={isEnglish ? "Portrait of Enzo Arjona" : "Retrato de Enzo Arjona"}
+              alt={
+                isEnglish ? "Portrait of Enzo Arjona" : "Retrato de Enzo Arjona"
+              }
               width="250"
               height="250"
               quality="95"
@@ -48,7 +50,12 @@ export default function Intro() {
             aria-hidden="true"
             initial={{ opacity: 0, scale: 0 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ type: "spring", stiffness: 125, delay: 0.1, duration: 0.7 }}
+            transition={{
+              type: "spring",
+              stiffness: 125,
+              delay: 0.1,
+              duration: 0.7,
+            }}
           >
             👋
           </motion.span>
@@ -63,11 +70,19 @@ export default function Intro() {
         <h1 className="text-3xl sm:text-5xl font-bold tracking-tight !leading-tight">
           {isEnglish ? (
             <>
-              Hi, I&apos;m <span className="text-frieren-700 dark:text-fern-300">Enzo Arjona</span>.
+              Hi, I&apos;m{" "}
+              <span className="text-frieren-700 dark:text-fern-300">
+                Enzo Arjona
+              </span>
+              .
             </>
           ) : (
             <>
-              Hola, soy <span className="text-frieren-700 dark:text-fern-300">Enzo Arjona</span>.
+              Hola, soy{" "}
+              <span className="text-frieren-700 dark:text-fern-300">
+                Enzo Arjona
+              </span>
+              .
             </>
           )}
         </h1>
@@ -75,20 +90,27 @@ export default function Intro() {
         <p className="mt-3 text-lg sm:text-2xl font-semibold text-frieren-900 dark:text-white/90">
           {isEnglish ? "Full-Stack Developer" : "Desarrollador Full-Stack"}
           <span className="text-frieren-500 dark:text-fern-400 font-medium">
-            {" "}· Next.js, TypeScript, PostgreSQL
+            {" "}
+            · Next.js, TypeScript, PostgreSQL
           </span>
         </p>
 
         <p className="mt-5 text-base sm:text-lg leading-relaxed text-frieren-900/90 dark:text-white/80 text-pretty max-w-[40rem] mx-auto">
           {isEnglish ? (
             <>
-              I build and run <span className="font-semibold">SaaS products in production</span>:
-              from the data model and auth to payments, PDFs and automated billing.
+              I build and run{" "}
+              <span className="font-semibold">SaaS products in production</span>
+              : from the data model and auth to payments, PDFs and automated
+              billing.
             </>
           ) : (
             <>
-              Construyo y mantengo <span className="font-semibold">productos SaaS en producción</span>:
-              del modelo de datos y el auth a los pagos, los PDFs y la facturación automática.
+              Construyo y mantengo{" "}
+              <span className="font-semibold">
+                productos SaaS en producción
+              </span>
+              : del modelo de datos y el auth a los pagos, los PDFs y la
+              facturación automática.
             </>
           )}
         </p>
@@ -104,53 +126,57 @@ export default function Intro() {
         initial={{ opacity: 0, y: 100 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
-        className="flex flex-wrap items-center justify-center gap-3 px-4 text-lg font-medium"
+        className="flex flex-col sm:flex-row items-center justify-center gap-3 px-4 text-base sm:text-lg font-medium"
       >
-        <Link
-          href="#contact"
-          className="group bg-frieren-800/80 text-frieren-50 px-7 py-3 flex items-center gap-2 rounded-full outline-none focus:scale-100 hover:scale-105 hover:bg-frieren-900/80 active:scale-105 transition dark:bg-fern-700 dark:text-white"
-          onClick={() => {
-            setActiveSection("Contact");
-            setTimeOfLastClick(Date.now());
-          }}
-        >
-          {isEnglish ? "Contact me" : "Contactame"}
-          <BsArrowRight
-            className="opacity-70 group-hover:translate-x-1 transition"
-            aria-hidden="true"
-          />
-        </Link>
+        <div className="flex items-center gap-3">
+          <Link
+            href="#contact"
+            className="group bg-frieren-800/80 text-frieren-50 px-5 sm:px-7 py-3 flex items-center gap-2 whitespace-nowrap rounded-full outline-none focus:scale-100 hover:scale-105 hover:bg-frieren-900/80 active:scale-105 transition dark:bg-fern-700 dark:text-white"
+            onClick={() => {
+              setActiveSection("Contact");
+              setTimeOfLastClick(Date.now());
+            }}
+          >
+            {isEnglish ? "Contact me" : "Contactame"}
+            <BsArrowRight
+              className="opacity-70 group-hover:translate-x-1 transition"
+              aria-hidden="true"
+            />
+          </Link>
 
-        <a
-          href={CV_PATH}
-          download
-          className="group bg-frieren-50/70 text-frieren-900 px-7 py-3 flex items-center gap-2 rounded-full outline-none focus:scale-100 hover:scale-105 active:scale-105 transition border border-frieren-200/60 dark:bg-white/10 dark:text-white/80 dark:border-white/10"
-        >
-          {isEnglish ? "Download CV" : "Descargar CV"}
-          <HiDownload
-            className="opacity-70 group-hover:translate-y-0.5 transition"
-            aria-hidden="true"
-          />
-        </a>
+          <a
+            href={CV_PATH}
+            download
+            className="group bg-frieren-50/70 text-frieren-900 px-5 sm:px-7 py-3 flex items-center gap-2 whitespace-nowrap rounded-full outline-none focus:scale-100 hover:scale-105 active:scale-105 transition border border-frieren-200/60 dark:bg-white/10 dark:text-white/80 dark:border-white/10"
+          >
+            {isEnglish ? "Download CV" : "Descargar CV"}
+            <HiDownload
+              className="opacity-70 group-hover:translate-y-0.5 transition"
+              aria-hidden="true"
+            />
+          </a>
+        </div>
 
-        <a
-          href={SITE.linkedin}
-          target="_blank"
-          aria-label="LinkedIn"
-          rel="noopener noreferrer"
-          className="bg-frieren-50/50 p-4 text-frieren-700 flex items-center gap-2 text-[1.35rem] rounded-full focus:scale-[1.15] hover:scale-[1.15] hover:text-frieren-950 active:scale-105 transition cursor-pointer border border-frieren-200/60 dark:bg-white/10 dark:text-white/60 dark:border-white/10"
-        >
-          <BsLinkedin aria-hidden="true" />
-        </a>
-        <a
-          href={SITE.github}
-          target="_blank"
-          aria-label="GitHub"
-          rel="noopener noreferrer"
-          className="bg-frieren-50/50 p-4 text-frieren-700 flex items-center gap-2 text-[1.35rem] rounded-full focus:scale-[1.15] hover:scale-[1.15] hover:text-frieren-950 active:scale-105 transition cursor-pointer border border-frieren-200/60 dark:bg-white/10 dark:text-white/60 dark:border-white/10"
-        >
-          <BsGithub aria-hidden="true" />
-        </a>
+        <div className="flex items-center gap-3">
+          <a
+            href={SITE.linkedin}
+            target="_blank"
+            aria-label="LinkedIn"
+            rel="noopener noreferrer"
+            className="bg-frieren-50/50 p-4 text-frieren-700 flex items-center gap-2 text-[1.35rem] rounded-full focus:scale-[1.15] hover:scale-[1.15] hover:text-frieren-950 active:scale-105 transition cursor-pointer border border-frieren-200/60 dark:bg-white/10 dark:text-white/60 dark:border-white/10"
+          >
+            <BsLinkedin aria-hidden="true" />
+          </a>
+          <a
+            href={SITE.github}
+            target="_blank"
+            aria-label="GitHub"
+            rel="noopener noreferrer"
+            className="bg-frieren-50/50 p-4 text-frieren-700 flex items-center gap-2 text-[1.35rem] rounded-full focus:scale-[1.15] hover:scale-[1.15] hover:text-frieren-950 active:scale-105 transition cursor-pointer border border-frieren-200/60 dark:bg-white/10 dark:text-white/60 dark:border-white/10"
+          >
+            <BsGithub aria-hidden="true" />
+          </a>
+        </div>
       </motion.div>
     </section>
   );

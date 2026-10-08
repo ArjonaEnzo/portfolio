@@ -22,7 +22,7 @@ export default function ThemeSwitch() {
       type="button"
       aria-label={label}
       title={label}
-      className="fixed bottom-5 right-5 bg-frieren-600 w-[3rem] h-[3rem] bg-opacity-80 backdrop-blur-[0.5rem] border border-frieren-600 border-opacity-40 shadow-2xl rounded-full flex items-center justify-center hover:scale-[1.15] active:scale-105 transition-all dark:bg-fern-700 dark:border-fern-700"
+      className="fixed bottom-4 right-4 bg-frieren-600 w-[2.5rem] h-[2.5rem] md:bottom-5 md:right-5 md:w-[3rem] md:h-[3rem] bg-opacity-80 backdrop-blur-[0.5rem] border border-frieren-600 border-opacity-40 shadow-2xl rounded-full flex items-center justify-center hover:scale-[1.15] active:scale-105 transition-all dark:bg-fern-700 dark:border-fern-700"
       onClick={toggleTheme}
     >
       {theme === "light" ? (
