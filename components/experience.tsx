@@ -1,177 +1,120 @@
 "use client";
-import React, { useRef, useLayoutEffect } from "react";
-import { motion, useMotionValue } from "framer-motion";
+import React from "react";
+import { motion } from "framer-motion";
+import { CgWorkAlt } from "react-icons/cg";
+import { LuGraduationCap } from "react-icons/lu";
 import { SectionHeading } from "./section-heading";
-import { experiencesData, experiencesDataEsp } from "@/lib/data";
+import {
+  experienceData,
+  experienceLabels,
+  type ExperienceItem,
+  type ExperienceKind,
+} from "@/lib/experience";
 import { useSectionInView } from "@/lib/hooks";
 import { useLanguage } from "@/context/language-context";
-import { useTheme } from "@/context/theme-context";
 
-const CARD_WIDTH = 384; // w-[24rem]
-const CARD_GAP = 32; // gap-8
-const PADDING_X = 96; // pl-12 (48) + pr-12 (48)
-const SPACER_WIDTH = 48; // w-12 spacer after last card
-const NUM_CARDS = experiencesData.length;
-const TOTAL_WIDTH = NUM_CARDS * CARD_WIDTH + (NUM_CARDS - 1) * CARD_GAP; // 2880
+function ExperienceColumn({
+  kind,
+  title,
+  items,
+  currentLabel,
+}: {
+  kind: ExperienceKind;
+  title: string;
+  items: readonly ExperienceItem[];
+  currentLabel: string;
+}) {
+  const Icon = kind === "work" ? CgWorkAlt : LuGraduationCap;
 
-// Full flex content width (cards + gaps + padding + spacer): 2880 + 96 + 48 = 3024px
-// SSR CSS fallback: section extra height = SECTION_OFFSET - 100vw
-// JS: setHeight() measures contentRef.scrollWidth directly (ground truth).
-const SECTION_OFFSET = TOTAL_WIDTH + PADDING_X + SPACER_WIDTH + 32; // 3056
+  return (
+    <div>
+      <h3 className="mb-6 flex items-center gap-2 text-lg font-semibold text-frieren-900 dark:text-white/90">
+        <span className="flex h-8 w-8 items-center justify-center rounded-full bg-frieren-600 text-white dark:bg-fern-600">
+          <Icon aria-hidden="true" />
+        </span>
+        {title}
+      </h3>
+
+      <ol className="relative ml-4 border-l border-frieren-300/70 dark:border-fern-700">
+        {items.map((item, index) => (
+          <motion.li
+            key={`${item.organization}-${item.period}`}
+            className="relative mb-8 pl-6 last:mb-0"
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-40px" }}
+            transition={{ duration: 0.45, delay: index * 0.05 }}
+          >
+            <span
+              aria-hidden="true"
+              className="absolute -left-[0.4rem] top-2 h-3 w-3 rounded-full border-2 border-frieren-50 bg-frieren-600 dark:border-[#0d0a1a] dark:bg-fern-400"
+            />
+            <div className="rounded-2xl border border-black/5 bg-frieren-800 p-5 text-white shadow-md shadow-frieren-900/10 dark:border-white/5 dark:bg-fern-900">
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+                <p className="text-xs font-medium uppercase tracking-widest text-white/75">
+                  {item.period}
+                </p>
+                {item.current && (
+                  <span className="rounded-full bg-white/15 px-2 py-0.5 text-[0.65rem] font-semibold uppercase tracking-wider text-white">
+                    {currentLabel}
+                  </span>
+                )}
+              </div>
+              <h4 className="mt-1 text-base font-semibold leading-snug text-white text-balance">
+                {item.role}
+              </h4>
+              <p className="text-sm font-medium text-white/70">
+                {item.organization}
+                {item.location ? ` · ${item.location}` : ""}
+              </p>
+              {item.highlights.length > 0 && (
+                <ul className="mt-3 space-y-1.5 text-sm leading-relaxed text-white/80">
+                  {item.highlights.map((text) => (
+                    <li key={text} className="flex gap-2">
+                      <span aria-hidden="true" className="mt-[0.55rem] h-1 w-1 flex-shrink-0 rounded-full bg-white/60" />
+                      <span>{text}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          </motion.li>
+        ))}
+      </ol>
+    </div>
+  );
+}
 
 export default function Experience() {
   const { language } = useLanguage();
-  const { theme } = useTheme();
+  const labels = experienceLabels[language];
   const sectionName = language === "ENG" ? "Experience" : "Experiencia";
-  const { ref: sectionRef } = useSectionInView(sectionName, 0.1);
-  const experience = language === "ENG" ? experiencesData : experiencesDataEsp;
-  const isDark = theme === "dark";
+  const { ref } = useSectionInView(sectionName, 0.2);
 
-  const targetRef = useRef<HTMLDivElement>(null);
-  const contentRef = useRef<HTMLDivElement>(null);
-  const x = useMotionValue(0);
-
-  useLayoutEffect(() => {
-    const el = targetRef.current;
-    if (!el) return;
-
-    // maxSlide = actual content scrollWidth − container width.
-    // scrollWidth is the ground truth: it measures the real DOM including the
-    // spacer div, gaps, and padding — no reliance on compile-time constants.
-    let maxSlide = 0;
-
-    const setHeight = () => {
-      const cw = el.offsetWidth; // actual rendered container width
-      const contentW = contentRef.current?.scrollWidth ?? (TOTAL_WIDTH + PADDING_X + SPACER_WIDTH);
-      maxSlide = Math.max(0, contentW - cw);
-      // window.innerHeight (JS pixels) avoids CSS 100vh ambiguity on mobile/zoom.
-      el.style.height = `${window.innerHeight + maxSlide}px`;
-    };
-
-    // Pure read — no DOM writes. getBoundingClientRect().top for a static block
-    // element is a cheap cache read when no layout mutations are pending.
-    // top = 0   → sticky starts  (progress 0 → x 0)
-    // top = -maxSlide → sticky ends (progress 1 → x -maxSlide, last card visible)
-    const onScroll = () => {
-      if (maxSlide <= 0) { x.set(0); return; }
-      const top = el.getBoundingClientRect().top;
-      const progress = Math.max(0, Math.min(1, -top / maxSlide));
-      x.set(-progress * maxSlide);
-    };
-
-    const onResize = () => { setHeight(); onScroll(); };
-
-    setHeight(); // run synchronously before first paint
-    onScroll();  // initialise x
-
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onResize, { passive: true });
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onResize);
-    };
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-  const cardStyle: React.CSSProperties = isDark
-    ? { background: "#362d49", border: "1px solid #2d263b" }
-    : { background: "#533b75", border: "1px solid #43315e" };
-
-  const iconStyle: React.CSSProperties = isDark
-    ? { background: "#50416d", color: "#f4f3f7" }
-    : { background: "#7a5caa", color: "#f4f3f7" };
+  const items = experienceData[language];
+  const work = items.filter((i) => i.kind === "work");
+  const education = items.filter((i) => i.kind === "education");
 
   return (
     <section
       id="experience"
-      ref={sectionRef}
-      className="scroll-mt-28 mb-8 sm:mb-12 w-full"
+      ref={ref}
+      className="scroll-mt-28 mb-28 w-full max-w-[72rem] px-0 sm:px-4 sm:mb-40"
     >
-      {/* Desktop: sticky horizontal scroll
-          setHeight() computes: maxSlide = contentWidth − containerWidth
-          then sets el.style.height = window.innerHeight + maxSlide (px, no CSS calc).
-          The JSX style is the SSR/first-paint fallback only; JS overrides it before paint.
-      */}
-      <div
-        ref={targetRef}
-        className="hidden md:block"
-        style={{
-          height: `max(100vh, calc(100vh - 100vw + ${SECTION_OFFSET}px))`,
-        }}
-      >
-        <div className="sticky top-0 h-screen flex flex-col justify-center overflow-hidden">
-          <div className="mb-8 text-center">
-            <SectionHeading>
-              {language === "ENG" ? "My experience" : "Mi experiencia"}
-            </SectionHeading>
-          </div>
-          <motion.div ref={contentRef} style={{ x }} className="flex gap-8 pl-12 pr-12">
-            {experience.map((item, index) => (
-              <div
-                key={index}
-                className="w-[24rem] flex-shrink-0 rounded-2xl p-6 flex flex-col gap-3"
-                style={cardStyle}
-              >
-                <div
-                  className="w-10 h-10 rounded-full flex items-center justify-center text-lg flex-shrink-0"
-                  style={iconStyle}
-                >
-                  {item.icon}
-                </div>
-                <p className="text-xs text-white/75 font-medium tracking-widest uppercase">
-                  {item.date}
-                </p>
-                <h3 className="text-base font-semibold text-white capitalize leading-snug text-balance">
-                  {item.title}
-                </h3>
-                <p className="text-sm text-white/60 font-medium">
-                  {item.location}
-                </p>
-                <p className="text-sm text-white/70 leading-relaxed mt-auto">
-                  {item.description}
-                </p>
-              </div>
-            ))}
-            {/* Spacer: guarantees the last card has breathing room at max scroll */}
-            <div className="w-12 flex-shrink-0" aria-hidden="true" />
-          </motion.div>
-        </div>
-      </div>
-
-      {/* Mobile: vertical list */}
-      <div className="md:hidden">
-        <SectionHeading>
-          {language === "ENG" ? "My experience" : "Mi experiencia"}
-        </SectionHeading>
-        <div className="flex flex-col gap-6 px-4">
-          {experience.map((item, index) => (
-            <div
-              key={index}
-              className="rounded-2xl p-6 flex flex-col gap-3"
-              style={cardStyle}
-            >
-              <div className="flex items-center gap-3">
-                <div
-                  className="w-9 h-9 rounded-full flex items-center justify-center text-base flex-shrink-0"
-                  style={iconStyle}
-                >
-                  {item.icon}
-                </div>
-                <p className="text-xs text-white/75 font-medium tracking-widest uppercase">
-                  {item.date}
-                </p>
-              </div>
-              <h3 className="text-base font-semibold text-white capitalize leading-snug text-balance">
-                {item.title}
-              </h3>
-              <p className="text-sm text-white/60 font-medium">
-                {item.location}
-              </p>
-              <p className="text-sm text-white/70 leading-relaxed">
-                {item.description}
-              </p>
-            </div>
-          ))}
-        </div>
+      <SectionHeading>{labels.heading}</SectionHeading>
+      <div className="grid gap-12 lg:grid-cols-[3fr_2fr] lg:gap-10">
+        <ExperienceColumn
+          kind="work"
+          title={labels.work}
+          items={work}
+          currentLabel={labels.current}
+        />
+        <ExperienceColumn
+          kind="education"
+          title={labels.education}
+          items={education}
+          currentLabel={labels.current}
+        />
       </div>
     </section>
   );
