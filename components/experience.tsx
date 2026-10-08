@@ -117,7 +117,7 @@ export default function Experience() {
                 >
                   {item.icon}
                 </div>
-                <p className="text-xs text-white/50 font-medium tracking-widest uppercase">
+                <p className="text-xs text-white/75 font-medium tracking-widest uppercase">
                   {item.date}
                 </p>
                 <h3 className="text-base font-semibold text-white capitalize leading-snug text-balance">
@@ -156,7 +156,7 @@ export default function Experience() {
                 >
                   {item.icon}
                 </div>
-                <p className="text-xs text-white/50 font-medium tracking-widest uppercase">
+                <p className="text-xs text-white/75 font-medium tracking-widest uppercase">
                   {item.date}
                 </p>
               </div>

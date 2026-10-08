@@ -7,12 +7,18 @@ import EN from "@/public/EN.png";
 
 export default function LanguageSwitch() {
   const { language, toggleLanguage } = useLanguage();
+  const label =
+    language === "ESP" ? "Switch to English" : "Cambiar a español";
+
   return (
-    <div
+    <button
+      type="button"
       onClick={toggleLanguage}
+      aria-label={label}
+      title={label}
       className="fixed bottom-20 md:top-5 right-5 w-[3rem] h-[3rem] bg-opacity-80 backdrop-blur-[0.5rem] border border-frieren-400 border-opacity-40 dark:border-fern-700 dark:border-opacity-60 shadow-2xl rounded-full flex items-center justify-center hover:scale-[1.15] active:scale-105 transition-all cursor-pointer"
     >
-      <Image src={language === "ESP" ? ES : EN} width={60} alt="Lang" />
-    </div>
+      <Image src={language === "ESP" ? ES : EN} width={60} alt="" />
+    </button>
   );
 }

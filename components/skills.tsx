@@ -51,7 +51,7 @@ export default function Skills() {
               }}
               custom={index}
             >
-              {Icon && <Icon className="text-base opacity-80" />}
+              {Icon && <Icon className="text-base opacity-80" aria-hidden="true" />}
               {skill}
             </motion.li>
           );
