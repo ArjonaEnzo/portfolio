@@ -2,13 +2,15 @@
 
 > Estado vivo del proyecto. Leer al abrir una sesión, actualizar al cerrar. Fechas absolutas.
 
-**Última actualización:** 2026-10-08
+**Última actualización:** 2026-10-27
 
 ## 👉 AHORA
 
 Rework completo hecho en `main` local (12 commits sobre `origin/main`, **sin pushear**). Build, type-check, lint verdes; Lighthouse mobile local: a11y 100 · SEO 100 · best practices 96 (el único fallo es el 400 de `next/image` por capturas de MyRent aún ausentes).
 
-**EL próximo paso:** Enzo revisa en local (`npm run build && npm run start`) y da OK → `git push origin main` → Vercel deploya. Antes del push conviene que estén en `public/` el CV (`cv-enzo-arjona.pdf`) y las capturas de MyRent (`public/projects/myrent/*.webp`), si no el botón CV y la card de MyRent muestran 404 en imagen/PDF.
+**Pendiente de la sesión anterior (2026-10-08):** el agente que debía sacar las capturas de MyRent en local (Supabase local + seed + Playwright) **se cortó sin producir nada** — `public/projects/myrent/` no existe. `lib/projects.ts` ya referencia `myrent-dashboard-light.webp`, `myrent-leases-light.webp`, `myrent-receipt-light.webp`, `myrent-payments-light.webp`, `myrent-dashboard-dark.webp` → hoy la card de MyRent muestra imagen rota. Los 3 docs de `docs/` (AUDITORIA, PLAN, PROMPT-MAESTRO) están **sin commitear a propósito** (mencionan proyectos privados; repo público).
+
+**EL próximo paso:** sacar las 5 capturas de MyRent (sesión nueva, ver prompt en el log del Brain 2026-10-27) → commit `feat(projects): add MyRent screenshots` → Enzo revisa en local (`npm run build && npm run start`) y da OK → `git push origin main` → Vercel deploya. Antes del push conviene que estén en `public/` el CV (`cv-enzo-arjona.pdf`) y las capturas de MyRent (`public/projects/myrent/*.webp`), si no el botón CV y la card de MyRent muestran 404 en imagen/PDF.
 
 ## Tareas de Enzo
 
@@ -34,7 +36,8 @@ Auditoría en `docs/AUDITORIA-2026-10-07.md`, plan en `docs/PLAN-2026-10-08.md`.
 9. `fix(ui)` — nav mobile con fade, controles flotantes compactos, CTAs del hero.
 10. `content(contact)` — ES rioplatense + labels.
 11. `docs` — CLAUDE.md + este STATUS.
-12. `feat(projects): add MyRent screenshots` — ver sección siguiente.
+12. `content: keep MyRent claims to 'real customers'…` — se bajó "clientes que pagan" a "clientes reales" (Brain 2026-10-07: MyRent sin usuarios pagos) y fecha de inicio alineada con LinkedIn (Jul 2025).
+13. ❌ PENDIENTE `feat(projects): add MyRent screenshots`.
 
 ## Fuera de alcance / próximo
 
