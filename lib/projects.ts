@@ -63,6 +63,7 @@ const base: readonly ProjectBase[] = [
       "/projects/myrent/myrent-receipt-light.webp",
       "/projects/myrent/myrent-payments-light.webp",
       "/projects/myrent/myrent-dashboard-dark.webp",
+      "/projects/myrent/myrent-landing-light.webp",
     ],
   },
   {
