@@ -29,6 +29,8 @@ import {
   SiRedux,
   SiMui,
   SiDocker,
+  SiPhp,
+  SiWoocommerce,
 } from "react-icons/si";
 import { TbBrandFramerMotion, TbShieldLock, TbMail } from "react-icons/tb";
 import type { Language } from "./projects";
@@ -70,8 +72,9 @@ export const skillGroups: readonly SkillGroup[] = [
       { name: "PostgreSQL", icon: SiPostgresql },
       { name: "Supabase", icon: SiSupabase },
       { name: "Tailwind CSS", icon: SiTailwindcss },
-      { name: "HTML", icon: SiHtml5 },
-      { name: "CSS", icon: SiCss3 },
+      { name: "WordPress", icon: SiWordpress },
+      { name: "PHP", icon: SiPhp },
+      { name: "WooCommerce", icon: SiWoocommerce },
     ],
   },
   {
@@ -84,6 +87,7 @@ export const skillGroups: readonly SkillGroup[] = [
       { name: "Express", icon: SiExpress },
       { name: "MongoDB", icon: SiMongodb },
       { name: "Mercado Pago", icon: SiMercadopago },
+      { name: "Vercel AI SDK" },
       { name: "Resend", icon: TbMail },
       { name: "Vercel", icon: SiVercel },
       { name: "GitHub Actions", icon: SiGithubactions },
@@ -105,8 +109,10 @@ export const skillGroups: readonly SkillGroup[] = [
   {
     id: "more",
     skills: [
-      { name: "WordPress", icon: SiWordpress },
       { name: "Elementor", icon: SiElementor },
+      { name: "Gutenberg" },
+      { name: "HTML", icon: SiHtml5 },
+      { name: "CSS", icon: SiCss3 },
       { name: "Framer Motion", icon: TbBrandFramerMotion },
       { name: "Redux", icon: SiRedux },
       { name: "Material UI", icon: SiMui },

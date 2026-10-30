@@ -67,19 +67,41 @@ const base: readonly ProjectBase[] = [
     ],
   },
   {
-    slug: "club-adip",
-    stack: [
-      "React",
-      "TypeScript",
-      "Nest.js",
-      "PostgreSQL",
-      "TypeORM",
-      "Material UI",
+    slug: "wordpress-sites",
+    stack: ["WordPress", "Elementor", "PHP", "CSS", "Local SEO"],
+    links: [
+      { kind: "live", href: "https://www.omertaconstruction.com/", label: "Omertà Construction" },
+      { kind: "live", href: "https://www.glorisalon.com/", label: "Glori Salon" },
     ],
-    links: [{ kind: "video", href: "https://youtu.be/OWJFsyPq-LQ" }],
-    cover: ADIP_COVER,
-    gallery: [],
+    cover: `${CLOUDINARY}/v1772130206/omerta/Captura-de-pantalla-2026-02-26-123442_f2o9bj.webp`,
+    gallery: [
+      `${CLOUDINARY}/v1772130206/omerta/Captura-de-pantalla-2026-02-26-123442_f2o9bj.webp`,
+      `${CLOUDINARY}/v1772130208/omerta/Captura-de-pantalla-2026-02-26-123630_isdztq.webp`,
+      `${CLOUDINARY}/v1772142432/Puppies/Captura_de_pantalla_2026-02-26_182550_q8jdb2.webp`,
+      `${CLOUDINARY}/v1772142432/Puppies/Captura_de_pantalla_2026-02-26_182617_zieu3d.webp`,
+      `${CLOUDINARY}/v1772155385/Glori/Captura_de_pantalla_2026-02-26_221549_nnjtvn.webp`,
+      `${CLOUDINARY}/v1772155384/Glori/Captura_de_pantalla_2026-02-26_221612_lontw6.webp`,
+    ],
   },
+  // Autos Kbeza is hidden until its pending fixes land (see docs/STATUS.md).
+  // To show it again, uncomment this entry; its copy below is kept.
+  /* {
+    slug: "autos-kbeza",
+    stack: [
+      "Next.js 15",
+      "React 19",
+      "TypeScript",
+      "Tailwind CSS v4",
+      "shadcn/ui",
+      "LLM API",
+      "Zod",
+      "Vitest",
+      "Vercel",
+    ],
+    links: [{ kind: "live", href: "https://autos-kbeza.vercel.app" }],
+    cover: "/projects/kbeza/kbeza-home.png",
+    gallery: [],
+  }, */
   {
     slug: "fisiom-fulness",
     stack: ["Next.js", "Express", "MongoDB", "Mongoose", "Tailwind CSS"],
@@ -94,34 +116,44 @@ const base: readonly ProjectBase[] = [
     ],
   },
   {
-    slug: "wordpress-sites",
-    stack: ["WordPress", "Elementor", "PHP", "CSS", "Local SEO"],
-    // TODO(enzo): add the public URL of each site as { kind: "live", href, label }.
-    links: [],
-    cover: `${CLOUDINARY}/v1772130206/omerta/Captura-de-pantalla-2026-02-26-123442_f2o9bj.webp`,
-    gallery: [
-      `${CLOUDINARY}/v1772130206/omerta/Captura-de-pantalla-2026-02-26-123442_f2o9bj.webp`,
-      `${CLOUDINARY}/v1772130208/omerta/Captura-de-pantalla-2026-02-26-123630_isdztq.webp`,
-      `${CLOUDINARY}/v1772142432/Puppies/Captura_de_pantalla_2026-02-26_182550_q8jdb2.webp`,
-      `${CLOUDINARY}/v1772142432/Puppies/Captura_de_pantalla_2026-02-26_182617_zieu3d.webp`,
-      `${CLOUDINARY}/v1772155385/Glori/Captura_de_pantalla_2026-02-26_221549_nnjtvn.webp`,
-      `${CLOUDINARY}/v1772155384/Glori/Captura_de_pantalla_2026-02-26_221612_lontw6.webp`,
+    slug: "club-adip",
+    stack: [
+      "React",
+      "TypeScript",
+      "Nest.js",
+      "PostgreSQL",
+      "TypeORM",
+      "Material UI",
     ],
+    links: [{ kind: "video", href: "https://youtu.be/OWJFsyPq-LQ" }],
+    cover: ADIP_COVER,
+    gallery: [],
   },
 ];
 
 const copy: Record<Language, Record<string, ProjectCopy>> = {
   ENG: {
     myrent: {
-      period: "2026 — present",
+      period: "2025 — present",
       title: "MyRent",
-      tagline: "Rental-management SaaS for landlords in Argentina. In production with real customers.",
+      tagline: "Rental-management SaaS for landlords in Argentina. In production with its first customer.",
       problem:
         "Landlords and small agencies run rentals on spreadsheets: receipts have legal value and must never change, contracts are re-indexed by ICL/IPC every few months, and payments arrive through cash, transfers and apps with no reconciliation.",
       solution:
         "Multi-tenant platform where every receipt is an immutable snapshot of a real lease, generated as PDF and emailed. Tenants pay online through Mercado Pago and a signed webhook reconciles the payment. A daily cron drafts receipts and reminders. Tenant portal, roles per account, AI assistant and ES/EN UI.",
       impact:
-        "Live at myrent.lat with real customers. Account isolation enforced with Postgres Row Level Security and covered by 500+ unit tests, 129 RLS tests and Playwright E2E in CI; security advisories found by those tests were fixed before shipping.",
+        "Live at myrent.lat with its first customer and in active development. Account isolation enforced with Postgres Row Level Security and covered by 500+ unit tests, 129 RLS tests and Playwright E2E in CI; security advisories found by those tests were fixed before shipping.",
+    },
+    "autos-kbeza": {
+      period: "2026",
+      title: "Autos Kbeza",
+      tagline: "Website, catalog and AI sales assistant for a used-car dealer in Mendoza. Freelance client work.",
+      problem:
+        "The dealer answered the same questions by hand on WhatsApp all day (price, mileage, trade-ins) and had no online catalog to send buyers to.",
+      solution:
+        "Dark, brand-first landing page and catalog plus an AI chat assistant that answers with the real inventory. Landing and assistant share one inventory API. Car cards with a 'Me interesa' button open WhatsApp with the car already written. Layered architecture (AI and messaging adapters behind ports) covered by Vitest.",
+      impact:
+        "Live at autos-kbeza.vercel.app: the assistant filters the actual stock by price, fuel and transmission and sends interested buyers to a salesperson on WhatsApp.",
     },
     "club-adip": {
       period: "2023",
@@ -146,7 +178,7 @@ const copy: Record<Language, Record<string, ProjectCopy>> = {
         "Four months as full-stack developer; the catalog module shipped to the team's staging environment with full CRUD and image galleries.",
     },
     "wordpress-sites": {
-      period: "2024 — present",
+      period: "2024 — 2026",
       title: "Websites for small businesses",
       tagline: "Omertà Construction · Hairy's Puppies World · Glori Salon — built at Dharma Digital Marketing Agency.",
       problem:
@@ -159,15 +191,26 @@ const copy: Record<Language, Record<string, ProjectCopy>> = {
   },
   ESP: {
     myrent: {
-      period: "2026 — presente",
+      period: "2025 — presente",
       title: "MyRent",
-      tagline: "SaaS de gestión de alquileres para propietarios en Argentina. En producción con clientes reales.",
+      tagline: "SaaS de gestión de alquileres para propietarios en Argentina. En producción con su primer cliente.",
       problem:
         "Propietarios e inmobiliarias chicas administran alquileres en planillas: los recibos tienen valor legal y no pueden cambiar, los contratos se ajustan por ICL/IPC cada pocos meses y los pagos llegan por efectivo, transferencia y apps sin conciliación.",
       solution:
         "Plataforma multi-tenant donde cada recibo es un snapshot inmutable de un contrato real, generado en PDF y enviado por email. El inquilino paga online por Mercado Pago y un webhook firmado concilia el pago. Un cron diario genera borradores y recordatorios. Portal del inquilino, roles por cuenta, asistente IA e interfaz ES/EN.",
       impact:
-        "En producción en myrent.lat con clientes reales. Aislamiento entre cuentas con Row Level Security de Postgres, cubierto por más de 500 tests unitarios, 129 tests de RLS y E2E con Playwright en CI; las vulnerabilidades que esos tests encontraron se corrigieron antes de salir.",
+        "En producción en myrent.lat con su primer cliente y en desarrollo activo. Aislamiento entre cuentas con Row Level Security de Postgres, cubierto por más de 500 tests unitarios, 129 tests de RLS y E2E con Playwright en CI; las vulnerabilidades que esos tests encontraron se corrigieron antes de salir.",
+    },
+    "autos-kbeza": {
+      period: "2026",
+      title: "Autos Kbeza",
+      tagline: "Sitio, catálogo y asistente de ventas con IA para una agencia de autos usados de Mendoza. Trabajo freelance para cliente.",
+      problem:
+        "La agencia respondía a mano por WhatsApp las mismas preguntas todo el día (precio, kilómetros, permutas) y no tenía un catálogo online para mandar a los compradores.",
+      solution:
+        "Landing oscura con la identidad de la marca, catálogo y un asistente de chat con IA que responde con el inventario real. Landing y asistente comparten una sola API de inventario. Las tarjetas de auto tienen un botón \"Me interesa\" que abre WhatsApp con el auto ya escrito. Arquitectura por capas (adaptadores de IA y mensajería detrás de puertos) cubierta con Vitest.",
+      impact:
+        "En producción en autos-kbeza.vercel.app: el asistente filtra el stock real por precio, combustible y transmisión y deriva los interesados a un vendedor por WhatsApp.",
     },
     "club-adip": {
       period: "2023",
@@ -192,7 +235,7 @@ const copy: Record<Language, Record<string, ProjectCopy>> = {
         "Cuatro meses como desarrollador full-stack; el módulo de catálogo quedó en el staging del equipo con CRUD completo y galerías de imágenes.",
     },
     "wordpress-sites": {
-      period: "2024 — presente",
+      period: "2024 — 2026",
       title: "Sitios web para pymes",
       tagline: "Omertà Construction · Hairy's Puppies World · Glori Salon — hechos en Dharma Digital Marketing Agency.",
       problem:

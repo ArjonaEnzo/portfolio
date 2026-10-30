@@ -27,10 +27,10 @@ export default function About() {
             I&apos;m a full-stack developer from Mendoza, Argentina. I started
             at a technical high school, trained at the{" "}
             <span className="font-medium">Henry</span> bootcamp and am now
-            finishing a degree in software development. Since 2023 I&apos;ve
+            finishing a degree in software development. Since 2022 I&apos;ve
             shipped work for clients and agencies, and I built and
             launched <span className="font-medium">MyRent</span>, a
-            rental-management SaaS that landlords use every day.
+            rental-management SaaS now live with its first customer.
           </p>
           <p className="mb-3 text-pretty leading-relaxed">
             I care about the parts that make software trustworthy:{" "}
@@ -51,10 +51,10 @@ export default function About() {
             Soy desarrollador full-stack de Mendoza, Argentina. Arranqué en una
             escuela técnica, me formé en el bootcamp de{" "}
             <span className="font-medium">Henry</span> y hoy estoy terminando
-            la tecnicatura en desarrollo de software. Desde 2023 trabajo para
+            la tecnicatura en desarrollo de software. Desde 2022 trabajo para
             clientes y agencias, y construí y lancé{" "}
             <span className="font-medium">MyRent</span>, un SaaS de gestión de
-            alquileres que propietarios usan todos los días.
+            alquileres que ya está en producción con su primer cliente.
           </p>
           <p className="mb-3 text-pretty leading-relaxed">
             Me importa lo que hace confiable al software:{" "}

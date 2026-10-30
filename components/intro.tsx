@@ -64,7 +64,7 @@ export default function Intro() {
 
       <motion.div
         className="mt-6 mb-8 px-4"
-        initial={{ opacity: 0, y: 100 }}
+        initial={false}
         animate={{ opacity: 1, y: 0 }}
       >
         <h1 className="text-3xl sm:text-5xl font-bold tracking-tight !leading-tight">
@@ -91,7 +91,7 @@ export default function Intro() {
           {isEnglish ? "Full-Stack Developer" : "Desarrollador Full-Stack"}
           <span className="text-frieren-500 dark:text-fern-400 font-medium">
             {" "}
-            · Next.js, TypeScript, PostgreSQL
+            · Next.js, TypeScript, WordPress
           </span>
         </p>
 
@@ -99,7 +99,7 @@ export default function Intro() {
           {isEnglish ? (
             <>
               I build and run{" "}
-              <span className="font-semibold">SaaS products in production</span>
+              <span className="font-semibold">a SaaS product in production</span>
               : from the data model and auth to payments, PDFs and automated
               billing.
             </>
@@ -107,7 +107,7 @@ export default function Intro() {
             <>
               Construyo y mantengo{" "}
               <span className="font-semibold">
-                productos SaaS en producción
+                un SaaS en producción
               </span>
               : del modelo de datos y el auth a los pagos, los PDFs y la
               facturación automática.
@@ -123,9 +123,8 @@ export default function Intro() {
       </motion.div>
 
       <motion.div
-        initial={{ opacity: 0, y: 100 }}
+        initial={false}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1 }}
         className="flex flex-col sm:flex-row items-center justify-center gap-3 px-4 text-base sm:text-lg font-medium"
       >
         <div className="flex items-center gap-3">

@@ -26,8 +26,8 @@ export const Projects = () => {
       <SectionHeading>{isEnglish ? "Projects" : "Proyectos"}</SectionHeading>
       <p className="-mt-4 mb-10 text-center text-frieren-800 dark:text-white/70 max-w-[40rem] mx-auto">
         {isEnglish
-          ? "Real products with real users. Each card shows the problem, what I built and the result."
-          : "Productos reales con usuarios reales. Cada card muestra el problema, qué construí y el resultado."}
+          ? "Real projects: in production, for clients and in teams. Each card shows the problem, what I built and the result."
+          : "Proyectos reales: en producción, para clientes y en equipo. Cada card muestra el problema, qué construí y el resultado."}
       </p>
 
       <div className="flex flex-col gap-8">

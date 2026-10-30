@@ -43,7 +43,7 @@ export const experienceData: Record<Language, readonly ExperienceItem[]> = {
       location: "Mendoza, Argentina · remote",
       current: true,
       highlights: [
-        "Designed, built and run a multi-tenant rental-management SaaS now in production with real customers (Next.js 15, TypeScript, Supabase/PostgreSQL).",
+        "Designed, built and run a multi-tenant rental-management SaaS now in production with its first customer (Next.js 15, TypeScript, Supabase/PostgreSQL).",
         "Enforced account isolation with Row Level Security, integrated Mercado Pago with signed, idempotent webhooks, and automated billing with cron jobs and immutable PDF receipts.",
         "Set up CI with type-check, 500+ unit tests, RLS integration tests, Playwright E2E and security gates (secret scanning, dependency audit).",
       ],
@@ -52,12 +52,11 @@ export const experienceData: Record<Language, readonly ExperienceItem[]> = {
       kind: "work",
       role: "WordPress Developer",
       organization: "Dharma Digital Marketing Agency",
-      period: "Aug 2024 — present",
-      location: "Remote",
-      current: true,
+      period: "Aug 2024 — Jul 2026",
+      location: "Miami, US · remote",
       highlights: [
-        "Build and maintain client websites with WordPress, Elementor and custom CSS/JavaScript.",
-        "Deliver landing pages optimized for mobile speed and local SEO for small businesses in the US.",
+        "Built and maintained client websites with WordPress, Elementor, custom PHP and CSS/JavaScript, across many client accounts at once.",
+        "Delivered landing pages optimized for mobile speed and local SEO for small businesses in the US.",
       ],
     },
     {
@@ -82,12 +81,22 @@ export const experienceData: Record<Language, readonly ExperienceItem[]> = {
       ],
     },
     {
+      kind: "work",
+      role: "WordPress Developer",
+      organization: "NOTAKE",
+      period: "Sep 2022 — Jan 2023",
+      location: "Mendoza, Argentina · remote",
+      highlights: [
+        "Built the brand's e-commerce store with WordPress, WooCommerce and custom PHP, including custom product pages.",
+      ],
+    },
+    {
       kind: "education",
       role: "Higher Technician in Software Development",
       organization: "IES 9-021 Tecnológico Junín",
       period: "2024 — present",
       current: true,
-      highlights: ["Third year of a three-year degree."],
+      highlights: ["Final (third) year."],
     },
     {
       kind: "education",
@@ -115,7 +124,7 @@ export const experienceData: Record<Language, readonly ExperienceItem[]> = {
       location: "Mendoza, Argentina · remoto",
       current: true,
       highlights: [
-        "Diseñé, construí y mantengo un SaaS multi-tenant de gestión de alquileres, hoy en producción con clientes reales (Next.js 15, TypeScript, Supabase/PostgreSQL).",
+        "Diseñé, construí y mantengo un SaaS multi-tenant de gestión de alquileres, hoy en producción con su primer cliente (Next.js 15, TypeScript, Supabase/PostgreSQL).",
         "Aislamiento entre cuentas con Row Level Security, integración con Mercado Pago vía webhooks firmados e idempotentes, facturación automática con cron y recibos PDF inmutables.",
         "CI con type-check, más de 500 tests unitarios, tests de integración de RLS, E2E con Playwright y gates de seguridad (escaneo de secretos, auditoría de dependencias).",
       ],
@@ -124,11 +133,10 @@ export const experienceData: Record<Language, readonly ExperienceItem[]> = {
       kind: "work",
       role: "Desarrollador WordPress",
       organization: "Dharma Digital Marketing Agency",
-      period: "Ago 2024 — presente",
-      location: "Remoto",
-      current: true,
+      period: "Ago 2024 — Jul 2026",
+      location: "Miami, EE.UU. · remoto",
       highlights: [
-        "Construyo y mantengo sitios de clientes con WordPress, Elementor y CSS/JavaScript a medida.",
+        "Construí y mantuve sitios de clientes con WordPress, Elementor, PHP a medida y CSS/JavaScript, con muchas cuentas de clientes en paralelo.",
         "Landing pages optimizadas para velocidad en móvil y SEO local para pymes de Estados Unidos.",
       ],
     },
@@ -154,12 +162,22 @@ export const experienceData: Record<Language, readonly ExperienceItem[]> = {
       ],
     },
     {
+      kind: "work",
+      role: "Desarrollador WordPress",
+      organization: "NOTAKE",
+      period: "Sep 2022 — Ene 2023",
+      location: "Mendoza, Argentina · remoto",
+      highlights: [
+        "Construí la tienda online de la marca con WordPress, WooCommerce y PHP a medida, con páginas de producto personalizadas.",
+      ],
+    },
+    {
       kind: "education",
       role: "Tecnicatura Superior en Desarrollo de Software",
       organization: "IES 9-021 Tecnológico Junín",
       period: "2024 — presente",
       current: true,
-      highlights: ["Cursando el tercer año de la carrera de tres."],
+      highlights: ["Cursando el último año (3.º)."],
     },
     {
       kind: "education",
