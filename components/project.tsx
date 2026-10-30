@@ -171,7 +171,7 @@ export default function Project({ project }: ProjectProps) {
                 href={link.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-semibold text-frieren-950 shadow transition hover:scale-[1.04] active:scale-100 dark:bg-fern-100"
+                className="inline-flex min-h-[44px] items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-semibold text-frieren-950 shadow transition hover:scale-[1.04] active:scale-100 dark:bg-fern-100"
               >
                 {linkIcons[link.kind]}
                 {link.label ?? linkLabels[language][link.kind]}

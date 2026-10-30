@@ -36,21 +36,23 @@ export default function Header() {
         aria-label="Main"
         className="fixed top-0 left-0 right-0 h-[4.5rem] flex items-center py-3 overflow-x-auto no-scrollbar [mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)] sm:top-6 sm:left-1/2 sm:right-auto sm:h-[3.25rem] sm:py-0 sm:-translate-x-1/2 sm:overflow-x-visible sm:[mask-image:none]"
       >
-        <ul className="flex flex-nowrap items-center gap-x-0.5 mx-auto px-4 text-[0.85rem] font-medium text-frieren-950 sm:gap-5 sm:px-0 sm:text-[0.9rem]">
+        <ul className="flex flex-nowrap items-center gap-x-0.5 mx-auto px-3 text-[0.85rem] font-medium text-frieren-950 sm:gap-5 sm:px-0 sm:text-[0.9rem]">
           {header.map((link) => (
             <motion.li
               onClick={() => {
                 setActiveSection(link.name);
                 setTimeOfLastClick(Date.now());
               }}
-              className="flex items-center justify-center relative"
+              className={clsx("flex items-center justify-center relative", {
+                "hidden sm:flex": "hideOnMobile" in link && link.hideOnMobile,
+              })}
               key={link.hash}
               initial={{ y: -100, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
             >
               <Link
                 className={clsx(
-                  "flex w-full items-center justify-center whitespace-nowrap px-2.5 py-2 rounded-full sm:px-3 hover:bg-frieren-200/60 dark:hover:bg-fern-800/60 transition dark:text-white/70",
+                  "flex w-full min-h-[44px] items-center justify-center whitespace-nowrap px-2.5 py-2 rounded-full sm:min-h-0 sm:px-3 hover:bg-frieren-200/60 dark:hover:bg-fern-800/60 transition dark:text-white/70",
                   {
                     "text-frieren-950 dark:text-white": activeSection === link.name,
                   }

@@ -2,6 +2,7 @@ export const links = [
   {
     name: "Home",
     hash: "#home",
+    hideOnMobile: true,
   },
   {
     name: "About",
@@ -14,6 +15,7 @@ export const links = [
   {
     name: "Skills",
     hash: "#skills",
+    hideOnMobile: true,
   },
   {
     name: "Experience",
@@ -29,6 +31,7 @@ export const linksESP = [
   {
     name: "Inicio",
     hash: "#home",
+    hideOnMobile: true,
   },
   {
     name: "Sobre mí",
@@ -41,6 +44,7 @@ export const linksESP = [
   {
     name: "Habilidades",
     hash: "#skills",
+    hideOnMobile: true,
   },
   {
     name: "Experiencia",

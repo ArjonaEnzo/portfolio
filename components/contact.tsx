@@ -30,7 +30,7 @@ export default function Contact() {
         {language === "ENG" ? (
           <>
             Email me at{" "}
-            <a className="underline" href="mailto:enzoarjona30@gmail.com">
+            <a className="underline inline-block py-2" href="mailto:enzoarjona30@gmail.com">
               enzoarjona30@gmail.com
             </a>{" "}
             or send a message through the form.
@@ -38,7 +38,7 @@ export default function Contact() {
         ) : (
           <>
             Escribime a{" "}
-            <a className="underline" href="mailto:enzoarjona30@gmail.com">
+            <a className="underline inline-block py-2" href="mailto:enzoarjona30@gmail.com">
               enzoarjona30@gmail.com
             </a>{" "}
             o mandame un mensaje por el formulario.
