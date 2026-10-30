@@ -17,11 +17,25 @@ export default function LanguageContextProvider({
 }: LanguageContextProviderProps) {
   const [language, setLanguage] = React.useState<Language>("ESP");
 
-  // Restore the visitor's last choice (default stays Spanish).
+  // Pick the initial language: ?lang=en|es in the link wins (so a job
+  // application can point to the English version), then the visitor's last
+  // choice, then the browser language. Spanish is only the SSR fallback.
   React.useEffect(() => {
     try {
+      const param = new URLSearchParams(window.location.search)
+        .get("lang")
+        ?.toLowerCase();
+      if (param === "en" || param === "es") {
+        setLanguage(param === "en" ? "ENG" : "ESP");
+        return;
+      }
       const stored = window.localStorage.getItem("language");
-      if (stored === "ENG" || stored === "ESP") setLanguage(stored);
+      if (stored === "ENG" || stored === "ESP") {
+        setLanguage(stored);
+        return;
+      }
+      const browser = (navigator.language || "").toLowerCase();
+      setLanguage(browser.startsWith("es") ? "ESP" : "ENG");
     } catch {}
   }, []);
 
