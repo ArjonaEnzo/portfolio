@@ -44,12 +44,17 @@ export default function BootScreen({
         <p className="mt-3" role="status" aria-live="polite">
           <span className={ready ? "text-[#7dd3c0]" : "text-[#f5c26b]"}>{ready ? "✓" : "○"}</span>{" "}
           {ready ? t.ready : t.loading}
-          {total > 0 && <span className="text-[#8273a3]"> ({loaded}/{total})</span>}
         </p>
 
         <div className="mt-8 flex items-center justify-between text-xs uppercase tracking-widest">
           <span className="text-[#f0a6ca]">{ready ? t.ready : t.loading}</span>
-          <span className="tabular-nums">{pct}%</span>
+          {/* The file count lives down here, in small type: on the status line
+              above it grew that line after the client remount, and Lighthouse
+              took the late repaint as the LCP (24 s on mobile). */}
+          <span className="tabular-nums">
+            {total > 0 && <span className="text-[#8273a3]">{loaded}/{total} · </span>}
+            {pct}%
+          </span>
         </div>
         <div aria-hidden className="mt-2 flex gap-[3px]">
           {Array.from({ length: BLOCKS }, (_, i) => (

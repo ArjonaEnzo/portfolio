@@ -1,5 +1,5 @@
 import "./globals.css";
-import { Inter, JetBrains_Mono, Shippori_Mincho } from "next/font/google";
+import { Inter, JetBrains_Mono } from "next/font/google";
 import type { Metadata } from "next";
 import { SITE, SITE_URL } from "@/lib/site";
 import { ThemeContextProvider } from "@/context/theme-context";
@@ -10,7 +10,6 @@ import { Analytics } from "@vercel/analytics/react";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const mono = JetBrains_Mono({ subsets: ["latin"], weight: ["400", "500", "700"], variable: "--font-mono" });
-const mincho = Shippori_Mincho({ subsets: ["latin"], weight: ["500", "700"], variable: "--font-mincho" });
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -73,7 +72,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="es" suppressHydrationWarning className={`${inter.variable} ${mono.variable} ${mincho.variable}`}>
+    <html lang="es" suppressHydrationWarning className={`${inter.variable} ${mono.variable}`}>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
