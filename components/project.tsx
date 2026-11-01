@@ -42,13 +42,18 @@ export default function Project({ project }: ProjectProps) {
   const featured = Boolean(project.featured);
 
   return (
-    <motion.article
+    // The wrapper reveals on scroll (framer-motion writes an inline transform);
+    // the card inside owns the hover lift, so the two don't fight.
+    <motion.div
       initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-60px" }}
       transition={{ duration: 0.5, ease: [0.21, 0.47, 0.32, 0.98] }}
+      className="h-full"
+    >
+    <article
       className={clsx(
-        "group relative flex h-full flex-col overflow-hidden rounded-2xl border border-black/5 bg-frieren-800 text-white shadow-lg shadow-frieren-900/10 transition hover:shadow-2xl hover:shadow-frieren-900/25 dark:border-white/5 dark:bg-fern-900 dark:shadow-black/30",
+        "tile-fx group relative flex h-full flex-col overflow-hidden rounded-2xl border border-black/5 bg-frieren-800 text-white shadow-lg shadow-frieren-900/10 dark:border-white/5 dark:bg-fern-900 dark:shadow-black/30",
         featured && "lg:flex-row"
       )}
     >
@@ -180,6 +185,7 @@ export default function Project({ project }: ProjectProps) {
           </div>
         )}
       </div>
-    </motion.article>
+    </article>
+    </motion.div>
   );
 }
