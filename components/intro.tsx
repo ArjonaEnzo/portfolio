@@ -11,6 +11,8 @@ import { useLanguage } from "@/context/language-context";
 import { SITE } from "@/lib/site";
 
 const CV_PATH = "/cv-enzo-arjona.pdf";
+// Hidden until the updated CV is in public/ (the current PDF has outdated items).
+const SHOW_CV = false;
 
 export default function Intro() {
   const { language } = useLanguage();
@@ -146,6 +148,7 @@ export default function Intro() {
             />
           </Link>
 
+          {SHOW_CV && (
           <a
             href={CV_PATH}
             download
@@ -157,6 +160,7 @@ export default function Intro() {
               aria-hidden="true"
             />
           </a>
+          )}
         </div>
 
         <div className="flex items-center gap-3">
