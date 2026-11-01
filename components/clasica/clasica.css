@@ -10,7 +10,7 @@
   --cl-sheet: #f7f5f0;
   --cl-ink: #1c1a19;
   --cl-muted: #5b5650;
-  --cl-faint: #7d776e;
+  --cl-faint: #6b655d;
   --cl-accent: #8b5cf6;
   --cl-accent-text: #6d28d9;
   --cl-chip: #cfc9bd;
@@ -43,7 +43,7 @@
   --cl-ok: #86efac;
   --cl-ok-bg: rgba(34, 197, 94, 0.08);
   --cl-ok-line: rgba(34, 197, 94, 0.28);
-  --cl-btn: #8b5cf6;
+  --cl-btn: #7c3aed;
   --cl-btn-text: #ffffff;
   --cl-title: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 }
@@ -145,7 +145,7 @@ html:has(.cl) body {
 .cl-key {
   font-family: var(--font-mono), ui-monospace, monospace;
   font-size: 0.72rem;
-  opacity: 0.6;
+  color: var(--cl-faint);
 }
 
 .cl-btn {
@@ -156,11 +156,11 @@ html:has(.cl) body {
   transition: background-color 0.2s ease, transform 0.15s ease;
 }
 .cl-btn:hover {
-  background: var(--cl-accent);
+  background: #7c3aed;
   color: #fff;
 }
 .dark .cl-btn:hover {
-  background: #7c3aed;
+  background: #6d28d9;
 }
 .cl-btn:active {
   transform: scale(0.97);
