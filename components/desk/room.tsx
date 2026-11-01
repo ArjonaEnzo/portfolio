@@ -80,7 +80,7 @@ function Model({
   name,
   castShadow = true,
   ...props
-}: { name: ModelName; castShadow?: boolean } & JSX.IntrinsicElements["group"]) {
+}: { name: ModelName; castShadow?: boolean } & React.JSX.IntrinsicElements["group"]) {
   const { scene } = useGLTF(modelUrl(name));
   const clone = React.useMemo(() => {
     const c = scene.clone(true);
@@ -708,7 +708,7 @@ const CHAR_YAW = Math.PI + 0.3;
 const SEAT = { x: DESK.x, z: -2.05 } as const;
 
 /** Mate with its bombilla. */
-function Mate(props: JSX.IntrinsicElements["group"]) {
+function Mate(props: React.JSX.IntrinsicElements["group"]) {
   return (
     <group {...props}>
       <mesh position={[0, 0.035, 0]} castShadow>
@@ -1145,6 +1145,15 @@ function Clickable({
   );
 }
 
+/**
+ * drei's <Html> appends to `events.connected`, which R3F 9 only sets after
+ * the first commit. Mounting earlier makes <Html> recreate its React root on
+ * the same element when the target changes, and the screen stays blank.
+ */
+function useHtmlReady() {
+  return useThree((s) => Boolean(s.events.connected));
+}
+
 function ScreenHtml({
   id,
   active,
@@ -1159,6 +1168,8 @@ function ScreenHtml({
   const s = SURFACES[id];
   const [w, h] = s.px;
   const interactive = active && inScene;
+  const ready = useHtmlReady();
+  if (!ready) return null;
   return (
     <Html
       transform
@@ -1253,6 +1264,7 @@ function Scroll({ station, language, inScene, onSelect }: Interactive) {
 function Phone({ station, language, inScene, onSelect }: Interactive) {
   const active = station === "contact";
   const c = SURFACES.contact.center;
+  const ready = useHtmlReady();
   return (
     <Clickable id="contact" station={station} onSelect={onSelect}>
       <group position={[c.x, CHABUDAI.top, c.z]} rotation={[0, PHONE_YAW, 0]}>
@@ -1260,7 +1272,7 @@ function Phone({ station, language, inScene, onSelect }: Interactive) {
           <meshStandardMaterial color="#d9d2e6" roughness={0.35} metalness={0.5} />
         </RoundedBox>
         <group position={[0, c.y - CHABUDAI.top, 0]}>
-          <Html
+          {ready && <Html
             transform
             rotation={SURFACES.contact.rotation}
             distanceFactor={distanceFactorFor(SURFACES.contact)}
@@ -1269,7 +1281,7 @@ function Phone({ station, language, inScene, onSelect }: Interactive) {
             style={{ width: SURFACES.contact.px[0], height: SURFACES.contact.px[1] }}
           >
             <PhoneScreen language={language} active={active && inScene} />
-          </Html>
+          </Html>}
         </group>
       </group>
     </Clickable>

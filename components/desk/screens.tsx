@@ -39,10 +39,8 @@ function ScreenShell({
       </div>
       <div
         aria-hidden={!active}
-        // `inert` keeps hidden links out of the tab order. React 18 only writes
-        // unknown attributes when they are strings, while @types/react 18.3 types
-        // it as boolean: pass "" (attribute present) and widen the type.
-        {...(!active ? ({ inert: "" } as unknown as { inert: boolean }) : {})}
+        // `inert` keeps hidden links out of the tab order.
+        inert={!active}
         className={clsx(
           "absolute inset-0 transition-opacity duration-500",
           active ? "opacity-100" : "pointer-events-none opacity-0"

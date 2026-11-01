@@ -1,10 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    // Next's built-in optimizer (/_next/image) is turned off: Next 14 has
-    // unpatched RCE advisories there (fixed only in 15.5.28+, which needs
-    // React 19). Images are pre-sized WebP in /public or optimized by
-    // Cloudinary through URL transforms instead.
+    // Next's built-in optimizer (/_next/image) stays off: images are already
+    // pre-sized WebP in /public or optimized by Cloudinary URL transforms, so
+    // it would only add attack surface (it had RCE advisories before 15.5.28)
+    // and Vercel image-optimization usage.
     unoptimized: true,
     remotePatterns: [
       {

@@ -1,8 +1,6 @@
 "use client";
-/// <reference types="react-dom/canary" />
 import React from "react";
 import { FaPaperPlane } from "react-icons/fa";
-// Next 14 bundles a React canary where the hook is stable (no experimental_ prefix).
 import { useFormStatus } from "react-dom";
 import { useLanguage } from "@/context/language-context";
 

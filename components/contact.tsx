@@ -49,7 +49,9 @@ export default function Contact() {
       <form
         className="mt-10 flex flex-col"
         action={async (formData) => {
-          const { error } = await sendEmail(formData);
+          const { error } = await sendEmail(formData).catch(() => ({
+            error: language === "ENG" ? "Something went wrong" : "Algo salió mal",
+          }));
           if (error) {
             toast.error(error);
             return;

@@ -4,8 +4,6 @@ import { Resend } from "resend";
 import { getErrorMessage, validateString } from "@/lib/utils";
 import ContactFormEmail from "@/email/contact-form-email";
 
-const resend = new Resend(process.env.RESEND_API_KEY ?? process.env.RESENT_API_KEY);
-
 export const sendEmail = async (formData: FormData) => {
   const message = formData.get("message");
   const senderEmail = formData.get("senderEmail");
@@ -19,6 +17,9 @@ export const sendEmail = async (formData: FormData) => {
   }
 
   try {
+    // Created per call: Resend throws without a key, and a throw at module
+    // load would crash the whole page instead of showing an error toast.
+    const resend = new Resend(process.env.RESEND_API_KEY ?? process.env.RESENT_API_KEY);
     // Resend >= 1 returns API errors instead of throwing them.
     const { data, error } = await resend.emails.send({
       from: "Contact Form <onboarding@resend.dev>",
