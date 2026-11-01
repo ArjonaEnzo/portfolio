@@ -315,10 +315,10 @@ function Controls({
       <button
         type="button"
         onClick={onLanguage}
-        aria-label={en ? "Cambiar a español" : "Switch to English"}
         className="cl-ghost grid h-9 min-w-[2.25rem] place-items-center px-2 font-mono text-xs"
       >
-        {en ? "ES" : "EN"}
+        <span aria-hidden>{en ? "ES" : "EN"}</span>
+        <span className="sr-only">{en ? "Cambiar a español" : "Switch to English"}</span>
       </button>
       <Link
         href="/"

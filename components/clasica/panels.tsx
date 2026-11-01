@@ -19,6 +19,10 @@ import { SITE } from "@/lib/site";
 import { sendEmail } from "@/actions/sendEmail";
 import { SubmitBtn } from "@/components/submit-btn";
 
+// Gallery thumbnails render at 80 px; ask Cloudinary for a small copy instead
+// of the 1600 px original (images are unoptimized, see next.config.js).
+const thumb = (src: string) => src.replace("w_1600,c_limit", "w_240,c_limit");
+
 const AVATAR = "https://res.cloudinary.com/ddtjwx08b/image/upload/f_auto,q_auto,w_320,c_fill,g_face/v1697323330/Enzo.jpg";
 
 /* ------------------------------------------------------------------ */
@@ -177,7 +181,6 @@ export function ProjectsPanel({ language }: { language: Language }) {
                   fill
                   sizes="(min-width: 1024px) 34vw, 90vw"
                   className="object-cover object-top"
-                  priority={i === 0}
                 />
               </div>
               {p.gallery.length > 1 && (
@@ -191,7 +194,7 @@ export function ProjectsPanel({ language }: { language: Language }) {
                         aria-label={`${p.title} — ${labels.gallery} ${g + 1}`}
                         className="relative block h-12 w-20 overflow-hidden rounded border border-[var(--cl-line)] transition-opacity hover:opacity-80"
                       >
-                        <Image src={src} alt="" fill sizes="80px" className="object-cover object-top" />
+                        <Image src={thumb(src)} alt="" fill sizes="80px" className="object-cover object-top" />
                       </a>
                     </li>
                   ))}
