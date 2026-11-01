@@ -13,6 +13,7 @@ import LanguageContextProvider from "@/context/language-context";
 import ParticlesBg from "@/components/particles-bg";
 import ScrollProgress from "@/components/scroll-progress";
 import BgOrbs from "@/components/bg-orbs";
+import { Analytics } from "@vercel/analytics/react";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -97,6 +98,8 @@ export default function RootLayout({
             </ActiveSectionContextProvider>
           </LanguageContextProvider>
         </ThemeContextProvider>
+        {/* Private visit counts, seen only in the Vercel dashboard. No cookies. */}
+        <Analytics />
       </body>
     </html>
   );
