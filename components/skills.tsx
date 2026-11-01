@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import clsx from "clsx";
 import { SectionHeading } from "./section-heading";
 import { skillGroups, skillGroupLabels } from "@/lib/skills";
@@ -44,7 +44,7 @@ export default function Skills() {
                 {group.skills.map((skill, index) => {
                   const Icon = skill.icon;
                   return (
-                    <motion.li
+                    <m.li
                       key={skill.name}
                       className={clsx(
                         "flex items-center gap-2 whitespace-nowrap rounded-xl borderBlack transition-shadow",
@@ -64,7 +64,7 @@ export default function Skills() {
                     >
                       {Icon && <Icon className="text-base opacity-80" aria-hidden="true" />}
                       {skill.name}
-                    </motion.li>
+                    </m.li>
                   );
                 })}
               </ul>

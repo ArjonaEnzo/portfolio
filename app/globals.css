@@ -145,3 +145,19 @@ h3 {
     animation: none;
   }
 }
+
+/* Background orbs mount after hydration (components/deferred-ui.tsx): fade
+   them in instead of popping. */
+@keyframes orbs-in {
+  from {
+    opacity: 0;
+  }
+}
+.orbs-in {
+  animation: orbs-in 0.8s ease-out both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .orbs-in {
+    animation: none;
+  }
+}

@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { CgWorkAlt } from "react-icons/cg";
 import { LuGraduationCap } from "react-icons/lu";
 import { SectionHeading } from "./section-heading";
@@ -37,7 +37,7 @@ function ExperienceColumn({
 
       <ol className="relative ml-4 border-l border-frieren-300/70 dark:border-fern-700">
         {items.map((item, index) => (
-          <motion.li
+          <m.li
             key={`${item.organization}-${item.period}`}
             className="relative mb-8 pl-6 last:mb-0"
             initial={{ opacity: 0, y: 24 }}
@@ -78,7 +78,7 @@ function ExperienceColumn({
                 </ul>
               )}
             </div>
-          </motion.li>
+          </m.li>
         ))}
       </ol>
     </div>

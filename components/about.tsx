@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { SectionHeading } from "./section-heading";
 import { useSectionInView } from "@/lib/hooks";
 import { useLanguage } from "@/context/language-context";
@@ -12,7 +12,7 @@ export default function About() {
   const { ref } = useSectionInView(sectionName, 1);
 
   return (
-    <motion.section
+    <m.section
       ref={ref}
       className="mb-28 max-w-[45rem] text-center text-lg leading-8 sm:mb-40 scroll-mt-28"
       initial={{ opacity: 0, y: 100 }}
@@ -71,6 +71,6 @@ export default function About() {
           </p>
         </>
       )}
-    </motion.section>
+    </m.section>
   );
 }

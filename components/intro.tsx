@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import React from "react";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import Link from "next/link";
 import { BsArrowRight, BsGithub, BsLinkedin } from "react-icons/bs";
 import { HiDownload } from "react-icons/hi";
@@ -30,7 +30,7 @@ export default function Intro() {
     >
       <div className="flex items-center justify-center">
         <div className="relative animate-float">
-          <motion.div
+          <m.div
             initial={{ opacity: 0, scale: 0 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ type: "tween", duration: 0.2 }}
@@ -49,8 +49,8 @@ export default function Intro() {
               priority={true}
               className="h-40 w-40 sm:h-48 sm:w-48 rounded-full object-cover border-[0.35rem] border-frieren-200 dark:border-fern-700 shadow-[0_0_30px_rgba(148,124,189,0.40)] dark:shadow-[0_0_30px_rgba(65,53,88,0.60)]"
             />
-          </motion.div>
-          <motion.span
+          </m.div>
+          <m.span
             className="absolute text-3xl sm:text-4xl bottom-0 right-0"
             aria-hidden="true"
             initial={{ opacity: 0, scale: 0 }}
@@ -63,11 +63,11 @@ export default function Intro() {
             }}
           >
             👋
-          </motion.span>
+          </m.span>
         </div>
       </div>
 
-      <motion.div
+      <m.div
         className="mt-6 mb-8 px-4"
         initial={false}
         animate={{ opacity: 1, y: 0 }}
@@ -125,9 +125,9 @@ export default function Intro() {
             ? "Mendoza, Argentina · open to remote roles"
             : "Mendoza, Argentina · abierto a trabajo remoto"}
         </p>
-      </motion.div>
+      </m.div>
 
-      <motion.div
+      <m.div
         initial={false}
         animate={{ opacity: 1, y: 0 }}
         className="flex flex-col sm:flex-row items-center justify-center gap-3 px-4 text-base sm:text-lg font-medium"
@@ -183,7 +183,7 @@ export default function Intro() {
             <BsGithub aria-hidden="true" />
           </a>
         </div>
-      </motion.div>
+      </m.div>
     </section>
   );
 }

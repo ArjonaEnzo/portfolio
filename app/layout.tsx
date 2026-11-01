@@ -4,15 +4,13 @@ import { Inter } from "next/font/google";
 import type { Metadata } from "next";
 import { SITE, SITE_URL } from "@/lib/site";
 import ActiveSectionContextProvider from "@/context/active-section-context";
-import { Toaster } from "react-hot-toast";
 import Footer from "@/components/footer";
 import ThemeSwitch from "@/components/theme-switch";
 import { ThemeContextProvider } from "@/context/theme-context";
+import MotionProvider from "@/components/motion-provider";
 import LanguageSwitch from "@/components/language-switch";
 import LanguageContextProvider from "@/context/language-context";
-import ParticlesBg from "@/components/particles-bg";
-import ScrollProgress from "@/components/scroll-progress";
-import BgOrbs from "@/components/bg-orbs";
+import { BgOrbs, ParticlesBg, ScrollProgress, Toaster } from "@/components/deferred-ui";
 import ClassicOnly from "@/components/classic-only";
 import DeskSwitch from "@/components/desk-switch";
 import { Analytics } from "@vercel/analytics/react";
@@ -85,30 +83,32 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
         />
-        <ThemeContextProvider>
-          <ClassicOnly>
-            <BgOrbs />
-            <ParticlesBg />
-            <ScrollProgress />
-          </ClassicOnly>
-          <LanguageContextProvider>
-            <ActiveSectionContextProvider>
-              <ClassicOnly>
-                <Header />
-              </ClassicOnly>
-              {children}
-              <ClassicOnly>
-                <Footer />
-              </ClassicOnly>
-              <Toaster position="top-right" />
-              <ClassicOnly>
-                <LanguageSwitch />
-                <ThemeSwitch />
-                <DeskSwitch />
-              </ClassicOnly>
-            </ActiveSectionContextProvider>
-          </LanguageContextProvider>
-        </ThemeContextProvider>
+        <MotionProvider>
+          <ThemeContextProvider>
+            <ClassicOnly>
+              <BgOrbs />
+              <ParticlesBg />
+              <ScrollProgress />
+            </ClassicOnly>
+            <LanguageContextProvider>
+              <ActiveSectionContextProvider>
+                <ClassicOnly>
+                  <Header />
+                </ClassicOnly>
+                {children}
+                <ClassicOnly>
+                  <Footer />
+                </ClassicOnly>
+                <Toaster position="top-right" />
+                <ClassicOnly>
+                  <LanguageSwitch />
+                  <ThemeSwitch />
+                  <DeskSwitch />
+                </ClassicOnly>
+              </ActiveSectionContextProvider>
+            </LanguageContextProvider>
+          </ThemeContextProvider>
+        </MotionProvider>
         {/* Private visit counts (/ and /desk), seen only in the Vercel dashboard. No cookies. */}
         <Analytics />
       </body>

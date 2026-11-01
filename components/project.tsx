@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import React, { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { BiLinkExternal } from "react-icons/bi";
@@ -13,7 +13,10 @@ import {
   type Project as ProjectData,
   type ProjectLinkKind,
 } from "@/lib/projects";
-import SwiperProjects from "./swiper-projects";
+import dynamic from "next/dynamic";
+
+// Swiper only loads when a gallery is opened.
+const SwiperProjects = dynamic(() => import("./swiper-projects"), { ssr: false });
 
 const linkIcons: Record<ProjectLinkKind, React.ReactNode> = {
   live: <BiLinkExternal aria-hidden="true" />,
@@ -44,7 +47,7 @@ export default function Project({ project }: ProjectProps) {
   return (
     // The wrapper reveals on scroll (framer-motion writes an inline transform);
     // the card inside owns the hover lift, so the two don't fight.
-    <motion.div
+    <m.div
       initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-60px" }}
@@ -59,7 +62,7 @@ export default function Project({ project }: ProjectProps) {
     >
       {galleryOpen &&
         createPortal(
-          <motion.div
+          <m.div
             role="dialog"
             aria-modal="true"
             aria-label={`${project.title} — ${labels.gallery}`}
@@ -83,7 +86,7 @@ export default function Project({ project }: ProjectProps) {
             >
               {labels.closeGallery}
             </button>
-          </motion.div>,
+          </m.div>,
           document.body
         )}
 
@@ -186,6 +189,6 @@ export default function Project({ project }: ProjectProps) {
         )}
       </div>
     </article>
-    </motion.div>
+    </m.div>
   );
 }

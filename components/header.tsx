@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { m, useScroll, useTransform } from "framer-motion";
 import { links, linksESP } from "@/lib/data";
 import Link from "next/link";
 import clsx from "clsx";
@@ -23,7 +23,7 @@ export default function Header() {
 
   return (
     <header className="z-[100] relative">
-      <motion.div
+      <m.div
         className={clsx(
           "fixed top-0 left-1/2 h-[4.5rem] w-full bg-white/60 backdrop-blur-[0.5rem] border border-white/40 sm:top-6 sm:h-[3.25rem] sm:w-[36rem] sm:rounded-full dark:bg-fern-950/60 dark:border-white/10",
           { "sm:w-[41.5rem]": language === "ESP" }
@@ -31,14 +31,14 @@ export default function Header() {
         initial={{ y: -100, x: "-50%", opacity: 0 }}
         animate={{ y: 0, x: "-50%", opacity: 1 }}
         style={{ boxShadow: headerShadow }}
-      ></motion.div>
+      ></m.div>
       <nav
         aria-label="Main"
         className="fixed top-0 left-0 right-0 h-[4.5rem] flex items-center py-3 overflow-x-auto no-scrollbar [mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)] sm:top-6 sm:left-1/2 sm:right-auto sm:h-[3.25rem] sm:py-0 sm:-translate-x-1/2 sm:overflow-x-visible sm:[mask-image:none]"
       >
         <ul className="flex flex-nowrap items-center gap-x-0.5 mx-auto px-3 text-[0.85rem] font-medium text-frieren-950 sm:gap-5 sm:px-0 sm:text-[0.9rem]">
           {header.map((link) => (
-            <motion.li
+            <m.li
               onClick={() => {
                 setActiveSection(link.name);
                 setTimeOfLastClick(Date.now());
@@ -62,7 +62,7 @@ export default function Header() {
                 {link.name}
 
                 {link.name === activeSection && (
-                  <motion.span
+                  <m.span
                     className="bg-frieren-500 rounded-full absolute inset-0 -z-10 dark:bg-fern-700"
                     layoutId="activeSection"
                     transition={{
@@ -70,10 +70,10 @@ export default function Header() {
                       stiffness: 380,
                       damping: 30,
                     }}
-                  ></motion.span>
+                  ></m.span>
                 )}
               </Link>
-            </motion.li>
+            </m.li>
           ))}
         </ul>
       </nav>
