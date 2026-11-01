@@ -1,21 +1,16 @@
-import Header from "@/components/header";
 import "./globals.css";
-import { Inter } from "next/font/google";
+import { Inter, JetBrains_Mono, Shippori_Mincho } from "next/font/google";
 import type { Metadata } from "next";
 import { SITE, SITE_URL } from "@/lib/site";
-import ActiveSectionContextProvider from "@/context/active-section-context";
-import Footer from "@/components/footer";
-import ThemeSwitch from "@/components/theme-switch";
 import { ThemeContextProvider } from "@/context/theme-context";
 import MotionProvider from "@/components/motion-provider";
-import LanguageSwitch from "@/components/language-switch";
 import LanguageContextProvider from "@/context/language-context";
-import { BgOrbs, ParticlesBg, ScrollProgress, Toaster } from "@/components/deferred-ui";
-import ClassicOnly from "@/components/classic-only";
-import DeskSwitch from "@/components/desk-switch";
+import { Toaster } from "@/components/deferred-ui";
 import { Analytics } from "@vercel/analytics/react";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+const mono = JetBrains_Mono({ subsets: ["latin"], weight: ["400", "500", "700"], variable: "--font-mono" });
+const mincho = Shippori_Mincho({ subsets: ["latin"], weight: ["500", "700"], variable: "--font-mincho" });
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -68,48 +63,34 @@ const personJsonLd = {
   knowsAbout: ["Next.js", "React", "TypeScript", "Node.js", "PostgreSQL", "Supabase"],
 };
 
+// Applies the saved (or system) theme before the first paint, so the classic
+// page doesn't flash paper white before switching to graphite.
+const themeScript = `try{var t=localStorage.getItem("theme");if(t==="dark"||(!t&&matchMedia("(prefers-color-scheme: dark)").matches))document.documentElement.classList.add("dark")}catch(e){}`;
+
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <html lang="es" className="!scroll-smooth">
-      <body
-        className={`${inter.className}
-      bg-frieren-50 text-frieren-950 relative pt-28 sm:pt-36 overflow-x-hidden dark:bg-[#0d0a1a] dark:text-gray-50 dark:text-opacity-90`}
-      >
+    <html lang="es" suppressHydrationWarning className={`${inter.variable} ${mono.variable} ${mincho.variable}`}>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+      </head>
+      <body className="font-sans">
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
         />
         <MotionProvider>
           <ThemeContextProvider>
-            <ClassicOnly>
-              <BgOrbs />
-              <ParticlesBg />
-              <ScrollProgress />
-            </ClassicOnly>
             <LanguageContextProvider>
-              <ActiveSectionContextProvider>
-                <ClassicOnly>
-                  <Header />
-                </ClassicOnly>
-                {children}
-                <ClassicOnly>
-                  <Footer />
-                </ClassicOnly>
-                <Toaster position="top-right" />
-                <ClassicOnly>
-                  <LanguageSwitch />
-                  <ThemeSwitch />
-                  <DeskSwitch />
-                </ClassicOnly>
-              </ActiveSectionContextProvider>
+              {children}
+              <Toaster position="top-right" />
             </LanguageContextProvider>
           </ThemeContextProvider>
         </MotionProvider>
-        {/* Private visit counts (/ and /desk), seen only in the Vercel dashboard. No cookies. */}
+        {/* Private visit counts, seen only in the Vercel dashboard. No cookies. */}
         <Analytics />
       </body>
     </html>

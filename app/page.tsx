@@ -1,21 +1,11 @@
-import About from "@/components/about";
-import Contact from "@/components/contact";
-import Experience from "@/components/experience";
-import Intro from "@/components/intro";
-import { Projects } from "@/components/projects";
-import SectionDivider from "@/components/section-divider";
-import Skills from "@/components/skills";
+import DeskClient from "@/components/desk/desk-client";
+import "@/components/desk/desk.css";
 
+/**
+ * Home — the portfolio as a 3D room. Each section lives on an object:
+ * monitor → projects, board → experience, poster → about, phone → contact.
+ * Content comes from lib/, like the one-screen classic version at /clasica.
+ */
 export default function Home() {
-  return (
-    <main className="flex flex-col items-center px-4">
-      <Intro />
-      <SectionDivider />
-      <About />
-      <Projects />
-      <Skills />
-      <Experience />
-      <Contact />
-    </main>
-  );
+  return <DeskClient />;
 }

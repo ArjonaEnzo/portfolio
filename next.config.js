@@ -1,5 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // The 3D room used to live at /desk before it became the home page.
+  async redirects() {
+    return [{ source: "/desk", destination: "/", permanent: true }];
+  },
   images: {
     // Next's built-in optimizer (/_next/image) stays off: images are already
     // pre-sized WebP in /public or optimized by Cloudinary URL transforms, so

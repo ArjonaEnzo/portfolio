@@ -138,7 +138,7 @@ export default function DeskExperience() {
       {webgl === false ? (
         <div className="flex h-full flex-col items-center justify-center gap-6 px-6 text-center">
           <p className="max-w-md text-lg">{t.noWebgl}</p>
-          <Link href="/" className="rounded-lg bg-[#f0a6ca] px-5 py-3 font-desk-mono text-[#1d1827]">
+          <Link href="/clasica" className="rounded-lg bg-[#f0a6ca] px-5 py-3 font-desk-mono text-[#1d1827]">
             {t.classicLong}
           </Link>
         </div>
@@ -218,7 +218,7 @@ export default function DeskExperience() {
             {language === "ENG" ? "ES" : "EN"}
           </button>
           <Link
-            href="/"
+            href="/clasica"
             aria-label={t.classicLong}
             className={clsx("flex h-11 items-center rounded-xl border px-4 font-desk-mono text-sm backdrop-blur transition-colors", pill)}
           >

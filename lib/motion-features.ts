@@ -1,6 +1,6 @@
 // Loaded after hydration by <MotionProvider>, so framer-motion's animation
-// and layout code stays out of the first JS chunk. domMax: the header pill
-// uses layoutId.
-import { domMax } from "framer-motion";
+// code stays out of the first JS chunk. domAnimation is enough: nothing uses
+// layout animations.
+import { domAnimation } from "framer-motion";
 
-export default domMax;
+export default domAnimation;

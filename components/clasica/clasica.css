@@ -1,0 +1,370 @@
+/* One-screen classic portfolio (/clasica).
+   Light = "Papel": washi sheets hanging from two cords (kakejiku).
+   Dark  = "Grafito": solid product panels on a faint grid.
+   Colors are tokens so both looks share the same markup. */
+
+.cl {
+  --cl-wall: #ebe8e1;
+  --cl-side: #f3f1eb;
+  --cl-line: #ddd8cd;
+  --cl-sheet: #f7f5f0;
+  --cl-ink: #1c1a19;
+  --cl-muted: #5b5650;
+  --cl-faint: #7d776e;
+  --cl-accent: #8b5cf6;
+  --cl-accent-text: #6d28d9;
+  --cl-chip: #cfc9bd;
+  --cl-hanko: #d9382e;
+  --cl-ok: #15803d;
+  --cl-ok-bg: #effaf2;
+  --cl-ok-line: #bfe3c9;
+  --cl-btn: #1c1a19;
+  --cl-btn-text: #f7f5f0;
+  --cl-title: var(--font-mincho), ui-serif, Georgia, serif;
+
+  height: 100dvh;
+  overflow: hidden;
+  overscroll-behavior: none;
+  background: var(--cl-wall);
+  color: var(--cl-ink);
+}
+
+.dark .cl {
+  --cl-wall: #0a0a0c;
+  --cl-side: #0f0f12;
+  --cl-line: #27272a;
+  --cl-sheet: #16161a;
+  --cl-ink: #f8fafc;
+  --cl-muted: #a1acbd;
+  --cl-faint: #8391a7;
+  --cl-accent: #8b5cf6;
+  --cl-accent-text: #c4b5fd;
+  --cl-chip: #2e2e35;
+  --cl-ok: #86efac;
+  --cl-ok-bg: rgba(34, 197, 94, 0.08);
+  --cl-ok-line: rgba(34, 197, 94, 0.28);
+  --cl-btn: #8b5cf6;
+  --cl-btn-text: #ffffff;
+  --cl-title: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+}
+
+html:has(.cl),
+html:has(.cl) body {
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+.cl-title {
+  font-family: var(--cl-title);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+.dark .cl-title {
+  font-weight: 600;
+  letter-spacing: -0.03em;
+}
+
+.cl-label {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--cl-faint);
+}
+
+/* ---------- sidebar / header ---------- */
+.cl-side {
+  background: var(--cl-side);
+  border-color: var(--cl-line);
+}
+
+.cl-hanko {
+  display: inline-grid;
+  place-items: center;
+  width: 1.4rem;
+  height: 1.4rem;
+  border-radius: 3px;
+  background: var(--cl-hanko);
+  color: #f7f5f0;
+  font: 700 0.7rem/1 var(--font-mincho), serif;
+  flex: none;
+}
+.dark .cl-hanko {
+  display: none;
+}
+
+.cl-nav-btn {
+  position: relative;
+  color: var(--cl-muted);
+  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+}
+.cl-nav-btn:hover,
+.cl-nav-btn[aria-current="true"] {
+  color: var(--cl-ink);
+}
+.cl-nav-btn[aria-current="true"] {
+  font-weight: 600;
+}
+/* Papel: a lavender stroke that grows under the label. */
+.cl-nav-btn::after {
+  content: "";
+  position: absolute;
+  left: 2.25rem;
+  bottom: 0.2rem;
+  height: 1.5px;
+  width: 0;
+  background: var(--cl-accent);
+  transition: width 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.cl-nav-btn:hover::after {
+  width: 2.5rem;
+}
+.cl-nav-btn[aria-current="true"]::after {
+  width: calc(100% - 2.25rem);
+}
+/* Grafito: a solid pill instead of the stroke. */
+.dark .cl-nav-btn::after {
+  display: none;
+}
+.dark .cl-nav-btn {
+  border: 1px solid transparent;
+  border-radius: 0.6rem;
+}
+.dark .cl-nav-btn:hover {
+  background: #16161a;
+}
+.dark .cl-nav-btn[aria-current="true"] {
+  background: #16161a;
+  border-color: var(--cl-line);
+}
+.cl-nav-btn[aria-current="true"] .cl-key {
+  color: var(--cl-accent-text);
+  opacity: 1;
+}
+.cl-key {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.72rem;
+  opacity: 0.6;
+}
+
+.cl-btn {
+  background: var(--cl-btn);
+  color: var(--cl-btn-text);
+  border-radius: 0.5rem;
+  font-weight: 500;
+  transition: background-color 0.2s ease, transform 0.15s ease;
+}
+.cl-btn:hover {
+  background: var(--cl-accent);
+  color: #fff;
+}
+.dark .cl-btn:hover {
+  background: #7c3aed;
+}
+.cl-btn:active {
+  transform: scale(0.97);
+}
+
+.cl-ghost {
+  border: 1px solid var(--cl-chip);
+  color: var(--cl-ink);
+  border-radius: 0.5rem;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+.cl-ghost:hover {
+  border-color: var(--cl-accent);
+  color: var(--cl-accent-text);
+}
+
+.cl-seg {
+  border: 1px solid var(--cl-chip);
+  border-radius: 999px;
+}
+.cl-seg button[aria-pressed="true"] {
+  background: var(--cl-ink);
+  color: var(--cl-sheet);
+}
+
+.cl-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.18);
+  flex: none;
+}
+
+/* ---------- stage and panels ---------- */
+.dark .cl-stage {
+  background-image: linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+.cl-panel {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  inset: 0 5% 4% 5%;
+  will-change: transform;
+}
+.dark .cl-panel {
+  inset: 4% 4%;
+}
+@media (max-width: 767px) {
+  .cl-panel {
+    inset: 0 0.75rem 0.6rem;
+  }
+  .dark .cl-panel {
+    inset: 0.6rem 0.75rem;
+  }
+}
+
+/* Papel: two cords run far above the screen, so the sheet always hangs from
+   something off-screen while it rises and drops. */
+.cl-cords {
+  position: relative;
+  flex: none;
+  height: 6%;
+  min-height: 1.25rem;
+}
+.cl-cords::before,
+.cl-cords::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  top: -200vh;
+  width: 1px;
+  background: var(--cl-ink);
+  opacity: 0.5;
+}
+.cl-cords::before {
+  left: 22%;
+}
+.cl-cords::after {
+  right: 22%;
+}
+.cl-rod {
+  flex: none;
+  height: 7px;
+  margin: 0 -10px;
+  border-radius: 4px;
+  background: var(--cl-ink);
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.08);
+}
+.dark .cl-cords,
+.dark .cl-rod {
+  display: none;
+}
+
+.cl-sheet {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--cl-sheet);
+  border-inline: 1px solid #e4e0d6;
+  box-shadow: 0 30px 60px -30px rgba(28, 26, 25, 0.35);
+}
+.dark .cl-sheet {
+  border: 1px solid var(--cl-line);
+  border-radius: 14px;
+  box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.8);
+}
+
+.cl-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--cl-chip) transparent;
+}
+
+.cl-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  border: 1px solid var(--cl-chip);
+  border-radius: 999px;
+  padding: 0.2rem 0.65rem;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.75rem;
+  color: var(--cl-muted);
+}
+.dark .cl-chip {
+  background: #111114;
+  color: var(--cl-accent-text);
+}
+.cl-chip.is-ok {
+  border-color: var(--cl-ok-line);
+  background: var(--cl-ok-bg);
+  color: var(--cl-ok);
+}
+
+.cl-card {
+  border: 1px solid var(--cl-line);
+  border-radius: 0.75rem;
+}
+
+.cl-input {
+  width: 100%;
+  border: 1px solid var(--cl-chip);
+  border-radius: 0.5rem;
+  background: transparent;
+  color: var(--cl-ink);
+  padding: 0.75rem 0.9rem;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.cl-input::placeholder {
+  color: var(--cl-faint);
+}
+.cl-input:focus {
+  border-color: var(--cl-accent);
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.18);
+}
+
+.cl :focus-visible {
+  outline: 2px solid var(--cl-accent);
+  outline-offset: 2px;
+}
+
+/* Content "lands" just after its panel: children rise in, 50 ms apart. */
+@keyframes cl-rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+.cl-panel[data-state="in"] .cl-rise > * {
+  animation: cl-rise 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.cl-panel[data-state="in"] .cl-rise > :nth-child(1) { animation-delay: 0.18s; }
+.cl-panel[data-state="in"] .cl-rise > :nth-child(2) { animation-delay: 0.23s; }
+.cl-panel[data-state="in"] .cl-rise > :nth-child(3) { animation-delay: 0.28s; }
+.cl-panel[data-state="in"] .cl-rise > :nth-child(4) { animation-delay: 0.33s; }
+.cl-panel[data-state="in"] .cl-rise > :nth-child(5) { animation-delay: 0.38s; }
+.cl-panel[data-state="in"] .cl-rise > :nth-child(n + 6) { animation-delay: 0.43s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .cl-panel[data-state="in"] .cl-rise > * {
+    animation: none;
+  }
+}
+
+/* Mobile tab bar */
+.cl-tab[aria-current="true"] {
+  color: var(--cl-ink);
+  font-weight: 600;
+}
+.cl-tab[aria-current="true"] .cl-key {
+  color: var(--cl-accent-text);
+  opacity: 1;
+}
+.dark .cl-tab[aria-current="true"] {
+  background: #16161a;
+}
