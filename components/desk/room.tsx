@@ -4,9 +4,11 @@ import * as THREE from "three";
 import { useFrame, useThree, type ThreeEvent } from "@react-three/fiber";
 import { Html, RoundedBox, Sparkles, useGLTF } from "@react-three/drei";
 import gsap from "gsap";
+import { easing } from "maath";
 import type { Language } from "@/lib/projects";
 import { CHABUDAI, DESK, LEVELS, PHONE_YAW, SURFACES, distanceFactorFor, type StationId } from "./stations";
 import { BoardScreen, MonitorScreen, PhoneScreen, PosterScreen } from "./screens";
+import { toonUniforms, toonifyTree } from "./toon";
 
 /* Kenney Furniture Kit (CC0), converted to GLB in meters, centered on X/Z. */
 const MODELS = [
@@ -67,6 +69,16 @@ function mixColor(out: THREE.Color, a: string, b: string, t: number) {
   out.copy(tmpA.set(a)).lerp(tmpB.set(b), t);
 }
 
+/** Reduced motion, read at call time (event handlers outside React state). */
+const prefersReducedMotion = () =>
+  typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/** The shadow map is static; things that move for a while ask for refreshes. */
+let shadowDirtyUntil = 0;
+function markShadowsDirty(seconds: number) {
+  shadowDirtyUntil = Math.max(shadowDirtyUntil, performance.now() + seconds * 1000);
+}
+
 /** Kenney material names → room palette (fabrics in the rose accent, honey wood). */
 const RECOLOR: Record<string, string> = {
   carpet: PALETTE.rose,
@@ -79,8 +91,9 @@ const RECOLOR: Record<string, string> = {
 function Model({
   name,
   castShadow = true,
+  wind = 0,
   ...props
-}: { name: ModelName; castShadow?: boolean } & React.JSX.IntrinsicElements["group"]) {
+}: { name: ModelName; castShadow?: boolean; /** Plant sway height (0 = none). */ wind?: number } & React.JSX.IntrinsicElements["group"]) {
   const { scene } = useGLTF(modelUrl(name));
   const clone = React.useMemo(() => {
     const c = scene.clone(true);
@@ -95,8 +108,9 @@ function Model({
         (mesh.material as THREE.MeshStandardMaterial).color.set(RECOLOR[mat.name]);
       }
     });
+    if (wind > 0) c.userData.toon = { wind };
     return c;
-  }, [scene, castShadow]);
+  }, [scene, castShadow, wind]);
   return <primitive object={clone} {...props} />;
 }
 
@@ -258,7 +272,9 @@ function Lantern({
   useFrame(({ clock }) => {
     // Lanterns dim to a soft paper glow by day (they stay lit: late afternoon).
     const on = 1 - mood.current * 0.6;
-    const flicker = reducedMotion ? 0 : Math.sin(clock.getElapsedTime() * 2.1 + seed) * 0.08;
+    // Flicker "on fours": the value changes 4 times a second, like hand-drawn animation.
+    const stepped = Math.floor(clock.getElapsedTime() * 4) / 4;
+    const flicker = reducedMotion ? 0 : Math.sin(stepped * 2.1 + seed) * 0.08;
     if (mat.current) mat.current.emissiveIntensity = (0.75 + flicker) * on;
     if (bulb.current) bulb.current.intensity = light * on;
   });
@@ -279,10 +295,41 @@ function Lantern({
   );
 }
 
+/** Floor lantern on a pole, as one piece with its origin at the base. */
+function LanternStand({
+  position,
+  radius,
+  height,
+  pole,
+  base,
+  reducedMotion,
+}: {
+  position: [number, number, number];
+  radius: number;
+  height: number;
+  pole: number;
+  base: number;
+  reducedMotion: boolean;
+}) {
+  return (
+    <group position={position}>
+      <Lantern position={[0, pole + height / 2 + 0.02, 0]} radius={radius} height={height} reducedMotion={reducedMotion} />
+      <mesh position={[0, pole / 2, 0]}>
+        <cylinderGeometry args={[0.03, 0.03, pole, 6]} />
+        <meshStandardMaterial color={PALETTE.woodDark} />
+      </mesh>
+      <mesh position={[0, 0.015, 0]}>
+        <cylinderGeometry args={[base, base, 0.03, 12]} />
+        <meshStandardMaterial color={PALETTE.woodDark} />
+      </mesh>
+    </group>
+  );
+}
+
 /** Bonsai: a crooked trunk and three foliage pads, in a shallow pot. */
 function Bonsai({ position, scale = 1 }: { position: [number, number, number]; scale?: number }) {
   return (
-    <group position={position} scale={scale}>
+    <group position={position} scale={scale} userData={{ toon: { wind: 0.12 } }}>
       <mesh position={[0, 0.03, 0]} castShadow receiveShadow>
         <cylinderGeometry args={[0.14, 0.11, 0.06, 6]} />
         <meshStandardMaterial color="#3b3a44" roughness={0.9} />
@@ -735,7 +782,7 @@ function Mate(props: React.JSX.IntrinsicElements["group"]) {
  */
 // Enzo casts no shadow: the shadow map is only refreshed when the light moves,
 // and his animated pose would leave a frozen silhouette behind.
-function Enzo({ reducedMotion }: { reducedMotion: boolean }) {
+function Enzo({ reducedMotion, station }: { reducedMotion: boolean; station: StationId }) {
   const head = React.useRef<THREE.Group>(null);
   const armL = React.useRef<THREE.Group>(null);
   const foreL = React.useRef<THREE.Group>(null);
@@ -746,9 +793,28 @@ function Enzo({ reducedMotion }: { reducedMotion: boolean }) {
   const kanji = useKanjiTexture();
   const blink = React.useRef({ next: 2, until: 0 });
   const look = React.useRef({ next: 3, until: 0 });
-  useFrame(({ clock, pointer }) => {
+  // Squash impulse (GSAP animates it): > 0 stretches, < 0 squashes.
+  const squash = React.useRef({ v: 0 });
+  const firstStation = React.useRef(true);
+  React.useEffect(() => {
+    // A little hop whenever the visitor goes somewhere: anticipate, stretch, settle.
+    if (firstStation.current) {
+      firstStation.current = false;
+      return;
+    }
+    if (reducedMotion) return;
+    const tl = gsap
+      .timeline()
+      .to(squash.current, { v: -0.12, duration: 0.12, ease: "power2.out" })
+      .to(squash.current, { v: 0.1, duration: 0.14, ease: "power2.out" })
+      .to(squash.current, { v: 0, duration: 0.9, ease: "elastic.out(1, 0.45)" });
+    return () => {
+      tl.kill();
+    };
+  }, [station, reducedMotion]);
+  useFrame(({ clock, pointer }, delta) => {
     const t = clock.getElapsedTime();
-    const ease = (from: number, to: number, k: number) => from + (to - from) * k;
+    const dt = Math.min(delta, 0.1);
     // Looks up for ~2.8 s every 7–11 s; waves in the middle of it.
     const l = look.current;
     if (!reducedMotion && t > l.next) {
@@ -757,13 +823,19 @@ function Enzo({ reducedMotion }: { reducedMotion: boolean }) {
     }
     const up = !reducedMotion && t < l.until;
     const waving = up && t > l.until - 2.3 && t < l.until - 0.5;
-    if (torso.current) torso.current.scale.y = 1 + (reducedMotion ? 0 : Math.sin(t * 2.1) * 0.012);
+    if (torso.current) {
+      // Squash & stretch with constant volume: y by s, x and z by 1/sqrt(s).
+      const s = 1 + (reducedMotion ? 0 : Math.sin(t * 2.1) * 0.012) + squash.current.v;
+      const k = 1 / Math.sqrt(s);
+      torso.current.scale.set(k, s, k);
+    }
     if (head.current) {
       // Positive x tilts the face up, positive y turns it towards the camera.
       const ty = up ? 0.38 + pointer.x * 0.3 : Math.sin(t * 0.4) * 0.05;
       const tx = up ? 0.16 + pointer.y * 0.15 : -0.32;
-      head.current.rotation.y = ease(head.current.rotation.y, ty, 0.08);
-      head.current.rotation.x = ease(head.current.rotation.x, tx, 0.08);
+      // Damped towards the target in seconds, not per frame (same feel at 60 or 120 Hz).
+      easing.damp(head.current.rotation, "y", ty, 0.2, dt);
+      easing.damp(head.current.rotation, "x", tx, 0.2, dt);
     }
     const b = blink.current;
     if (t > b.next) {
@@ -775,12 +847,12 @@ function Enzo({ reducedMotion }: { reducedMotion: boolean }) {
     const tap = reducedMotion ? 0 : 0.05;
     if (foreL.current) foreL.current.rotation.x = 1.1 + Math.sin(t * 17) * tap;
     if (armR.current) {
-      armR.current.rotation.x = ease(armR.current.rotation.x, waving ? 0 : 0.45, 0.12);
-      armR.current.rotation.z = ease(armR.current.rotation.z, waving ? 2.5 : -0.15, 0.12);
+      easing.damp(armR.current.rotation, "x", waving ? 0 : 0.45, 0.12, dt);
+      easing.damp(armR.current.rotation, "z", waving ? 2.5 : -0.15, 0.12, dt);
     }
     if (foreR.current) {
-      foreR.current.rotation.x = ease(foreR.current.rotation.x, waving ? 0 : 1.1 + Math.sin(t * 17 + 1.7) * tap, 0.25);
-      foreR.current.rotation.z = ease(foreR.current.rotation.z, waving ? 0.5 + Math.sin(t * 12) * 0.35 : 0, 0.25);
+      easing.damp(foreR.current.rotation, "x", waving ? 0 : 1.1 + Math.sin(t * 17 + 1.7) * tap, 0.06, dt);
+      easing.damp(foreR.current.rotation, "z", waving ? 0.5 + Math.sin(t * 12) * 0.35 : 0, 0.06, dt);
     }
   });
   const skin = <meshStandardMaterial color="#e9bd98" roughness={0.85} />;
@@ -1022,12 +1094,13 @@ function Laptop() {
 }
 
 /** Chair, Enzo and laptop share one transform, turned towards the camera. */
-function Workstation({ reducedMotion }: { reducedMotion: boolean }) {
+function Workstation({ reducedMotion, station }: { reducedMotion: boolean; station: StationId }) {
   return (
     <group position={[SEAT.x, LEVELS.deck, SEAT.z]} rotation={[0, CHAR_YAW, 0]}>
       <Model name="chairDesk" />
-      <group position={[0, 0.46, 0]}>
-        <Enzo reducedMotion={reducedMotion} />
+      {/* Characters get a harder light/shadow cut than the set, as in Messenger. */}
+      <group position={[0, 0.46, 0]} userData={{ toon: { cut: [0.1, 0.15] } }}>
+        <Enzo reducedMotion={reducedMotion} station={station} />
       </group>
       <group position={[0, 0.769, -0.44]}>
         <Laptop />
@@ -1117,30 +1190,67 @@ function useHoverCursor() {
   };
 }
 
-/** Wraps a clickable object: ignores clicks that were really drags. */
+/**
+ * Squeeze and elastic bounce back, the "poke" from Messenger: on hover a
+ * light one, on click a deeper one (0.9) right before the camera flies.
+ */
+function poke(target: THREE.Object3D, depth: number) {
+  if (prefersReducedMotion()) return;
+  gsap.killTweensOf(target.scale);
+  gsap
+    .timeline()
+    .to(target.scale, { x: depth, y: depth, z: depth, duration: 0.16, ease: "power2.out" })
+    .to(target.scale, { x: 1, y: 1, z: 1, duration: 0.9, ease: `elastic.out(1, ${(0.5 + Math.random() * 0.3).toFixed(2)})` });
+}
+
+/**
+ * Wraps a clickable object: ignores clicks that were really drags and pokes
+ * the object around `pivot` (its centre), so it squeezes in place.
+ */
 function Clickable({
   id,
   station,
   onSelect,
+  pivot,
   children,
 }: {
   id: Exclude<StationId, "home">;
   station: StationId;
   onSelect: Interactive["onSelect"];
+  pivot: THREE.Vector3;
   children: React.ReactNode;
 }) {
   const { bind } = useHoverCursor();
   const enabled = station !== id;
+  const squeeze = React.useRef<THREE.Group>(null);
+  const lastPoke = React.useRef(0);
   return (
     <group
-      {...(enabled ? bind : {})}
+      {...(enabled
+        ? {
+            ...bind,
+            onPointerOver: (e: ThreeEvent<PointerEvent>) => {
+              bind.onPointerOver(e);
+              const now = performance.now();
+              if (squeeze.current && now - lastPoke.current > 700) {
+                lastPoke.current = now;
+                poke(squeeze.current, 0.96);
+              }
+            },
+          }
+        : {})}
       onClick={(e) => {
         if (!enabled || e.delta > 6) return;
         e.stopPropagation();
+        if (squeeze.current) poke(squeeze.current, 0.9);
         onSelect(id);
       }}
     >
-      {children}
+      <group position={pivot}>
+        <group ref={squeeze}>
+          <group position={pivot.clone().negate()}>{children}</group>
+        </group>
+      </group>
     </group>
   );
 }
@@ -1193,7 +1303,7 @@ function Monitor({ station, language, inScene, onSelect }: Interactive) {
   const c = SURFACES.projects.center;
   const [w, h] = SURFACES.projects.size;
   return (
-    <Clickable id="projects" station={station} onSelect={onSelect}>
+    <Clickable id="projects" station={station} onSelect={onSelect} pivot={SURFACES.projects.center}>
       <RoundedBox args={[w + 0.05, h + 0.05, 0.03]} radius={0.01} position={[c.x, c.y, c.z - 0.02]} castShadow>
         <meshStandardMaterial color="#1a1622" roughness={0.5} metalness={0.3} />
       </RoundedBox>
@@ -1213,7 +1323,7 @@ function Board({ station, language, inScene, onSelect }: Interactive) {
   const active = station === "experience";
   const c = SURFACES.experience.center;
   return (
-    <Clickable id="experience" station={station} onSelect={onSelect}>
+    <Clickable id="experience" station={station} onSelect={onSelect} pivot={SURFACES.experience.center}>
       <mesh position={[c.x, c.y, -ROOM.half + 0.065]} castShadow receiveShadow>
         <boxGeometry args={[1.32, 0.84, 0.03]} />
         <meshStandardMaterial color={PALETTE.woodDark} roughness={0.8} />
@@ -1236,7 +1346,7 @@ function Scroll({ station, language, inScene, onSelect }: Interactive) {
   const [w, h] = SURFACES.about.size;
   const rod = <meshStandardMaterial color={PALETTE.woodDark} roughness={0.7} />;
   return (
-    <Clickable id="about" station={station} onSelect={onSelect}>
+    <Clickable id="about" station={station} onSelect={onSelect} pivot={SURFACES.about.center}>
       {/* Backing cloth sits just behind the HTML (x = -2.465); rods in front. */}
       <group position={[-ROOM.half + 0.029, c.y, c.z]}>
         <mesh position={[0, 0, 0]} castShadow receiveShadow>
@@ -1266,7 +1376,7 @@ function Phone({ station, language, inScene, onSelect }: Interactive) {
   const c = SURFACES.contact.center;
   const ready = useHtmlReady();
   return (
-    <Clickable id="contact" station={station} onSelect={onSelect}>
+    <Clickable id="contact" station={station} onSelect={onSelect} pivot={SURFACES.contact.center}>
       <group position={[c.x, CHABUDAI.top, c.z]} rotation={[0, PHONE_YAW, 0]}>
         <RoundedBox args={[0.076, 0.008, 0.156]} radius={0.003} position={[0, 0.004, 0]} castShadow>
           <meshStandardMaterial color="#d9d2e6" roughness={0.35} metalness={0.5} />
@@ -1302,12 +1412,14 @@ const MARKERS: { id: Exclude<StationId, "home"> | "arcade"; position: [number, n
 
 function Markers({ visible, reducedMotion }: { visible: boolean; reducedMotion: boolean }) {
   const refs = React.useRef<(THREE.Mesh | null)[]>([]);
-  useFrame(({ clock }) => {
+  const size = React.useRef(MARKERS.map(() => ({ s: 0 })));
+  useFrame(({ clock }, delta) => {
     const t = clock.getElapsedTime();
     refs.current.forEach((m, i) => {
       if (!m) return;
-      const s = THREE.MathUtils.lerp(m.scale.x, visible ? 1 : 0, 0.15);
-      m.scale.setScalar(s);
+      const sz = size.current[i];
+      easing.damp(sz, "s", visible ? 1 : 0, 0.12, Math.min(delta, 0.1));
+      m.scale.setScalar(Math.max(sz.s, 0.0001));
       if (reducedMotion) return;
       m.rotation.y = t * 1.2 + i;
       m.position.y = MARKERS[i].position[1] + Math.sin(t * 2 + i) * 0.02;
@@ -1420,6 +1532,7 @@ function Petals({ count, reducedMotion }: { count: number; reducedMotion: boolea
       rz: rand() * Math.PI * 2,
       spin: 0.6 + rand() * 1.5,
       rest: 0,
+      flat: false,
     }));
   }, [count]);
   useFrame(({ clock }, delta) => {
@@ -1427,6 +1540,8 @@ function Petals({ count, reducedMotion }: { count: number; reducedMotion: boolea
     if (!m) return;
     const dt = Math.min(delta, 0.05);
     const t = clock.getElapsedTime();
+    // Spin "on twos": the fall stays smooth, the turning changes twice a second.
+    const stepped = Math.floor(t * 2) / 2;
     petals.forEach((p, i) => {
       const floor = floorAt(p.x, p.z);
       const inside = Math.abs(p.x) < ROOM.half && Math.abs(p.z) < ROOM.half;
@@ -1434,6 +1549,7 @@ function Petals({ count, reducedMotion }: { count: number; reducedMotion: boolea
         // Lying on the floor for a moment, then back to the top.
         p.rest -= dt;
         if (p.rest <= 0) {
+          p.flat = false;
           p.y = 4 + Math.random() * 0.6;
           p.x = -2.3 + Math.random() * 4.5;
           p.z = -2.3 + Math.random() * 4.5;
@@ -1442,13 +1558,9 @@ function Petals({ count, reducedMotion }: { count: number; reducedMotion: boolea
         p.y -= p.fall * dt;
         p.x += (0.07 + Math.sin(t * 0.8 + p.phase) * p.sway) * dt;
         p.z += (0.05 + Math.cos(t * 0.6 + p.phase) * p.sway * 0.6) * dt;
-        p.rx += p.spin * dt;
-        p.ry += p.spin * 0.7 * dt;
-        p.rz += p.spin * 0.4 * dt;
         if (inside && p.y <= floor + 0.01) {
           p.y = floor + 0.006;
-          p.rx = -Math.PI / 2;
-          p.ry = 0;
+          p.flat = true;
           p.rest = 2 + Math.random() * 3;
         } else if (p.y < -0.5 || p.x > 3.6 || p.z > 3.6) {
           p.y = 4 + Math.random() * 0.6;
@@ -1457,7 +1569,8 @@ function Petals({ count, reducedMotion }: { count: number; reducedMotion: boolea
         }
       }
       dummy.position.set(p.x, p.y, p.z);
-      dummy.rotation.set(p.rx, p.ry, p.rz);
+      if (p.flat) dummy.rotation.set(-Math.PI / 2, 0, p.rz);
+      else dummy.rotation.set(p.rx + stepped * p.spin, p.ry + stepped * p.spin * 0.7, p.rz + stepped * p.spin * 0.4);
       dummy.updateMatrix();
       m.setMatrixAt(i, dummy.matrix);
     });
@@ -1482,6 +1595,9 @@ const LIGHTING = {
     screen: 0.9,
     shoji: 1.2,
     spot: 1.1,
+    // Two-tone shading: lavender shadows, slightly cool lit side.
+    shadowTint: "#7d74b4",
+    litTint: "#aaa2d2",
   },
   // Late afternoon rather than noon: warm, low sun with real shadows and the
   // lanterns still glowing a little, so the room keeps its contrast.
@@ -1494,6 +1610,9 @@ const LIGHTING = {
     screen: 0.6,
     shoji: 0.5,
     spot: 0.6,
+    // Warm shadows and a sunny lit side.
+    shadowTint: "#f2d4c2",
+    litTint: "#fff3e4",
   },
 };
 
@@ -1523,12 +1642,14 @@ function Lights() {
     const t = mood.current;
     const sh = shadow.current;
     // First frames (models settling) and every frame of the mood tween.
-    if (sh.frames < 10 || t !== sh.last) gl.shadowMap.needsUpdate = true;
+    if (sh.frames < 10 || t !== sh.last || performance.now() < shadowDirtyUntil) gl.shadowMap.needsUpdate = true;
     sh.frames++;
     sh.last = t;
     const n = LIGHTING.night;
     const d = LIGHTING.day;
     const lerp = THREE.MathUtils.lerp;
+    mixColor(toonUniforms.uShadowTint.value, n.shadowTint, d.shadowTint, t);
+    mixColor(toonUniforms.uLitTint.value, n.litTint, d.litTint, t);
     if (ambient.current) {
       ambient.current.intensity = lerp(n.ambient.intensity, d.ambient.intensity, t);
       mixColor(ambient.current.color, n.ambient.color, d.ambient.color, t);
@@ -1585,6 +1706,58 @@ function Lights() {
   );
 }
 
+/**
+ * Applies the two-tone shading to every standard material in the scene once
+ * the room has mounted, and drives the wind time.
+ */
+function Toonify({ reducedMotion }: { reducedMotion: boolean }) {
+  const scene = useThree((s) => s.scene);
+  React.useEffect(() => {
+    toonifyTree(scene);
+  }, [scene]);
+  useFrame(({ clock }) => {
+    toonUniforms.uTime.value = clock.getElapsedTime();
+    toonUniforms.uWindAmp.value = reducedMotion ? 0 : 0.03;
+  });
+  return null;
+}
+
+/**
+ * Entrance: each direct child grows from nothing with an elastic overshoot,
+ * one after the other (Messenger's elastic.out(1, 0.75), 0.075 s apart), with
+ * a small random turn that settles. Every child must have its origin at its
+ * own base or centre. The canvas mounts on "Enter", so mount = entrance.
+ */
+function PopIn({ reducedMotion, children }: { reducedMotion: boolean; children: React.ReactNode }) {
+  const ref = React.useRef<THREE.Group>(null);
+  const original = React.useRef(new Map<THREE.Object3D, { s: THREE.Vector3; ry: number }>());
+  React.useLayoutEffect(() => {
+    const group = ref.current;
+    if (!group || reducedMotion) return;
+    const rest = original.current;
+    const tweens: gsap.core.Tween[] = [];
+    group.children.forEach((child, i) => {
+      // Remember the resting pose once (StrictMode runs this effect twice).
+      if (!rest.has(child)) rest.set(child, { s: child.scale.clone(), ry: child.rotation.y });
+      const { s, ry } = rest.get(child)!;
+      const delay = 0.2 + 0.075 * i;
+      tweens.push(
+        gsap.fromTo(child.scale, { x: 0.0001, y: 0.0001, z: 0.0001 }, { x: s.x, y: s.y, z: s.z, duration: 2.2, delay, ease: "elastic.out(1, 0.75)" }),
+        gsap.fromTo(child.rotation, { y: ry + (Math.random() - 0.5) * 1.2 }, { y: ry, duration: 2.2, delay, ease: "elastic.out(1, 0.75)" })
+      );
+    });
+    markShadowsDirty(0.2 + 0.075 * group.children.length + 2.4);
+    return () => {
+      tweens.forEach((t) => t.kill());
+      rest.forEach(({ s, ry }, child) => {
+        child.scale.copy(s);
+        child.rotation.y = ry;
+      });
+    };
+  }, [reducedMotion]);
+  return <group ref={ref}>{children}</group>;
+}
+
 export default function Room({
   station,
   language,
@@ -1611,73 +1784,57 @@ export default function Room({
       <Shell />
       <WindowView />
 
-      {/* Level 1: the desk */}
-      <Model name="desk" position={[DESK.x, deck, DESK.z]} />
+      {/* Furniture pops in one piece after another; screens, markers and
+          particles stay outside (they have their own transitions). */}
+      <PopIn reducedMotion={reducedMotion}>
+        <Model name="desk" position={[DESK.x, deck, DESK.z]} />
+        <Workstation reducedMotion={reducedMotion} station={station} />
+        <Model name="lampSquareTable" position={[DESK.x - 0.55, deck + 0.769, DESK.z + 0.15]} />
+        <Model name="plantSmall1" position={[DESK.x + 0.58, deck + 0.769, DESK.z + 0.2]} wind={0.35} />
+        <Model name="books" position={[DESK.x - 0.55, deck + 0.769, DESK.z - 0.22]} rotation={[0, 0.4, 0]} />
+        <Mate position={[DESK.x + 0.45, deck + 0.769, DESK.z - 0.12]} />
+        <Model name="speakerSmall" position={[-2.25, deck, -2.3]} />
+        <Model name="radio" position={[-2.0, deck, -1.2]} rotation={[0, 0.9, 0]} />
+        <Model name="pottedPlant" position={[-2.1, deck, -0.95]} wind={0.9} />
+        <Model name="plantSmall3" position={[0.55, deck, -2.3]} wind={0.35} />
+        <Swing position={[0.45, deck + 2.47, -1.4]} reducedMotion={reducedMotion}>
+          <Lantern position={[0, -0.57, 0]} radius={0.13} height={0.26} reducedMotion={reducedMotion} light={1.0} />
+          <mesh position={[0, -0.22, 0]}>
+            <cylinderGeometry args={[0.004, 0.004, 0.45, 4]} />
+            <meshStandardMaterial color={PALETTE.ink} />
+          </mesh>
+        </Swing>
+        <Model name="bookcaseOpenLow" position={[2.2, loft, -1.0]} rotation={[0, -Math.PI / 2, 0]} />
+        <Model name="books" position={[2.2, loft + 0.44, -1.1]} rotation={[0, -Math.PI / 2, 0]} />
+        <Model name="plantSmall2" position={[2.2, loft + 0.8, -0.75]} wind={0.35} />
+        <Futon position={[1.95, loft, -2.1]} />
+        <Zabuton position={[1.25, loft, -1.3]} rotation={0.2} />
+        <LanternStand position={[1.3, loft, -2.2]} radius={0.17} height={0.34} pole={0.34} base={0.14} reducedMotion={reducedMotion} />
+        <Model name="tableCoffeeSquare" position={[CHABUDAI.x, 0, CHABUDAI.z]} />
+        <TeaSet position={[CHABUDAI.x - 0.14, CHABUDAI.top, CHABUDAI.z - 0.1]} />
+        <Zabuton position={[CHABUDAI.x - 0.75, 0, CHABUDAI.z + 0.1]} rotation={0.1} />
+        <Zabuton position={[CHABUDAI.x + 0.75, 0, CHABUDAI.z - 0.05]} rotation={-0.15} color={PALETTE.roseDark} />
+        <Zabuton position={[CHABUDAI.x, 0, CHABUDAI.z + 0.78]} rotation={0.05} />
+        <Model name="benchCushionLow" position={[1.95, 0, 1.75]} rotation={[0, -Math.PI / 2 - 0.3, 0]} />
+        <Bonsai position={[-2.15, 0.15, 0.55]} scale={1.1} />
+        <Bonsai position={[-1.95, 0, 2.05]} scale={0.8} />
+        <LanternStand position={[1.95, 0, 0.6]} radius={0.2} height={0.4} pole={0.5} base={0.16} reducedMotion={reducedMotion} />
+        <Arcade onArcade={onArcade} />
+      </PopIn>
       {/* Pink LED strip on the desk's front edge (the side facing the room) */}
       <mesh position={[DESK.x, deck + 0.735, DESK.z + 0.395]}>
         <boxGeometry args={[1.44, 0.008, 0.008]} />
         <meshBasicMaterial color={PALETTE.pink} toneMapped={false} />
       </mesh>
-      <Model name="lampSquareTable" position={[DESK.x - 0.55, deck + 0.769, DESK.z + 0.15]} />
-      <Model name="plantSmall1" position={[DESK.x + 0.58, deck + 0.769, DESK.z + 0.2]} />
-      <Model name="books" position={[DESK.x - 0.55, deck + 0.769, DESK.z - 0.22]} rotation={[0, 0.4, 0]} />
-      <Mate position={[DESK.x + 0.45, deck + 0.769, DESK.z - 0.12]} />
-      <Workstation reducedMotion={reducedMotion} />
       <Monitor {...shared} />
-      <Model name="speakerSmall" position={[-2.25, deck, -2.3]} />
-      <Model name="radio" position={[-2.0, deck, -1.2]} rotation={[0, 0.9, 0]} />
-      <Model name="pottedPlant" position={[-2.1, deck, -0.95]} />
-      <Model name="plantSmall3" position={[0.55, deck, -2.3]} />
-      <Swing position={[0.45, deck + 2.47, -1.4]} reducedMotion={reducedMotion}>
-        <Lantern position={[0, -0.57, 0]} radius={0.13} height={0.26} reducedMotion={reducedMotion} light={1.0} />
-        <mesh position={[0, -0.22, 0]}>
-          <cylinderGeometry args={[0.004, 0.004, 0.45, 4]} />
-          <meshStandardMaterial color={PALETTE.ink} />
-        </mesh>
-      </Swing>
+      <Board {...shared} />
+      <Phone {...shared} />
       <Dust reducedMotion={reducedMotion} day={mood === "day"} />
       <Petals count={inScene ? 70 : 40} reducedMotion={reducedMotion} />
 
-      {/* Level 2: the platform with the board */}
-      <Board {...shared} />
-      <Model name="bookcaseOpenLow" position={[2.2, loft, -1.0]} rotation={[0, -Math.PI / 2, 0]} />
-      <Model name="books" position={[2.2, loft + 0.44, -1.1]} rotation={[0, -Math.PI / 2, 0]} />
-      <Model name="plantSmall2" position={[2.2, loft + 0.8, -0.75]} />
-      <Futon position={[1.95, loft, -2.1]} />
-      <Zabuton position={[1.25, loft, -1.3]} rotation={0.2} />
-      <Lantern position={[1.3, loft + 0.52, -2.2]} radius={0.17} height={0.34} reducedMotion={reducedMotion} />
-      <mesh position={[1.3, loft + 0.17, -2.2]}>
-        <cylinderGeometry args={[0.03, 0.03, 0.34, 6]} />
-        <meshStandardMaterial color={PALETTE.woodDark} />
-      </mesh>
-      <mesh position={[1.3, loft + 0.015, -2.2]}>
-        <cylinderGeometry args={[0.14, 0.14, 0.03, 12]} />
-        <meshStandardMaterial color={PALETTE.woodDark} />
-      </mesh>
-
-      {/* Level 0: tatami with the low table */}
-      <Model name="tableCoffeeSquare" position={[CHABUDAI.x, 0, CHABUDAI.z]} />
-      <TeaSet position={[CHABUDAI.x - 0.14, CHABUDAI.top, CHABUDAI.z - 0.1]} />
-      <Phone {...shared} />
-      <Zabuton position={[CHABUDAI.x - 0.75, 0, CHABUDAI.z + 0.1]} rotation={0.1} />
-      <Zabuton position={[CHABUDAI.x + 0.75, 0, CHABUDAI.z - 0.05]} rotation={-0.15} color={PALETTE.roseDark} />
-      <Zabuton position={[CHABUDAI.x, 0, CHABUDAI.z + 0.78]} rotation={0.05} />
-      <Model name="benchCushionLow" position={[1.95, 0, 1.75]} rotation={[0, -Math.PI / 2 - 0.3, 0]} />
-      <Bonsai position={[-2.15, 0.15, 0.55]} scale={1.1} />
-      <Bonsai position={[-1.95, 0, 2.05]} scale={0.8} />
-      <Lantern position={[1.95, 0.75, 0.6]} radius={0.2} height={0.4} reducedMotion={reducedMotion} />
-      <mesh position={[1.95, 0.25, 0.6]}>
-        <cylinderGeometry args={[0.03, 0.03, 0.5, 6]} />
-        <meshStandardMaterial color={PALETTE.woodDark} />
-      </mesh>
-      <mesh position={[1.95, 0.015, 0.6]}>
-        <cylinderGeometry args={[0.16, 0.16, 0.03, 12]} />
-        <meshStandardMaterial color={PALETTE.woodDark} />
-      </mesh>
-
       <Scroll {...shared} />
-      <Arcade onArcade={onArcade} />
       <Markers visible={station === "home"} reducedMotion={reducedMotion} />
+      <Toonify reducedMotion={reducedMotion} />
     </MoodCtx.Provider>
   );
 }
