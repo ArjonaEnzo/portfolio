@@ -11,6 +11,8 @@ import { useLanguage } from "@/context/language-context";
 import { SITE } from "@/lib/site";
 
 const CV_PATH = "/cv-enzo-arjona.pdf";
+// Hidden until the updated CV is in public/ (the current PDF has outdated items).
+const SHOW_CV = false;
 
 export default function Intro() {
   const { language } = useLanguage();
@@ -34,13 +36,16 @@ export default function Intro() {
             transition={{ type: "tween", duration: 0.2 }}
           >
             <Image
-              src="https://res.cloudinary.com/ddtjwx08b/image/upload/v1697323330/Enzo.jpg"
+              src="https://res.cloudinary.com/ddtjwx08b/image/upload/c_fill,g_face,w_400,h_400,f_auto,q_auto/v1697323330/Enzo.jpg"
               alt={
                 isEnglish ? "Portrait of Enzo Arjona" : "Retrato de Enzo Arjona"
               }
               width="250"
               height="250"
-              quality="95"
+              quality="85"
+              // Shown at 160 px (192 px from sm): without sizes the 2x
+              // candidate is 640 px wide on phones.
+              sizes="(min-width: 640px) 192px, 160px"
               priority={true}
               className="h-40 w-40 sm:h-48 sm:w-48 rounded-full object-cover border-[0.35rem] border-frieren-200 dark:border-fern-700 shadow-[0_0_30px_rgba(148,124,189,0.40)] dark:shadow-[0_0_30px_rgba(65,53,88,0.60)]"
             />
@@ -143,6 +148,7 @@ export default function Intro() {
             />
           </Link>
 
+          {SHOW_CV && (
           <a
             href={CV_PATH}
             download
@@ -154,6 +160,7 @@ export default function Intro() {
               aria-hidden="true"
             />
           </a>
+          )}
         </div>
 
         <div className="flex items-center gap-3">
