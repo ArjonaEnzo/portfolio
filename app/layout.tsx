@@ -13,6 +13,9 @@ import LanguageContextProvider from "@/context/language-context";
 import ParticlesBg from "@/components/particles-bg";
 import ScrollProgress from "@/components/scroll-progress";
 import BgOrbs from "@/components/bg-orbs";
+import ClassicOnly from "@/components/classic-only";
+import DeskSwitch from "@/components/desk-switch";
+import { Analytics } from "@vercel/analytics/react";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -83,20 +86,31 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
         />
         <ThemeContextProvider>
-          <BgOrbs />
-          <ParticlesBg />
-          <ScrollProgress />
+          <ClassicOnly>
+            <BgOrbs />
+            <ParticlesBg />
+            <ScrollProgress />
+          </ClassicOnly>
           <LanguageContextProvider>
             <ActiveSectionContextProvider>
-              <Header />
+              <ClassicOnly>
+                <Header />
+              </ClassicOnly>
               {children}
-              <Footer />
+              <ClassicOnly>
+                <Footer />
+              </ClassicOnly>
               <Toaster position="top-right" />
-              <LanguageSwitch />
-              <ThemeSwitch />
+              <ClassicOnly>
+                <LanguageSwitch />
+                <ThemeSwitch />
+                <DeskSwitch />
+              </ClassicOnly>
             </ActiveSectionContextProvider>
           </LanguageContextProvider>
         </ThemeContextProvider>
+        {/* Private visit counts (/ and /desk), seen only in the Vercel dashboard. No cookies. */}
+        <Analytics />
       </body>
     </html>
   );

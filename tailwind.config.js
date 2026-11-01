@@ -12,6 +12,9 @@ module.exports = {
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
+      fontFamily: {
+        "desk-mono": ["var(--font-desk-mono)", "ui-monospace", "monospace"],
+      },
       colors: {
         frieren: {
           50:  "#fcfbfd",

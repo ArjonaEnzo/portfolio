@@ -19,16 +19,18 @@ export const sendEmail = async (formData: FormData) => {
   }
 
   try {
-    const data = await resend.emails.send({
+    // Resend >= 1 returns API errors instead of throwing them.
+    const { data, error } = await resend.emails.send({
       from: "Contact Form <onboarding@resend.dev>",
       to: "enzoarjona30@gmail.com",
       subject: "Message from contact form (Portfolio)",
-      reply_to: senderEmail as string,
+      replyTo: senderEmail as string,
       react: React.createElement(ContactFormEmail, {
         message: message as string,
         senderEmail: senderEmail as string,
       }),
     });
+    if (error) return { error: error.message };
     return { data };
   } catch (error) {
     return { error: getErrorMessage(error) };

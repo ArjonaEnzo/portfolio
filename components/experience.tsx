@@ -49,7 +49,7 @@ function ExperienceColumn({
               aria-hidden="true"
               className="absolute -left-[0.4rem] top-2 h-3 w-3 rounded-full border-2 border-frieren-50 bg-frieren-600 dark:border-[#0d0a1a] dark:bg-fern-400"
             />
-            <div className="rounded-2xl border border-black/5 bg-frieren-800 p-5 text-white shadow-md shadow-frieren-900/10 dark:border-white/5 dark:bg-fern-900">
+            <div className="tile-fx rounded-2xl border border-black/5 bg-frieren-800 p-5 text-white shadow-md shadow-frieren-900/10 dark:border-white/5 dark:bg-fern-900">
               <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
                 <p className="text-xs font-medium uppercase tracking-widest text-white/75">
                   {item.period}

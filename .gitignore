@@ -33,3 +33,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Texturas extraídas del juego (Blizzard): nunca al repo
+public/assets/wc3-ui/

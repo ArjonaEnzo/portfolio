@@ -1,6 +1,6 @@
 import type { StaticImageData } from "next/image";
-import ADIP_COVER from "@/public/ADIP-home-light.png";
-import FISIOM_COVER from "@/public/fisio-log.png";
+import ADIP_COVER from "@/public/ADIP-home-light.webp";
+import FISIOM_COVER from "@/public/fisio-log.webp";
 
 export type Language = "ENG" | "ESP";
 
@@ -33,7 +33,9 @@ export type ProjectCopy = {
 
 export type Project = ProjectBase & ProjectCopy;
 
-const CLOUDINARY = "https://res.cloudinary.com/ddtjwx08b/image/upload";
+// Next's image optimizer is off (see next.config.js), so Cloudinary does the
+// work: best format for the browser, automatic quality, at most 1600 px wide.
+const CLOUDINARY = "https://res.cloudinary.com/ddtjwx08b/image/upload/f_auto,q_auto,w_1600,c_limit";
 
 const base: readonly ProjectBase[] = [
   {
@@ -99,7 +101,7 @@ const base: readonly ProjectBase[] = [
       "Vercel",
     ],
     links: [{ kind: "live", href: "https://autos-kbeza.vercel.app" }],
-    cover: "/projects/kbeza/kbeza-home.png",
+    cover: "/projects/kbeza/kbeza-home.webp",
     gallery: [],
   }, */
   {

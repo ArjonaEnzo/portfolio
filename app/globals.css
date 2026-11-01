@@ -6,6 +6,22 @@ body {
   overflow-x: hidden;
 }
 
+/* No widows: a paragraph never ends with a single word on its own line.
+   Chrome/Edge rebalance the last lines; `balance` for short headings. */
+p,
+li,
+dd,
+figcaption,
+blockquote {
+  text-wrap: pretty;
+}
+
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+
 .borderBlack {
   @apply border border-black/10;
 }
@@ -26,4 +42,106 @@ body {
 
 .animate-float {
   animation: float 5s ease-in-out infinite;
+}
+
+/* Card hover (desk screens + classic project/experience cards), after raomuhammadhamza.tech: a gradient border
+   that flows (pink → amber → teal), a small lift, and a press. Layout-safe:
+   the border is a masked pseudo-element, so nothing shifts. */
+.tile-fx {
+  position: relative;
+  isolation: isolate; /* own stacking context: the border layer stays inside the card */
+  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.25s ease, background-color 0.2s ease;
+}
+.tile-fx::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 2px;
+  background: linear-gradient(120deg, #f0a6ca, #f5c26b, #7dd3c0, #f0a6ca) 0 50% / 300% 100%;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+  z-index: 2; /* above positioned children (covers, images) that would hide it */
+}
+.tile-fx:hover,
+.tile-fx:focus-visible {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 28px -14px rgba(240, 166, 202, 0.55);
+  outline: none;
+}
+.tile-fx:hover::before,
+.tile-fx:focus-visible::before {
+  opacity: 1;
+  animation: tile-fx-flow 2.4s linear infinite;
+}
+.tile-fx:active {
+  transform: translateY(0) scale(0.97);
+}
+@keyframes tile-fx-flow {
+  to {
+    background-position: 150% 50%;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tile-fx,
+  .tile-fx:hover,
+  .tile-fx:focus-visible,
+  .tile-fx:active {
+    transform: none;
+  }
+  .tile-fx:hover::before,
+  .tile-fx:focus-visible::before {
+    animation: none;
+  }
+}
+
+/* Card transitions inside the desk screens: each time the visible card
+   changes (project, tab, experience badge) the new one slides in from the
+   side it comes from; badges drop and swing on their lanyard. Keyed remounts
+   replay the animation. Off with reduced motion. */
+@keyframes card-swap-in {
+  from {
+    opacity: 0;
+    transform: translateX(var(--swap-from, 22px)) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.card-swap {
+  animation: card-swap-in 0.42s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.card-swap.from-left {
+  --swap-from: -22px;
+}
+@keyframes badge-drop-in {
+  0% {
+    opacity: 0;
+    transform: translateY(-36px) rotate(-7deg);
+  }
+  55% {
+    opacity: 1;
+    transform: translateY(5px) rotate(3deg);
+  }
+  80% {
+    transform: translateY(-2px) rotate(-1deg);
+  }
+  100% {
+    transform: none;
+  }
+}
+.badge-drop {
+  transform-origin: 50% 0;
+  animation: badge-drop-in 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .card-swap,
+  .badge-drop {
+    animation: none;
+  }
 }
