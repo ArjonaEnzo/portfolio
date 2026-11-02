@@ -2,7 +2,7 @@
 
 > Estado vivo del proyecto. Leer al abrir una sesión, actualizar al cerrar. Fechas absolutas.
 
-**Última actualización:** 2026-11-02 (Fase 2: perf del cuarto en prod `a711543`; identidad Mendoza lista en local, esperando OK para push)
+**Última actualización:** 2026-11-02 (Fase 2 en prod: perf `a711543` + identidad Mendoza `2545c85`)
 
 ## 👉 AHORA
 
@@ -41,9 +41,9 @@
 - **Lighthouse prod `/`** (2026-11-02, `lighthouse@12.8.2`, 3 corridas): celu 94/97/96 (**mediana 96**), desktop **100**×3; a11y, BP y SEO 100; LCP celu 1,4 s; CLS 0. El precalentado no aparece en la traza.
 - **No hecho:** medir en el celu real de Enzo (2.1) y reduced motion → `frameloop="demand"` (el informe lo proponía; lo dejé porque el CameraRig necesita frames).
 
-**Fase 2.5 identidad Mendoza (2026-11-02, en local, SIN push todavía; opción A elegida por Enzo: todo en código, sin malbec):** en la ventana, Andes con el Aconcagua nevado + precordillera + viñedo en perspectiva (de noche, luces de la ciudad en el llano; se fueron el Fuji y el torii); termo verde tipo Stanley + mate en la chabudai en lugar del juego de té; el bonsái del tokonoma pasa a ser una vid con racimo `#8273a3`. 0 KB de assets, 0 programas nuevos, +4 draw calls. Verificado en build local: desktop y celu, día y noche, sin errores de consola (salvo el 404 de `/_vercel/insights`, que solo existe en Vercel).
+**Fase 2.5 identidad Mendoza en prod (2026-11-02, `2545c85`, pusheado con OK de Enzo, verificado en vivo; opción A elegida por Enzo: todo en código, sin malbec):** en la ventana, Andes con el Aconcagua nevado + precordillera + viñedo en perspectiva (de noche, luces de la ciudad en el llano; se fueron el Fuji y el torii); termo verde tipo Stanley + mate en la chabudai en lugar del juego de té; el bonsái del tokonoma pasa a ser una vid con racimo `#8273a3`. 0 KB de assets, 0 programas nuevos, +4 draw calls. Verificado en vivo: desktop de día y celu de noche, sin errores de consola. **Lighthouse prod `/` celu:** 6 corridas 80/95/93/96/94/94 (mediana 94); comparación intercalada contra el deploy solo-perf: 79/95/97 vs 93/98/95, **mediana 95 en los dos** = ruido, no regresión. Las corridas de 79–80 son primeras visitas (LCP 4,3 s, caché fría). Desktop 100×3; a11y/BP/SEO 100.
 
-**👉 EL próximo paso:** OK de Enzo para pushear la identidad Mendoza y re-medir Lighthouse de prod. Después, a mano: medir en el celu real (`chrome://inspect`). Siguen pendientes de Enzo: pins, LinkedIn y sitemap en Search Console.
+**👉 EL próximo paso:** Enzo, a mano: abrir el cuarto en el celu real (`chrome://inspect`) y anotar click→visible para cerrar la 2.1. En código: Fase 3 (look desktop), con OK. Siguen pendientes de Enzo: pins, LinkedIn y sitemap en Search Console.
 
 **Fases del plan (resumen; detalle en el informe):** F1 alcance (sem. 1–2, ≈10 h) → F2 cuarto: precalentado con `compileAsync` durante el boot screen, menos programas, tiers, identidad Mendoza (sem. 3–4, ≈9 h) → F3 look desktop: Outlines, AccumulativeShadows en tatami, composer N8AO/Bloom/SMAA (sem. 5–7, ≈11 h) → F4 dominio + un artículo técnico (cuando Enzo decida).
 
