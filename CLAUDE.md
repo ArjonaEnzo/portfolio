@@ -58,4 +58,4 @@ Two custom palettes in `tailwind.config.js`: `frieren-*` (light mode, lavender) 
 
 ## Docs
 
-`docs/STATUS.md` is the live state of the project (read it first). `docs/AUDITORIA-2026-10-07.md` and `docs/PLAN-2026-10-08.md` record the audit and the plan behind the current structure.
+`docs/STATUS.md` is the live state of the project (read it first). Private reports, audits and plans live in `docs/private/` (gitignored, never commit them): for example `docs/private/AUDITORIA-2026-10-07.md`, `docs/private/PLAN-2026-10-08.md` and `docs/private/INFORME-ANALISIS-2026-11-01.md`.

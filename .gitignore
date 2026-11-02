@@ -36,3 +36,9 @@ next-env.d.ts
 
 # Texturas extraídas del juego (Blizzard): nunca al repo
 public/assets/wc3-ui/
+
+# Informes, auditorías y referencias privadas: nunca al repo
+/docs/private/
+
+# Config local de Claude Code (preview server)
+/.claude/
