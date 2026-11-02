@@ -5,6 +5,7 @@ import { useFrame, useThree, type ThreeEvent } from "@react-three/fiber";
 import { Html, RoundedBox, Sparkles, useGLTF } from "@react-three/drei";
 import gsap from "gsap";
 import { easing } from "maath";
+import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js";
 import type { Language } from "@/lib/projects";
 import { CHABUDAI, DESK, LEVELS, PHONE_YAW, SURFACES, distanceFactorFor, type StationId } from "./stations";
 import { BoardScreen, MonitorScreen, PhoneScreen, PosterScreen } from "./screens";
@@ -340,8 +341,35 @@ function FacetedSphere({ radius }: { radius: number }) {
   return <primitive object={geo} attach="geometry" />;
 }
 
-/** Bonsai: a crooked trunk and three foliage pads, in a shallow pot. */
-function Bonsai({ position, scale = 1 }: { position: [number, number, number]; scale?: number }) {
+/** Bunch of grapes: nine faceted berries merged into one mesh (one draw call). */
+function GrapeBunch(props: React.JSX.IntrinsicElements["mesh"]) {
+  const geo = React.useMemo(() => {
+    const r = 0.013;
+    // Rows of 3, 3, 2 and 1 berries, narrowing towards the tip.
+    const berries: [number, number, number][] = [
+      [-0.013, 0, 0], [0.013, 0, 0], [0, 0, 0.014],
+      [-0.012, -0.019, 0.006], [0.012, -0.019, 0.006], [0, -0.019, -0.01],
+      [-0.007, -0.036, 0], [0.007, -0.036, 0.004],
+      [0, -0.051, 0.002],
+    ];
+    const merged = mergeGeometries(berries.map(([x, y, z]) => new THREE.IcosahedronGeometry(r, 1).translate(x, y, z)));
+    return merged ?? new THREE.IcosahedronGeometry(r, 1);
+  }, []);
+  React.useEffect(() => () => geo.dispose(), [geo]);
+  return (
+    <mesh geometry={geo} castShadow {...props}>
+      <meshStandardMaterial color="#8273a3" roughness={0.7} />
+    </mesh>
+  );
+}
+
+/**
+ * Bonsai: a crooked trunk and three foliage pads, in a shallow pot. The
+ * `vine` one is a grapevine trained as a bonsai (a nod to Mendoza's
+ * vineyards): lighter leaves and a bunch of grapes hanging under a pad.
+ */
+function Bonsai({ position, scale = 1, vine = false }: { position: [number, number, number]; scale?: number; vine?: boolean }) {
+  const leaves = vine ? ["#6f8f3c", "#86a547"] : ["#3f6b3b", "#4f7a46"];
   return (
     <group position={position} scale={scale} userData={{ toon: { wind: 0.12 } }}>
       <mesh position={[0, 0.03, 0]} castShadow receiveShadow>
@@ -367,9 +395,10 @@ function Bonsai({ position, scale = 1 }: { position: [number, number, number]; s
       ].map(([x, y, z, r], i) => (
         <mesh key={i} position={[x, y, z]} scale={[1, 0.55, 1]} castShadow>
           <FacetedSphere radius={r} />
-          <meshStandardMaterial color={i === 1 ? "#4f7a46" : "#3f6b3b"} roughness={1} />
+          <meshStandardMaterial color={leaves[i === 1 ? 1 : 0]} roughness={1} />
         </mesh>
       ))}
+      {vine && <GrapeBunch position={[0.12, 0.31, 0.1]} scale={1.3} />}
     </group>
   );
 }
@@ -383,28 +412,41 @@ function Zabuton({ position, rotation = 0, color = PALETTE.rose }: { position: [
   );
 }
 
-/** Tea set on the low table. */
-function TeaSet({ position }: { position: [number, number, number] }) {
+/**
+ * Termo and mate on the low table, ready for a round: a Stanley-style green
+ * thermos (body, dark lid with the pouring spout, side handle) with the mate
+ * next to it.
+ */
+function MateSet({ position }: { position: [number, number, number] }) {
+  const dark = <meshStandardMaterial color="#2c2a33" roughness={0.6} />;
   return (
     <group position={position}>
-      <mesh position={[0, 0.005, 0]} receiveShadow>
-        <boxGeometry args={[0.28, 0.01, 0.18]} />
-        <meshStandardMaterial color={PALETTE.woodDark} roughness={0.9} />
-      </mesh>
-      <mesh position={[-0.06, 0.05, 0]} castShadow>
-        <sphereGeometry args={[0.045, 12, 8]} />
-        <meshStandardMaterial color="#2c2a33" roughness={0.6} />
-      </mesh>
-      <mesh position={[-0.12, 0.05, 0]} rotation={[0, 0, Math.PI / 2]}>
-        <cylinderGeometry args={[0.008, 0.012, 0.06, 6]} />
-        <meshStandardMaterial color="#2c2a33" roughness={0.6} />
-      </mesh>
-      {[0.06, 0.1].map((x, i) => (
-        <mesh key={i} position={[x, 0.03, i ? 0.05 : -0.04]} castShadow>
-          <cylinderGeometry args={[0.022, 0.018, 0.04, 10]} />
-          <meshStandardMaterial color="#e9e0d0" roughness={0.7} />
+      <group position={[-0.07, 0, 0.03]} rotation={[0, 0.5, 0]}>
+        <mesh position={[0, 0.095, 0]} castShadow>
+          <cylinderGeometry args={[0.038, 0.038, 0.19, 12]} />
+          <meshStandardMaterial color="#4b6e55" roughness={0.55} metalness={0.2} />
         </mesh>
-      ))}
+        <mesh position={[0, 0.2, 0]} castShadow>
+          <cylinderGeometry args={[0.026, 0.035, 0.022, 12]} />
+          {dark}
+        </mesh>
+        <mesh position={[0.018, 0.214, 0]} rotation={[0, 0, -0.5]}>
+          <boxGeometry args={[0.024, 0.01, 0.016]} />
+          {dark}
+        </mesh>
+        {/* Handle: a bar held off the body by two short arms */}
+        <mesh position={[-0.056, 0.11, 0]}>
+          <boxGeometry args={[0.009, 0.11, 0.016]} />
+          {dark}
+        </mesh>
+        {[0.06, 0.16].map((y) => (
+          <mesh key={y} position={[-0.046, y, 0]}>
+            <boxGeometry args={[0.02, 0.009, 0.014]} />
+            {dark}
+          </mesh>
+        ))}
+      </group>
+      <Mate position={[0.03, 0, -0.06]} rotation={[0, 0.8, 0]} />
     </group>
   );
 }
@@ -630,12 +672,12 @@ function Shell() {
 }
 
 /* ------------------------------------------------------------------ */
-/* Night outside the window: moon, mountain, torii                     */
+/* Outside the window: the Andes and a vineyard, by night or by day   */
 /* ------------------------------------------------------------------ */
 
 /**
- * Painted landscape for the window: sky gradient, sun or moon, layered
- * mountains, a small torii. Drawn once per mood on a canvas, like a backdrop
+ * Painted landscape for the window: sky gradient, sun or moon, the Andes
+ * with the Aconcagua, and a vineyard on the plain (city lights at night). Drawn once per mood on a canvas, like a backdrop
  * in a diorama, so nothing outside the room needs to exist in 3D.
  */
 function paintView(mood: Mood) {
@@ -669,45 +711,65 @@ function paintView(mood: Mood) {
     ctx.fillStyle = "rgba(255,255,255,0.8)";
     for (let i = 0; i < 40; i++) ctx.fillRect(rand() * w, rand() * h * 0.55, 1.5, 1.5);
   }
-  // Mountain layers, far to near.
-  const layers = night ? ["#3a3166", "#2a2350", "#1c1838"] : ["#b9a7c9", "#8f86ad", "#5f6a8a"];
-  const ridge = (base: number, amp: number, seed: number, color: string) => {
-    const rand = mulberry32(seed);
+  // From the home camera the window frames the lower middle of the canvas,
+  // so the landscape is drawn 40 px lower than its coordinates say.
+  ctx.save();
+  ctx.translate(0, 40);
+  const poly = (color: string, pts: number[][]) => {
     ctx.fillStyle = color;
     ctx.beginPath();
-    ctx.moveTo(0, h);
-    for (let x = 0; x <= w; x += 32) ctx.lineTo(x, base - Math.sin(x / 90 + seed) * amp - rand() * amp * 0.4);
-    ctx.lineTo(w, h);
+    pts.forEach(([x, y], i) => (i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)));
     ctx.fill();
   };
-  // Fuji-like peak with snow first, then the ridges in front of it.
-  ctx.fillStyle = layers[0];
+  // The Andes from Mendoza: a jagged range with the Aconcagua standing out,
+  // a broad lopsided pyramid (steep west face, long eastern shoulder).
+  const range = night ? "#3a3166" : "#c49a96";
+  const snow = night ? "#a99fd0" : "#fbf4f0";
+  poly(range, [
+    [0, h], [0, 232], [40, 214], [72, 226], [110, 188], [140, 204], [178, 168], [204, 188],
+    [240, 132], [262, 150], [292, 158], [318, 178], [352, 166], [380, 186], [420, 172],
+    [452, 196], [490, 186], [w, 206], [w, h],
+  ]);
+  poly(snow, [[240, 132], [226, 154], [236, 150], [242, 160], [252, 150], [266, 160], [276, 156], [262, 150]]);
+  poly(snow, [[178, 168], [170, 180], [180, 176], [188, 182], [194, 176]]);
+  poly(snow, [[352, 166], [344, 176], [354, 173], [362, 178], [368, 174]]);
+  poly(snow, [[110, 188], [104, 197], [113, 194], [120, 198]]);
+  // Precordillera in front: lower, rounder, warmer.
+  const foothills = mulberry32(3);
+  ctx.fillStyle = night ? "#2a2350" : "#a88070";
   ctx.beginPath();
-  ctx.moveTo(60, h * 0.78);
-  ctx.lineTo(250, h * 0.36);
-  ctx.lineTo(300, h * 0.36);
-  ctx.lineTo(470, h * 0.78);
+  ctx.moveTo(0, h);
+  for (let x = 0; x <= w; x += 32) ctx.lineTo(x, 250 - Math.sin(x / 90 + 3) * 9 - foothills() * 4);
+  ctx.lineTo(w, h);
   ctx.fill();
-  ctx.fillStyle = night ? "#a99fd0" : "#fbf7ff";
-  ctx.beginPath();
-  ctx.moveTo(215, h * 0.44);
-  ctx.lineTo(250, h * 0.36);
-  ctx.lineTo(300, h * 0.36);
-  ctx.lineTo(335, h * 0.44);
-  ctx.lineTo(300, h * 0.42);
-  ctx.lineTo(275, h * 0.46);
-  ctx.lineTo(250, h * 0.42);
-  ctx.fill();
-  ridge(h * 0.72, 14, 3, layers[1]);
-  // Torii on the near ridge.
-  ctx.fillStyle = night ? "#7a2f3a" : "#c2443f";
-  const tx = 360;
-  const ty = h * 0.8;
-  ctx.fillRect(tx - 34, ty - 70, 7, 70);
-  ctx.fillRect(tx + 27, ty - 70, 7, 70);
-  ctx.fillRect(tx - 44, ty - 76, 88, 8);
-  ctx.fillRect(tx - 36, ty - 60, 72, 5);
-  ridge(h * 0.86, 10, 11, layers[2]);
+  // The plain with the vineyard: rows running away from the window, all
+  // heading to one vanishing point under the mountains.
+  ctx.fillStyle = night ? "#1c1838" : "#cdb27a";
+  ctx.fillRect(0, 262, w, h - 262);
+  const vx = 256;
+  const top = 264;
+  ctx.fillStyle = night ? "#2b2650" : "#7f9446";
+  for (let i = -9; i <= 9; i++) {
+    const x0 = vx + i * 13;
+    const x1 = vx + i * 95;
+    ctx.beginPath();
+    ctx.moveTo(x0 - 1.2, top);
+    ctx.lineTo(x0 + 1.2, top);
+    ctx.lineTo(x1 + 9, h);
+    ctx.lineTo(x1 - 9, h);
+    ctx.fill();
+  }
+  if (night) {
+    // City lights down on the plain, warm and scattered, thicker to the right.
+    const rand = mulberry32(21);
+    for (let i = 0; i < 70; i++) {
+      const x = 120 + rand() * 300 + rand() * 60;
+      const y = 266 + rand() * rand() * 70;
+      ctx.fillStyle = rand() < 0.75 ? "rgba(255,210,122,0.9)" : "rgba(255,240,215,0.85)";
+      ctx.fillRect(x, y, 1.6, 1.6);
+    }
+  }
+  ctx.restore();
   const tex = new THREE.CanvasTexture(c);
   tex.colorSpace = THREE.SRGBColorSpace;
   return tex;
@@ -1830,12 +1892,12 @@ export default function Room({
         <Zabuton position={[1.25, loft, -1.3]} rotation={0.2} />
         <LanternStand position={[1.3, loft, -2.2]} radius={0.17} height={0.34} pole={0.34} base={0.14} reducedMotion={reducedMotion} />
         <Model name="tableCoffeeSquare" position={[CHABUDAI.x, 0, CHABUDAI.z]} />
-        <TeaSet position={[CHABUDAI.x - 0.14, CHABUDAI.top, CHABUDAI.z - 0.1]} />
+        <MateSet position={[CHABUDAI.x - 0.14, CHABUDAI.top, CHABUDAI.z - 0.1]} />
         <Zabuton position={[CHABUDAI.x - 0.75, 0, CHABUDAI.z + 0.1]} rotation={0.1} />
         <Zabuton position={[CHABUDAI.x + 0.75, 0, CHABUDAI.z - 0.05]} rotation={-0.15} color={PALETTE.roseDark} />
         <Zabuton position={[CHABUDAI.x, 0, CHABUDAI.z + 0.78]} rotation={0.05} />
         <Model name="benchCushionLow" position={[1.95, 0, 1.75]} rotation={[0, -Math.PI / 2 - 0.3, 0]} />
-        <Bonsai position={[-2.15, 0.15, 0.55]} scale={1.1} />
+        <Bonsai position={[-2.15, 0.15, 0.55]} scale={1.1} vine />
         <Bonsai position={[-1.95, 0, 2.05]} scale={0.8} />
         <LanternStand position={[1.95, 0, 0.6]} radius={0.2} height={0.4} pole={0.5} base={0.16} reducedMotion={reducedMotion} />
         <Arcade onArcade={onArcade} />
