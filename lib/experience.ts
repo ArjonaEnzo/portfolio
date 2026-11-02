@@ -43,7 +43,7 @@ export const experienceData: Record<Language, readonly ExperienceItem[]> = {
       location: "Mendoza, Argentina · remote",
       current: true,
       highlights: [
-        "Designed, built and run a multi-tenant rental-management SaaS now in production with its first customer (Next.js 15, TypeScript, Supabase/PostgreSQL).",
+        "Designed, built and run a multi-tenant rental-management SaaS now in production with its first customers (Next.js 15, TypeScript, Supabase/PostgreSQL).",
         "Enforced account isolation with Row Level Security, integrated Mercado Pago with signed, idempotent webhooks, and automated billing with cron jobs and immutable PDF receipts.",
         "Set up CI with type-check, 500+ unit tests, RLS integration tests, Playwright E2E and security gates (secret scanning, dependency audit).",
       ],
@@ -124,7 +124,7 @@ export const experienceData: Record<Language, readonly ExperienceItem[]> = {
       location: "Mendoza, Argentina · remoto",
       current: true,
       highlights: [
-        "Diseñé, construí y mantengo un SaaS multi-tenant de gestión de alquileres, hoy en producción con su primer cliente (Next.js 15, TypeScript, Supabase/PostgreSQL).",
+        "Diseñé, construí y mantengo un SaaS multi-tenant de gestión de alquileres, hoy en producción con sus primeros clientes (Next.js 15, TypeScript, Supabase/PostgreSQL).",
         "Aislamiento entre cuentas con Row Level Security, integración con Mercado Pago vía webhooks firmados e idempotentes, facturación automática con cron y recibos PDF inmutables.",
         "CI con type-check, más de 500 tests unitarios, tests de integración de RLS, E2E con Playwright y gates de seguridad (escaneo de secretos, auditoría de dependencias).",
       ],

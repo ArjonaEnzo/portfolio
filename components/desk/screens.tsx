@@ -174,7 +174,7 @@ export function MonitorContent({ language, compact = false }: { language: Langua
               <h3 className={clsx("mt-2 font-bold", compact ? "text-2xl" : "text-3xl")}>{project.title}</h3>
               <p className="mt-1 text-lg text-[#ccc7d8]">{project.tagline}</p>
               <dl className="mt-5 space-y-4 text-[17px] leading-relaxed">
-                {(["problem", "solution", "impact"] as const).map((key) => (
+                {(["problem", "solution", "impact", "decision"] as const).filter((key) => project[key]).map((key) => (
                   <div key={key}>
                     <dt className="font-desk-mono text-sm uppercase tracking-wider text-[#f0a6ca]">
                       {labels[key]}

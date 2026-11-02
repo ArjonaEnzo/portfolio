@@ -58,6 +58,11 @@ export default function RoomSummary({ language }: { language: Language }) {
             <p>
               {labels.impact}: {p.impact}
             </p>
+            {p.decision && (
+              <p>
+                {labels.decision}: {p.decision}
+              </p>
+            )}
             <p>Stack: {p.stack.join(", ")}.</p>
             {p.links.length > 0 && (
               <ul>

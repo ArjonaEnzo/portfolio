@@ -71,7 +71,7 @@ export function ProfilePanel({
                 I&apos;m a full-stack developer from Mendoza, Argentina. I started at a technical high school, trained
                 at the Henry bootcamp and am now finishing a degree in software development. Since 2022 I&apos;ve
                 shipped work for clients and agencies, and I built and launched <b>MyRent</b>, a rental-management SaaS
-                now live with its first customer.
+                now live with its first customers.
               </p>
               <p>
                 I care about the parts that make software trustworthy: typed code, database-level security, automated
@@ -85,7 +85,7 @@ export function ProfilePanel({
                 Soy desarrollador full-stack de Mendoza, Argentina. Arranqué en una escuela técnica, me formé en el
                 bootcamp de Henry y hoy estoy terminando la tecnicatura en desarrollo de software. Desde 2022 trabajo
                 para clientes y agencias, y construí y lancé <b>MyRent</b>, un SaaS de gestión de alquileres que ya está
-                en producción con su primer cliente.
+                en producción con sus primeros clientes.
               </p>
               <p>
                 Me importa lo que hace confiable al software: código tipado, seguridad a nivel de base de datos, tests
@@ -220,6 +220,12 @@ export function ProjectsPanel({ language }: { language: Language }) {
                 <dt className="cl-label mb-1">{labels.impact}</dt>
                 <dd>{p.impact}</dd>
               </div>
+              {p.decision && (
+                <div>
+                  <dt className="cl-label mb-1">{labels.decision}</dt>
+                  <dd>{p.decision}</dd>
+                </div>
+              )}
             </dl>
           </div>
 
