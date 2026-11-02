@@ -2,9 +2,15 @@
 
 > Estado vivo del proyecto. Leer al abrir una sesión, actualizar al cerrar. Fechas absolutas.
 
-**Última actualización:** 2026-11-02 (Fase 2 en prod: perf `a711543` + identidad Mendoza `2545c85`)
+**Última actualización:** 2026-11-02 (NOTAKE fuera, "desde 2023")
 
 ## 👉 AHORA
+
+**2026-11-02 — Fase 3 (calidad visual del cuarto) descartada por Enzo, cuarto sin cambios.** Se evaluó con renders A/B: postprocesado (N8AO, contorno, bloom, AgX/Neutral) y texturas CC0 (referencias y packs en `docs/private/FASE3-REFERENCIA-2026-11-02.html` y `docs/private/FASE3-TEXTURAS-2026-11-02.html`). Enzo eligió mantener la gráfica actual. Se probó también una cara dibujada (atlas de canvas): **Enzo prefirió su cara original de primitivas** ("me veo con los ojos cerrados y triste"), revertida sin commit. Spec en `docs/superpowers/specs/2026-11-02-fase3-cuarto-design.md` (marcado descartado). El error de consola de dev "Attempted to synchronously unmount a root…" (×4) **aparece también con el código limpio**: es previo, no lo introdujo la Fase 3.
+**2026-11-02 — Restyle de Experience y About descartado, quedan como están.** Se mostraron 3 mockups (A editorial sumi con kanji vertical, B cuaderno cuadriculado con washi y sellos, C línea de tren + tarjeta "Dev Pass") en `docs/private/MOCKUPS-EXP-ABOUT-2026-11-02.html`; a Enzo no le gustó ninguno. Sin cambios en código.
+**2026-11-02 — NOTAKE fuera del portfolio (`00db318`, pusheado con OK de Enzo):** sacado de `lib/experience.ts` (ES/EN) para alinear con el CV; Experience queda en 7 ítems. Como era el único trabajo de 2022, "desde 2022" → "desde 2023" en 8 textos (`components/desk/desk-copy.ts` y `components/clasica/panels.tsx`). tsc, lint y build verdes (build en copia aparte: otra sesión tenía `next dev` en esta carpeta y comparten `.next`).
+**Próximo paso (uno):** LinkedIn + pins de GitHub + sitemap en Search Console (Enzo, a mano; textos en `docs/private/GITHUB-LINKEDIN-2026-11-01.md`). No reabrir el estilo del cuarto ni de sus pantallas sin pedido explícito.
+
 
 **Estado al 2026-11-01 (después del análisis):** prod sigue en `main` `dd15f7b`. Informe con hallazgos, refs y plan por fases en `docs/private/INFORME-ANALISIS-2026-11-01.md` (privado, no commitear).
 
