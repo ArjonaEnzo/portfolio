@@ -48,9 +48,12 @@ export const metadata: Metadata = {
     description: SITE.description,
   },
   robots: { index: true, follow: true },
-  // Google Search Console "HTML tag" method: set the token in Vercel
-  // (GOOGLE_SITE_VERIFICATION) and redeploy. Omitted when unset.
-  verification: { google: process.env.GOOGLE_SITE_VERIFICATION },
+  // Google Search Console "HTML tag" method for https://enzo-arjona.vercel.app/.
+  // The token is public by design (it ships in the HTML); the env var can
+  // override it, e.g. for a new property on a custom domain.
+  verification: {
+    google: process.env.GOOGLE_SITE_VERIFICATION ?? "DVKyWsCLwEr91toTpUEbvIjhj3zEXAHH7rCeM42fFTA",
+  },
 };
 
 const personJsonLd = {
