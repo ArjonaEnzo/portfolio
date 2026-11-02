@@ -28,9 +28,7 @@ export default function RoomSummary({ language }: { language: Language }) {
         {SITE.name}: {en ? "Full-Stack Developer" : "Desarrollador Full-Stack"}
       </h1>
       <p>
-        {en
-          ? "Full-stack developer in Mendoza, Argentina (UTC-3). Next.js, TypeScript and PostgreSQL. Open to remote work."
-          : SITE.description}
+        {en ? SITE.description : SITE.descriptionEs}
       </p>
       <p>
         <Link href="/clasica">{t.classicLong}</Link>

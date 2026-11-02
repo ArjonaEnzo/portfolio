@@ -8,7 +8,7 @@ const DeskExperience = dynamic(() => import("./desk-experience"), {
   ssr: false,
   loading: () => (
     <div className="fixed inset-0 z-[60]">
-      <BootScreen language="ESP" progress={0} loaded={0} total={0} ready={false} onEnter={() => {}} />
+      <BootScreen language="ENG" progress={0} loaded={0} total={0} ready={false} onEnter={() => {}} />
     </div>
   ),
 });

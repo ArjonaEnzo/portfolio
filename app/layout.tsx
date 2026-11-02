@@ -39,8 +39,8 @@ export const metadata: Metadata = {
     siteName: `${SITE.name} — Portfolio`,
     title: SITE.title,
     description: SITE.description,
-    locale: "es_AR",
-    alternateLocale: ["en_US"],
+    locale: "en_US",
+    alternateLocale: ["es_AR"],
   },
   twitter: {
     card: "summary_large_image",
@@ -75,7 +75,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="es" suppressHydrationWarning className={`${inter.variable} ${mono.variable}`}>
+    <html lang="en" suppressHydrationWarning className={`${inter.variable} ${mono.variable}`}>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>

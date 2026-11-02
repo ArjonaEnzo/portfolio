@@ -15,11 +15,11 @@ const LanguageContext = React.createContext<LanguageContextType | null>(null);
 export default function LanguageContextProvider({
   children,
 }: LanguageContextProviderProps) {
-  const [language, setLanguage] = React.useState<Language>("ESP");
+  const [language, setLanguage] = React.useState<Language>("ENG");
 
-  // Pick the initial language: ?lang=en|es in the link wins (so a job
-  // application can point to the English version), then the visitor's last
-  // choice, then the browser language. Spanish is only the SSR fallback.
+  // Pick the initial language: ?lang=en|es in the link wins (so a Spanish
+  // link can be shared), then the visitor's last choice. Otherwise English,
+  // the default for remote recruiters and what the server renders.
   React.useEffect(() => {
     try {
       const param = new URLSearchParams(window.location.search)
@@ -32,10 +32,7 @@ export default function LanguageContextProvider({
       const stored = window.localStorage.getItem("language");
       if (stored === "ENG" || stored === "ESP") {
         setLanguage(stored);
-        return;
       }
-      const browser = (navigator.language || "").toLowerCase();
-      setLanguage(browser.startsWith("es") ? "ESP" : "ENG");
     } catch {}
   }, []);
 

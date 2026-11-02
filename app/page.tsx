@@ -11,7 +11,7 @@ export default function Home() {
   return (
     <>
       {/* Text version for search engines and screen readers (visually hidden). */}
-      <RoomSummary language="ESP" />
+      <RoomSummary language="ENG" />
       <DeskClient />
     </>
   );

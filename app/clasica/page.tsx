@@ -16,7 +16,7 @@ const mincho = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Versión clásica",
+  title: "Classic version",
   alternates: { canonical: "/clasica" },
 };
 
