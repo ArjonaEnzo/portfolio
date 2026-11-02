@@ -39,8 +39,8 @@ export function ProfilePanel({
 }) {
   const en = language === "ENG";
   const facts = en
-    ? ["Working with clients since 2022", "SaaS in production", "500+ tests in MyRent"]
-    : ["Con clientes desde 2022", "SaaS en producción", "500+ tests en MyRent"];
+    ? ["Working with clients since 2023", "SaaS in production", "500+ tests in MyRent"]
+    : ["Con clientes desde 2023", "SaaS en producción", "500+ tests en MyRent"];
 
   return (
     <>
@@ -69,7 +69,7 @@ export function ProfilePanel({
             <>
               <p>
                 I&apos;m a full-stack developer from Mendoza, Argentina. I started at a technical high school, trained
-                at the Henry bootcamp and am now finishing a degree in software development. Since 2022 I&apos;ve
+                at the Henry bootcamp and am now finishing a degree in software development. Since 2023 I&apos;ve
                 shipped work for clients and agencies, and I built and launched <b>MyRent</b>, a rental-management SaaS
                 now live with its first customers.
               </p>
@@ -83,7 +83,7 @@ export function ProfilePanel({
             <>
               <p>
                 Soy desarrollador full-stack de Mendoza, Argentina. Arranqué en una escuela técnica, me formé en el
-                bootcamp de Henry y hoy estoy terminando la tecnicatura en desarrollo de software. Desde 2022 trabajo
+                bootcamp de Henry y hoy estoy terminando la tecnicatura en desarrollo de software. Desde 2023 trabajo
                 para clientes y agencias, y construí y lancé <b>MyRent</b>, un SaaS de gestión de alquileres que ya está
                 en producción con sus primeros clientes.
               </p>

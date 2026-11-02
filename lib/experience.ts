@@ -81,16 +81,6 @@ export const experienceData: Record<Language, readonly ExperienceItem[]> = {
       ],
     },
     {
-      kind: "work",
-      role: "WordPress Developer",
-      organization: "NOTAKE",
-      period: "Sep 2022 — Jan 2023",
-      location: "Mendoza, Argentina · remote",
-      highlights: [
-        "Built the brand's e-commerce store with WordPress, WooCommerce and custom PHP, including custom product pages.",
-      ],
-    },
-    {
       kind: "education",
       role: "Higher Technician in Software Development",
       organization: "IES 9-021 Tecnológico Junín",
@@ -159,16 +149,6 @@ export const experienceData: Record<Language, readonly ExperienceItem[]> = {
       location: "Buenos Aires, Argentina · remoto",
       highlights: [
         "Entregué una plataforma de administración SPA para un club deportivo: socios, cuotas, sponsors y noticias (React, Nest.js, PostgreSQL, TypeORM).",
-      ],
-    },
-    {
-      kind: "work",
-      role: "Desarrollador WordPress",
-      organization: "NOTAKE",
-      period: "Sep 2022 — Ene 2023",
-      location: "Mendoza, Argentina · remoto",
-      highlights: [
-        "Construí la tienda online de la marca con WordPress, WooCommerce y PHP a medida, con páginas de producto personalizadas.",
       ],
     },
     {

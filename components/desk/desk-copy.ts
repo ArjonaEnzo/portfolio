@@ -66,7 +66,7 @@ export const deskCopy: Record<
     },
     profileValues: {
       building: "MyRent, SaaS en producción",
-      since: "2022, para clientes y agencias",
+      since: "2023, para clientes y agencias",
       focus: "código tipado, RLS, tests y CI",
       projects: (n) => `${n}, abrí la pestaña Proyectos`,
     },
@@ -76,7 +76,7 @@ export const deskCopy: Record<
       title: "Sobre mí",
       paragraphs: [
         "Soy desarrollador full-stack de Mendoza, Argentina. Arranqué en una escuela técnica, me formé en el bootcamp de Henry y hoy estoy terminando la tecnicatura en desarrollo de software.",
-        "Desde 2022 trabajo para clientes y agencias, y construí y lancé MyRent, un SaaS de gestión de alquileres que ya está en producción con sus primeros clientes.",
+        "Desde 2023 trabajo para clientes y agencias, y construí y lancé MyRent, un SaaS de gestión de alquileres que ya está en producción con sus primeros clientes.",
         "Me importa lo que hace confiable al software: código tipado, seguridad a nivel de base de datos, tests automatizados con CI y manejo claro de errores.",
         "Lejos del teclado me vas a encontrar entrenando, compartiendo unos mates o metiéndole a algún proyecto nuevo.",
       ],
@@ -117,7 +117,7 @@ export const deskCopy: Record<
     },
     profileValues: {
       building: "MyRent, a SaaS in production",
-      since: "2022, for clients and agencies",
+      since: "2023, for clients and agencies",
       focus: "typed code, RLS, tests and CI",
       projects: (n) => `${n}, open the Projects tab`,
     },
@@ -127,7 +127,7 @@ export const deskCopy: Record<
       title: "About me",
       paragraphs: [
         "I'm a full-stack developer from Mendoza, Argentina. I started at a technical high school, trained at the Henry bootcamp and am now finishing a degree in software development.",
-        "Since 2022 I've shipped work for clients and agencies, and I built and launched MyRent, a rental-management SaaS now live with its first customers.",
+        "Since 2023 I've shipped work for clients and agencies, and I built and launched MyRent, a rental-management SaaS now live with its first customers.",
         "I care about the parts that make software trustworthy: typed code, database-level security, automated tests and CI, and clear error handling.",
         "Off the keyboard you'll find me training, sharing a mate or poking at a new side project.",
       ],
