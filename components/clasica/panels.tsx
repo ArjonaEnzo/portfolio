@@ -7,6 +7,7 @@ import {
   TbBrandLinkedin,
   TbCheck,
   TbCopy,
+  TbDownload,
   TbExternalLink,
   TbMail,
   TbPlayerPlay,
@@ -22,6 +23,8 @@ import { SubmitBtn } from "@/components/submit-btn";
 // Gallery thumbnails render at 80 px; ask Cloudinary for a small copy instead
 // of the 1600 px original (images are unoptimized, see next.config.js).
 const thumb = (src: string) => src.replace("w_1600,c_limit", "w_240,c_limit");
+
+const CV_URL = "/cv-enzo-arjona.pdf";
 
 const AVATAR = "https://res.cloudinary.com/ddtjwx08b/image/upload/f_auto,q_auto,w_320,c_fill,g_face/v1697323330/Enzo.jpg";
 
@@ -119,6 +122,9 @@ export function ProfilePanel({
             <button type="button" onClick={() => onGo("contacto")} className="cl-ghost px-4 py-2.5 text-sm">
               {en ? "Get in touch" : "Contactame"}
             </button>
+            <a href={CV_URL} target="_blank" rel="noreferrer" className="cl-ghost inline-flex items-center gap-2 px-4 py-2.5 text-sm">
+              <TbDownload aria-hidden /> {en ? "Resume (PDF)" : "CV (PDF)"}
+            </a>
           </div>
         </div>
       </div>
@@ -378,6 +384,9 @@ export function ContactPanel({ language }: { language: Language }) {
               </a>
               <a href={`mailto:${SITE.email}`} className="cl-ghost inline-flex items-center gap-2 px-3.5 py-2 text-sm">
                 <TbMail aria-hidden /> {en ? "Write an email" : "Escribir un mail"}
+              </a>
+              <a href={CV_URL} target="_blank" rel="noreferrer" className="cl-ghost inline-flex items-center gap-2 px-3.5 py-2 text-sm">
+                <TbDownload aria-hidden /> {en ? "Resume (PDF)" : "CV (PDF)"}
               </a>
             </div>
           </div>

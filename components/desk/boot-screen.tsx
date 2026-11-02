@@ -3,6 +3,7 @@ import React from "react";
 import Link from "next/link";
 import clsx from "clsx";
 import type { Language } from "@/lib/projects";
+import { SITE } from "@/lib/site";
 import { deskCopy } from "./desk-copy";
 
 const BLOCKS = 32;
@@ -42,6 +43,11 @@ export default function BootScreen({
           <span className="text-[#f0a6ca]">▲</span> enzo@desk
         </p>
         <p className="text-[#a89fc0]">  - Local: /desk</p>
+        {/* What a recruiter needs in the first seconds, before any 3D. Lines
+            stay under ~36 characters so they don't wrap on a 375 px phone. */}
+        <p className="text-[#a89fc0]">  - {t.boot.role}</p>
+        <p className="text-[#a89fc0]">  - Next.js · TypeScript · PostgreSQL</p>
+        <p className="text-[#a89fc0]">  - {t.boot.status}</p>
         <p className="mt-3" role="status" aria-live="polite">
           <span className={ready ? "text-[#7dd3c0]" : "text-[#f5c26b]"}>{ready ? "✓" : "○"}</span>{" "}
           {ready ? t.ready : t.loading}
@@ -79,12 +85,30 @@ export default function BootScreen({
             {t.enter}
           </button>
         </div>
-        {/* Way out for anyone who doesn't want to wait for the room. */}
-        <p className="mt-6 text-center text-xs uppercase tracking-widest">
-          <Link href="/clasica" className="text-[#a89fc0] underline underline-offset-4 hover:text-[#e6e1f0]">
-            {t.skip3d} →
-          </Link>
-        </p>
+        {/* Resume and profiles, plus a way out for anyone who doesn't want to wait for the room. */}
+        <ul className="mt-6 flex flex-wrap items-center justify-center gap-x-6 gap-y-1 text-xs uppercase tracking-widest">
+          {[
+            { href: "/cv-enzo-arjona.pdf", label: t.boot.resume },
+            { href: SITE.github, label: "GitHub" },
+            { href: SITE.linkedin, label: "LinkedIn" },
+          ].map((l) => (
+            <li key={l.href}>
+              <a
+                href={l.href}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-block py-2 text-[#a89fc0] underline underline-offset-4 hover:text-[#e6e1f0]"
+              >
+                {l.label}
+              </a>
+            </li>
+          ))}
+          <li>
+            <Link href="/clasica" className="inline-block py-2 text-[#a89fc0] underline underline-offset-4 hover:text-[#e6e1f0]">
+              {t.skip3d} →
+            </Link>
+          </li>
+        </ul>
       </div>
     </div>
   );
