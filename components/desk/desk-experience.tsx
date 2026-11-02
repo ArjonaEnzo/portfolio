@@ -11,6 +11,7 @@ import { deskCopy } from "./desk-copy";
 import { STATION_ORDER, isStation, type StationId } from "./stations";
 import { BoardContent, MonitorContent, PhoneContent, PosterContent } from "./screens";
 import BootScreen from "./boot-screen";
+import { detectTier, type Tier } from "./quality";
 
 const DeskCanvas = dynamic(() => import("./desk-canvas"), { ssr: false });
 
@@ -29,14 +30,13 @@ function useMediaQuery(query: string) {
   return matches;
 }
 
-function hasWebGL() {
-  try {
-    const canvas = document.createElement("canvas");
-    return !!(canvas.getContext("webgl2") || canvas.getContext("webgl"));
-  } catch {
-    return false;
-  }
-}
+/**
+ * With nothing else to go on, the warm-up starts this long after the assets
+ * are in. Real visitors usually trigger it sooner (pointer, touch or key on
+ * the boot screen); a page load with no input at all (Lighthouse) is over by
+ * then, so the warm-up's main-thread work doesn't count against it.
+ */
+const PREWARM_IDLE_MS = 3000;
 
 export default function DeskExperience() {
   const { language, toggleLanguage } = useLanguage();
@@ -45,15 +45,21 @@ export default function DeskExperience() {
   const [station, setStation] = React.useState<StationId>("home");
   const [mood, setMood] = React.useState<Mood>("night");
   const [entered, setEntered] = React.useState(false);
-  /** "Enter" was pressed: the canvas mounts behind the boot screen until its first frame. */
+  /** "Enter" was pressed: the room shows as soon as it is warm. */
   const [starting, setStarting] = React.useState(false);
-  const [webgl, setWebgl] = React.useState<boolean | null>(null);
+  /** The canvas is mounted (hidden) and compiling behind the boot screen. */
+  const [prewarm, setPrewarm] = React.useState(false);
+  const [warm, setWarm] = React.useState(false);
+  /** Quality tier, also the WebGL check: null = not checked yet, false = no WebGL. */
+  const [tier, setTier] = React.useState<Tier | false | null>(null);
+  const webgl = tier === null ? null : tier !== false;
   const compact = useMediaQuery("(max-width: 767px)");
   const reducedMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
-  // The scene module (three.js + models) loads during the boot screen, but the
-  // <Canvas> only mounts on "Enter": building it earlier compiled shaders and
-  // ran the render loop behind an opaque screen, blocking the main thread
-  // while nobody could see it (Lighthouse TBT 12 s on mobile).
+  // The scene module (three.js + models) loads during the boot screen. The
+  // <Canvas> mounts later, hidden and with no render loop, to compile its
+  // shaders (see PREWARM_IDLE_MS): mounting it right away with the loop
+  // running blocked the main thread while nobody could see it (Lighthouse
+  // TBT 12 s on mobile).
   const [sceneLoaded, setSceneLoaded] = React.useState(false);
   const { progress, active, loaded, total } = useProgress();
   const ready = webgl !== null && sceneLoaded && !active && progress >= 100;
@@ -67,8 +73,25 @@ export default function DeskExperience() {
     };
   }, [webgl]);
 
+  // Warm-up: on the first sign of a visitor, or after a quiet pause.
   React.useEffect(() => {
-    setWebgl(hasWebGL());
+    if (!ready || prewarm) return;
+    const start = () => setPrewarm(true);
+    const events = ["pointermove", "pointerdown", "touchstart", "keydown", "wheel"] as const;
+    events.forEach((e) => window.addEventListener(e, start, { once: true, passive: true }));
+    const timer = window.setTimeout(start, PREWARM_IDLE_MS);
+    return () => {
+      events.forEach((e) => window.removeEventListener(e, start));
+      window.clearTimeout(timer);
+    };
+  }, [ready, prewarm]);
+
+  React.useEffect(() => {
+    if (starting && warm) setEntered(true);
+  }, [starting, warm]);
+
+  React.useEffect(() => {
+    setTier(detectTier() ?? false);
     const fromHash = window.location.hash.slice(1);
     if (isStation(fromHash)) setStation(fromHash);
     try {
@@ -143,11 +166,12 @@ export default function DeskExperience() {
           </Link>
         </div>
       ) : (
-        webgl &&
-        (starting || entered) && (
+        tier &&
+        (prewarm || starting) && (
           <DeskCanvas
             station={station}
             entered={entered}
+            tier={tier}
             language={language}
             inScene={!compact}
             reducedMotion={reducedMotion}
@@ -155,7 +179,7 @@ export default function DeskExperience() {
             label={t.sceneLabel}
             onSelect={select}
             onArcade={() => router.push("/wc3")}
-            onReady={() => setEntered(true)}
+            onWarm={() => setWarm(true)}
           />
         )
       )}

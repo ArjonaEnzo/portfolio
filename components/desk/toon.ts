@@ -71,31 +71,36 @@ export function toonify(material: THREE.Material, options: ToonOptions = {}) {
   const mat = material as THREE.MeshStandardMaterial;
   if (!mat.isMeshStandardMaterial || mat.userData.toon) return;
   mat.userData.toon = true;
-  const cut = new THREE.Vector2(...(options.cut ?? DEFAULT_CUT));
+  // Cut and wind height are per-material uniforms, not constants in the GLSL:
+  // every toon material shares one program (two with wind), instead of one
+  // program per cut/height combination. Fewer programs = less to compile.
+  const cut = { value: new THREE.Vector2(...(options.cut ?? DEFAULT_CUT)) };
   const wind = options.wind ?? 0;
+  const windHeight = { value: wind };
   mat.onBeforeCompile = (shader) => {
-    shader.uniforms.uCut = { value: cut };
+    shader.uniforms.uCut = cut;
     shader.uniforms.uShadowTint = toonUniforms.uShadowTint;
     shader.uniforms.uLitTint = toonUniforms.uLitTint;
     shader.fragmentShader = HEAD + shader.fragmentShader.replace("#include <opaque_fragment>", BODY + "\n#include <opaque_fragment>");
     if (wind > 0) {
       shader.uniforms.uTime = toonUniforms.uTime;
       shader.uniforms.uWindAmp = toonUniforms.uWindAmp;
+      shader.uniforms.uWindHeight = windHeight;
       shader.vertexShader =
-        "uniform float uTime;\nuniform float uWindAmp;\n" +
+        "uniform float uTime;\nuniform float uWindAmp;\nuniform float uWindHeight;\n" +
         shader.vertexShader.replace(
           "#include <begin_vertex>",
           /* glsl */ `#include <begin_vertex>
           {
             // Roots stay still, tips move: two sines at different rates.
-            float h = clamp(position.y / ${wind.toFixed(3)}, 0.0, 1.0);
+            float h = clamp(position.y / uWindHeight, 0.0, 1.0);
             float w = sin(uTime * 1.3 + position.x * 4.0) * 0.5 + sin(uTime * 2.1 + position.z * 3.0) * 0.5;
             transformed.xz += vec2(w, w * 0.6) * uWindAmp * h * h;
           }`
         );
     }
   };
-  mat.customProgramCacheKey = () => `toon-${cut.x}-${cut.y}-${wind}`;
+  mat.customProgramCacheKey = () => (wind > 0 ? "toon-wind" : "toon");
   mat.needsUpdate = true;
 }
 

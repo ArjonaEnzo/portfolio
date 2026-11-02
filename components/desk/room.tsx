@@ -9,6 +9,7 @@ import type { Language } from "@/lib/projects";
 import { CHABUDAI, DESK, LEVELS, PHONE_YAW, SURFACES, distanceFactorFor, type StationId } from "./stations";
 import { BoardScreen, MonitorScreen, PhoneScreen, PosterScreen } from "./screens";
 import { toonUniforms, toonifyTree } from "./toon";
+import type { Quality } from "./quality";
 
 /* Kenney Furniture Kit (CC0), converted to GLB in meters, centered on X/Z. */
 const MODELS = [
@@ -235,7 +236,6 @@ function Shoji({
             emissive={PALETTE.paper}
             emissiveIntensity={glow}
             roughness={1}
-            side={THREE.DoubleSide}
             transparent
             opacity={0.92}
           />
@@ -326,6 +326,20 @@ function LanternStand({
   );
 }
 
+/**
+ * Low-poly sphere with one normal per face. Same look as `flatShading`, but
+ * baked into the geometry, so the material shares the plain toon program.
+ */
+function FacetedSphere({ radius }: { radius: number }) {
+  const geo = React.useMemo(() => {
+    const g = new THREE.SphereGeometry(radius, 10, 7).toNonIndexed();
+    g.computeVertexNormals();
+    return g;
+  }, [radius]);
+  React.useEffect(() => () => geo.dispose(), [geo]);
+  return <primitive object={geo} attach="geometry" />;
+}
+
 /** Bonsai: a crooked trunk and three foliage pads, in a shallow pot. */
 function Bonsai({ position, scale = 1 }: { position: [number, number, number]; scale?: number }) {
   return (
@@ -352,8 +366,8 @@ function Bonsai({ position, scale = 1 }: { position: [number, number, number]; s
         [-0.09, 0.26, -0.04, 0.07],
       ].map(([x, y, z, r], i) => (
         <mesh key={i} position={[x, y, z]} scale={[1, 0.55, 1]} castShadow>
-          <sphereGeometry args={[r, 10, 7]} />
-          <meshStandardMaterial color={i === 1 ? "#4f7a46" : "#3f6b3b"} roughness={1} flatShading />
+          <FacetedSphere radius={r} />
+          <meshStandardMaterial color={i === 1 ? "#4f7a46" : "#3f6b3b"} roughness={1} />
         </mesh>
       ))}
     </group>
@@ -448,7 +462,9 @@ function Shell() {
       {[-1.7, -0.8, 0.1, 1.0, 1.9].map((x) => (
         <mesh key={x} position={[x, 0.003, 0]} rotation={[-Math.PI / 2, 0, 0]}>
           <planeGeometry args={[0.02, ROOM.half * 2]} />
-          <meshBasicMaterial color={PALETTE.tatamiEdge} />
+          {/* Color already run through ACES, so it can skip tone mapping like
+              the other unlit materials (one program less). */}
+          <meshBasicMaterial color="#1e3427" toneMapped={false} />
         </mesh>
       ))}
 
@@ -579,7 +595,7 @@ function Shell() {
         </mesh>
         <mesh position={[0, 0, -0.02]}>
           <planeGeometry args={[z1 - z0, y1 - y0]} />
-          <meshPhysicalMaterial color="#c9d6ff" transparent opacity={0.07} roughness={0.05} />
+          <meshStandardMaterial color="#c9d6ff" transparent opacity={0.07} roughness={0.05} />
         </mesh>
       </group>
 
@@ -1616,7 +1632,7 @@ const LIGHTING = {
   },
 };
 
-function Lights() {
+function Lights({ shadowMapSize }: { shadowMapSize: number }) {
   const mood = useMood();
   const scene = useThree((s) => s.scene);
   const ambient = React.useRef<THREE.AmbientLight>(null);
@@ -1685,7 +1701,7 @@ function Lights() {
         intensity={1.1}
         color="#b9c4ff"
         castShadow
-        shadow-mapSize={[2048, 2048]}
+        shadow-mapSize={[shadowMapSize, shadowMapSize]}
         shadow-bias={-0.0004}
         shadow-normalBias={0.02}
         shadow-camera-left={-4}
@@ -1726,14 +1742,15 @@ function Toonify({ reducedMotion }: { reducedMotion: boolean }) {
  * Entrance: each direct child grows from nothing with an elastic overshoot,
  * one after the other (Messenger's elastic.out(1, 0.75), 0.075 s apart), with
  * a small random turn that settles. Every child must have its origin at its
- * own base or centre. The canvas mounts on "Enter", so mount = entrance.
+ * own base or centre. Starts on "Enter" (`play`): before that the canvas is
+ * hidden and the furniture stays in its resting pose for the warm-up frame.
  */
-function PopIn({ reducedMotion, children }: { reducedMotion: boolean; children: React.ReactNode }) {
+function PopIn({ reducedMotion, play, children }: { reducedMotion: boolean; play: boolean; children: React.ReactNode }) {
   const ref = React.useRef<THREE.Group>(null);
   const original = React.useRef(new Map<THREE.Object3D, { s: THREE.Vector3; ry: number }>());
   React.useLayoutEffect(() => {
     const group = ref.current;
-    if (!group || reducedMotion) return;
+    if (!group || reducedMotion || !play) return;
     const rest = original.current;
     const tweens: gsap.core.Tween[] = [];
     group.children.forEach((child, i) => {
@@ -1754,19 +1771,21 @@ function PopIn({ reducedMotion, children }: { reducedMotion: boolean; children: 
         child.rotation.y = ry;
       });
     };
-  }, [reducedMotion]);
+  }, [reducedMotion, play]);
   return <group ref={ref}>{children}</group>;
 }
 
 export default function Room({
   station,
+  entered,
+  quality,
   language,
   inScene,
   reducedMotion,
   mood,
   onSelect,
   onArcade,
-}: Interactive & { reducedMotion: boolean; mood: Mood; onArcade: () => void }) {
+}: Interactive & { entered: boolean; quality: Quality; reducedMotion: boolean; mood: Mood; onArcade: () => void }) {
   const shared = { station, language, inScene, onSelect };
   const deck = LEVELS.deck;
   const loft = LEVELS.loft;
@@ -1780,13 +1799,13 @@ export default function Room({
   }, [mood, reducedMotion]);
   return (
     <MoodCtx.Provider value={moodRef}>
-      <Lights />
+      <Lights shadowMapSize={quality.shadowMapSize} />
       <Shell />
       <WindowView />
 
       {/* Furniture pops in one piece after another; screens, markers and
           particles stay outside (they have their own transitions). */}
-      <PopIn reducedMotion={reducedMotion}>
+      <PopIn reducedMotion={reducedMotion} play={entered}>
         <Model name="desk" position={[DESK.x, deck, DESK.z]} />
         <Workstation reducedMotion={reducedMotion} station={station} />
         <Model name="lampSquareTable" position={[DESK.x - 0.55, deck + 0.769, DESK.z + 0.15]} />
@@ -1829,8 +1848,8 @@ export default function Room({
       <Monitor {...shared} />
       <Board {...shared} />
       <Phone {...shared} />
-      <Dust reducedMotion={reducedMotion} day={mood === "day"} />
-      <Petals count={inScene ? 70 : 40} reducedMotion={reducedMotion} />
+      {quality.dust && <Dust reducedMotion={reducedMotion} day={mood === "day"} />}
+      <Petals count={inScene ? quality.petals : 40} reducedMotion={reducedMotion} />
 
       <Scroll {...shared} />
       <Markers visible={station === "home"} reducedMotion={reducedMotion} />
