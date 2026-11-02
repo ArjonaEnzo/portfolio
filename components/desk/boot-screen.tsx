@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import Link from "next/link";
 import clsx from "clsx";
 import type { Language } from "@/lib/projects";
 import { deskCopy } from "./desk-copy";
@@ -78,6 +79,12 @@ export default function BootScreen({
             {t.enter}
           </button>
         </div>
+        {/* Way out for anyone who doesn't want to wait for the room. */}
+        <p className="mt-6 text-center text-xs uppercase tracking-widest">
+          <Link href="/clasica" className="text-[#a89fc0] underline underline-offset-4 hover:text-[#e6e1f0]">
+            {t.skip3d} →
+          </Link>
+        </p>
       </div>
     </div>
   );

@@ -48,6 +48,9 @@ export const metadata: Metadata = {
     description: SITE.description,
   },
   robots: { index: true, follow: true },
+  // Google Search Console "HTML tag" method: set the token in Vercel
+  // (GOOGLE_SITE_VERIFICATION) and redeploy. Omitted when unset.
+  verification: { google: process.env.GOOGLE_SITE_VERIFICATION },
 };
 
 const personJsonLd = {

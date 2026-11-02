@@ -12,6 +12,7 @@ export const deskCopy: Record<
     classic: string;
     classicShort: string;
     classicLong: string;
+    skip3d: string;
     dragHint: string;
     toDay: string;
     toNight: string;
@@ -41,6 +42,7 @@ export const deskCopy: Record<
     classic: "Versión clásica",
     classicShort: "Clásica",
     classicLong: "Ver la versión clásica del portfolio",
+    skip3d: "¿Sin 3D? Versión clásica",
     dragHint: "Arrastrá para mirar · tocá un objeto",
     toDay: "Cambiar a modo día",
     toNight: "Cambiar a modo noche",
@@ -90,6 +92,7 @@ export const deskCopy: Record<
     classic: "Classic version",
     classicShort: "Classic",
     classicLong: "Open the classic version of the portfolio",
+    skip3d: "No 3D? Classic version",
     dragHint: "Drag to look around · tap an object",
     toDay: "Switch to day mode",
     toNight: "Switch to night mode",

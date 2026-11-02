@@ -169,7 +169,7 @@ export default function DeskExperience() {
       >
         {station === "home" ? (
           <div className={clsx("pointer-events-auto rounded-xl border px-3 py-2 backdrop-blur sm:px-4", glass)}>
-            <h1 className="whitespace-nowrap text-base font-bold uppercase tracking-wide sm:text-2xl">{SITE.name}</h1>
+            <p className="whitespace-nowrap text-base font-bold uppercase tracking-wide sm:text-2xl">{SITE.name}</p>
             {/* Phones: the name alone, so the box stays one line next to the buttons */}
             <p className="hidden font-desk-mono text-xs uppercase tracking-widest text-[#f0a6ca] sm:block sm:text-sm">
               Full-Stack Developer · Mendoza
