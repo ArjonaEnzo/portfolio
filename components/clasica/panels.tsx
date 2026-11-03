@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import toast from "react-hot-toast";
 import {
@@ -17,7 +17,7 @@ import { getProjects, linkLabels, projectLabels } from "@/lib/projects";
 import { experienceData, experienceLabels } from "@/lib/experience";
 import { skillGroupLabels, skillGroups } from "@/lib/skills";
 import { SITE } from "@/lib/site";
-import { sendEmail } from "@/actions/sendEmail";
+import { sendEmail, type SendEmailError } from "@/actions/sendEmail";
 import { SubmitBtn } from "@/components/submit-btn";
 
 // Gallery thumbnails render at 80 px; ask Cloudinary for a small copy instead
@@ -343,6 +343,22 @@ export function ExperiencePanel({ language }: { language: Language }) {
 export function ContactPanel({ language }: { language: Language }) {
   const en = language === "ENG";
   const [copied, setCopied] = useState(false);
+  // When the form became usable: the server drops sends faster than a human.
+  const mountedAt = useRef(0);
+  useEffect(() => {
+    mountedAt.current = Date.now();
+  }, []);
+  const sendErrors: Record<SendEmailError, string> = en
+    ? {
+        invalid: "Check your email and write a slightly longer message.",
+        rate_limited: "Too many messages. Try again in a few minutes.",
+        failed: "Could not send the message. Email me directly instead.",
+      }
+    : {
+        invalid: "Revisá tu email y escribí un mensaje un poco más largo.",
+        rate_limited: "Demasiados mensajes. Probá de nuevo en unos minutos.",
+        failed: "No se pudo enviar el mensaje. Escribime directo por mail.",
+      };
 
   const copyEmail = async () => {
     try {
@@ -401,11 +417,12 @@ export function ContactPanel({ language }: { language: Language }) {
         <form
           className="flex flex-col gap-3"
           action={async (formData) => {
+            formData.set("startedAt", String(mountedAt.current));
             const { error } = await sendEmail(formData).catch(() => ({
-              error: en ? "Something went wrong" : "Algo salió mal",
+              error: "failed" as SendEmailError,
             }));
             if (error) {
-              toast.error(error);
+              toast.error(sendErrors[error]);
               return;
             }
             toast.success(en ? "Message sent!" : "¡Mensaje enviado!");
@@ -419,7 +436,7 @@ export function ContactPanel({ language }: { language: Language }) {
             type="email"
             name="senderEmail"
             required
-            maxLength={500}
+            maxLength={254}
             autoComplete="email"
             placeholder={en ? "you@company.com" : "vos@empresa.com"}
             className="cl-input"
@@ -435,6 +452,15 @@ export function ContactPanel({ language }: { language: Language }) {
             rows={6}
             placeholder={en ? "Tell me about the role or the project" : "Contame del puesto o del proyecto"}
             className="cl-input resize-y"
+          />
+          {/* Honeypot: hidden from people and screen readers, bots fill it. */}
+          <input
+            type="text"
+            name="company"
+            tabIndex={-1}
+            autoComplete="off"
+            aria-hidden
+            className="absolute -left-[9999px] h-px w-px opacity-0"
           />
           <SubmitBtn />
         </form>
