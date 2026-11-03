@@ -2,10 +2,12 @@
 // 'unsafe-inline' (theme script, JSON-LD, Next's inline chunks). The CSP still
 // blocks plugins, <base> hijacking, foreign form targets and framing.
 // 'wasm-unsafe-eval' allows WebAssembly only (drei's meshopt GLTF decoder),
-// not JS eval.
+// not JS eval. `next dev` needs 'unsafe-eval' (eval source maps, React
+// Refresh), so it is added in development only.
+const isDev = process.env.NODE_ENV === "development";
 const csp = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'",
+  `script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'${isDev ? " 'unsafe-eval'" : ""}`,
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob: https://res.cloudinary.com",
   "font-src 'self' data:",
