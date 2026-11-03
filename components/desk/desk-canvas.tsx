@@ -44,7 +44,11 @@ function Prewarm({ onWarm }: { onWarm: () => void }) {
       .catch(() => {})
       .then(() => {
         if (!alive) return;
-        advance(performance.now());
+        // With frameloop "never", advance() sets clock.elapsedTime to this value
+        // in seconds. The loop restarts the clock at 0 on "Enter", so anything
+        // else leaves timers scheduled from this frame (Enzo's blink and look-up)
+        // hours in the future: eyes shut, head down.
+        advance(0);
         requestAnimationFrame(() => alive && done.current());
       });
     return () => {
@@ -62,7 +66,7 @@ function Prewarm({ onWarm }: { onWarm: () => void }) {
 function EnterFrame({ entered }: { entered: boolean }) {
   const advance = useThree((s) => s.advance);
   React.useLayoutEffect(() => {
-    if (entered) advance(performance.now());
+    if (entered) advance(0);
   }, [entered, advance]);
   return null;
 }
