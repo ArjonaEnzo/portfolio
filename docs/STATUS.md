@@ -17,7 +17,7 @@
 - **Prod verificado (2026-11-03 12:16):** deploy `portfolio-ca249vwjl` Ready. `curl -I` a `enzo-arjona.vercel.app`: CSP (sin `'unsafe-eval'`), X-Frame-Options DENY, nosniff, Referrer-Policy, Permissions-Policy, HSTS, sin X-Powered-By; `/robots.txt`, `/sitemap.xml`, `/cv-enzo-arjona.pdf`, `/clasica` 200; meta `google-site-verification` intacta. **Envío real del form** desde `/clasica` → Resend devolvió id (mail de prueba a la casilla de Enzo).
 - Gotcha Vercel Hobby: un solo build a la vez para toda la cuenta. Un preview lento de MyRent (~30 min) dejó los deploys de prod del portfolio en "Queued" sin logs. Antes de pensar que está roto: `vercel ls <proyecto>` en todos los proyectos y buscar uno en "Building".
 - **M2 aceptado por Enzo (2026-11-03):** el CV de 2023 con su teléfono queda en el historial público de git; no se reescribe historial. Cerrado, no volver a proponerlo.
-- **B4 pendiente de Enzo:** crear `RESEND_API_KEY` en Vercel con el valor de `RESENT_API_KEY` → push (va con el commit de STATUS sin pushear) → probar el form → borrar `RESENT_API_KEY`.
+- **B4 cerrado por Enzo (2026-11-03):** se queda con `RESENT_API_KEY` tal como está (key "Porfolio" de la cuenta de Resend de enzoarjona30). No rotar ni renombrar; **no volver a proponerlo**.
 - Worktree `../portfolio-wt-face` borrado. Tablero de la cara: `docs/private/CARA-ENTORNO-2026-11-03.html` + `docs/private/cara-2026-11-03/`.
 - Gotcha: `vercel link` crea `.env.local` con un token OIDC y agrega `.env*` al `.gitignore` (revertido; `.env*.local` ya lo cubría).
 
