@@ -940,6 +940,7 @@ function Enzo({ reducedMotion, station }: { reducedMotion: boolean; station: Sta
   const frame = <meshStandardMaterial color="#2e2c33" roughness={0.35} metalness={0.6} />;
   // From his photo: thin light-brown moustache and a little chin stubble.
   const whisker = <meshStandardMaterial color="#5a4232" roughness={1} />;
+  const lip = <meshStandardMaterial color="#b4705e" roughness={1} />;
   const curls = React.useMemo(() => {
     const rand = mulberry32(21);
     const out: [number, number, number, number][] = [];
@@ -1092,15 +1093,17 @@ function Enzo({ reducedMotion, station }: { reducedMotion: boolean; station: Sta
             {whisker}
           </mesh>
         ))}
-        {/* Chin stubble on the rounded underside of the face */}
-        <mesh position={[0, -0.125, -0.103]} rotation={[-0.85, Math.PI, 0]}>
-          <planeGeometry args={[0.07, 0.035]} />
-          <meshStandardMaterial color="#9c7158" roughness={1} />
-        </mesh>
-        <mesh position={[0, -0.1, -0.1244]}>
-          <boxGeometry args={[0.05, 0.008, 0.008]} />
-          <meshStandardMaterial color="#b4705e" roughness={1} />
-        </mesh>
+        {/* Smile: a flat lip with the corners turned up */}
+        {[
+          [0, -0.1, 0.03, 0],
+          [-0.021, -0.094, 0.018, -0.6],
+          [0.021, -0.094, 0.018, 0.6],
+        ].map(([x, y, w, rz], i) => (
+          <mesh key={i} position={[x, y, -0.1244]} rotation={[0, 0, rz]}>
+            <boxGeometry args={[w, 0.008, 0.008]} />
+            {lip}
+          </mesh>
+        ))}
         {[-0.145, 0.145].map((x) => (
           <mesh key={x} position={[x, -0.01, 0]}>
             <sphereGeometry args={[0.028, 10, 8]} />
