@@ -2,16 +2,27 @@
 
 > Estado vivo del proyecto. Leer al abrir una sesión, actualizar al cerrar. Fechas absolutas.
 
-**Última actualización:** 2026-11-02 (auditoría de seguridad + fixes)
+**Última actualización:** 2026-11-03 (cierre: cara, seguridad en prod)
 
 ## 👉 AHORA
 
-**2026-11-02 — Auditoría de seguridad hecha (informe `docs/private/SEGURIDAD-2026-11-02.md`): 0 críticos/altos.** Fixes en `b3070b4` (**commiteado, falta push con OK de Enzo**): form de contacto con honeypot, tiempo mínimo de 3 s, rate limit por IP en memoria (3/10 min), validación de email y errores como códigos EN/ES (sin filtrar mensajes de Resend; el log no guarda PII); headers CSP (con `'wasm-unsafe-eval'` para el decoder meshopt de drei), X-Frame-Options, nosniff, Referrer-Policy, Permissions-Policy, sin X-Powered-By. tsc, lint y build verdes (build en worktree aparte con solo estos cambios); verificado con `next start` local: cuarto 3D sin violaciones de CSP, imágenes de Cloudinary OK, rate limit (4º envío bloqueado), honeypot, celu ES oscuro sin scroll horizontal. **Pendiente de Enzo:** M2 (CV de 2023 con su teléfono en el historial público de git: aceptar o reescribir historial con force push) y B4 (crear `RESEND_API_KEY` en Vercel para sacar el nombre legado `RESENT_API_KEY`). Después del push: medir headers con curl contra prod y probar un envío real del form.
+**✅ PORTFOLIO CERRADO (2026-11-03).** Prod = `main` `f6174b3`. Solo quedan tareas de Enzo, a mano: **pins de GitHub y LinkedIn** (textos en `docs/private/GITHUB-LINKEDIN-2026-11-01.md`). No reabrir el cuarto, sus pantallas ni la cara sin pedido explícito. No tocar la meta `google-site-verification`.
+
+**2026-11-03 — Cierre.** Pusheado con OK de Enzo (`6507aa0..f6174b3`):
+- `b3070b4` seguridad (form de contacto con honeypot, 3 s mínimos, rate limit 3/10 min por IP, errores como códigos; headers CSP, X-Frame-Options, nosniff, Referrer-Policy, Permissions-Policy) · `9959e2d` STATUS · `43d3ee3` CSP con `'unsafe-eval'` solo en dev.
+- `91c89f3` **bug de prod arreglado:** desde `a711543` Enzo quedaba con ojos cerrados y cabeza gacha. Con `frameloop="never"`, `advance(performance.now())` llevaba el reloj de R3F a ~50.000 s en el precalentado → `advance(0)`.
+- `6da9ae1` cara: sin la barbilla (plano `#9c7158`) y con sonrisa (labio plano + comisuras arriba). Enzo eligió esto sobre las variantes V1/V2/V3 del spike (descartadas, código temporal borrado). Entorno sin cambios.
+- `f6174b3` CSP de dev permite el script de debug de Vercel Analytics.
+- Gate: tsc, lint y build verdes; `next start` en Chrome DevTools desktop + celu 390 px × día/noche, sin errores nuevos. Preview de Vercel: headers OK; Lighthouse `lighthouse@12.8.2` celu 95/93/95 (mediana 95), desktop 100×3 (las primeras 3 de celu dieron 83–89 con la máquina cargada; prod viejo en el mismo momento dio 88/80/49 → ruido). En previews SEO 66 y BP 93 son por `x-robots-tag: noindex` y el toolbar `vercel.live` (no existen en prod).
+- **Prod verificado (2026-11-03 12:16):** deploy `portfolio-ca249vwjl` Ready. `curl -I` a `enzo-arjona.vercel.app`: CSP (sin `'unsafe-eval'`), X-Frame-Options DENY, nosniff, Referrer-Policy, Permissions-Policy, HSTS, sin X-Powered-By; `/robots.txt`, `/sitemap.xml`, `/cv-enzo-arjona.pdf`, `/clasica` 200; meta `google-site-verification` intacta. **Envío real del form** desde `/clasica` → Resend devolvió id (mail de prueba a la casilla de Enzo).
+- Gotcha Vercel Hobby: un solo build a la vez para toda la cuenta. Un preview lento de MyRent (~30 min) dejó los deploys de prod del portfolio en "Queued" sin logs. Antes de pensar que está roto: `vercel ls <proyecto>` en todos los proyectos y buscar uno en "Building".
+- Worktree `../portfolio-wt-face` borrado. Tablero de la cara: `docs/private/CARA-ENTORNO-2026-11-03.html` + `docs/private/cara-2026-11-03/`.
+- Gotcha: `vercel link` crea `.env.local` con un token OIDC y agrega `.env*` al `.gitignore` (revertido; `.env*.local` ya lo cubría).
+
 **2026-11-02 — Fase 3 (calidad visual del cuarto) descartada por Enzo, cuarto sin cambios.** Se evaluó con renders A/B: postprocesado (N8AO, contorno, bloom, AgX/Neutral) y texturas CC0 (referencias y packs en `docs/private/FASE3-REFERENCIA-2026-11-02.html` y `docs/private/FASE3-TEXTURAS-2026-11-02.html`). Enzo eligió mantener la gráfica actual. Se probó también una cara dibujada (atlas de canvas): **Enzo prefirió su cara original de primitivas** ("me veo con los ojos cerrados y triste"), revertida sin commit. Spec y plan borrados (descartados). El error de consola de dev "Attempted to synchronously unmount a root…" (×4) **aparece también con el código limpio**: es previo, no lo introdujo la Fase 3.
 **2026-11-02 — Restyle de Experience y About descartado, quedan como están.** Se mostraron 3 mockups (A editorial sumi con kanji vertical, B cuaderno cuadriculado con washi y sellos, C línea de tren + tarjeta "Dev Pass") en `docs/private/MOCKUPS-EXP-ABOUT-2026-11-02.html`; a Enzo no le gustó ninguno. Sin cambios en código.
 **2026-11-02 — NOTAKE fuera del portfolio (`00db318`, pusheado con OK de Enzo):** sacado de `lib/experience.ts` (ES/EN) para alinear con el CV; Experience queda en 7 ítems. Como era el único trabajo de 2022, "desde 2022" → "desde 2023" en 8 textos (`components/desk/desk-copy.ts` y `components/clasica/panels.tsx`). tsc, lint y build verdes (build en copia aparte: otra sesión tenía `next dev` en esta carpeta y comparten `.next`).
 **Search Console (chequeado 2026-11-02, cuenta `authuser=1` del Chrome):** sitemap enviado el 2026-11-01, estado "Correcto", 2 páginas descubiertas; `/` **está indexada**. "Solicitar indexación" dio "Cuota superada" (ya se pidió hoy): reintentar mañana si el título viejo sigue en Google.
-**Próximo paso (uno):** pins de GitHub y LinkedIn (Enzo, a mano; textos en `docs/private/GITHUB-LINKEDIN-2026-11-01.md`, About corregido a "since 2023"). Después: medir el celu real (2.1) y Fase 4 (dominio + artículo) cuando Enzo decida. GitHub sección A ya aplicada. No reabrir el estilo del cuarto ni de sus pantallas sin pedido explícito.
 
 
 **Estado al 2026-11-01 (después del análisis):** prod sigue en `main` `dd15f7b`. Informe con hallazgos, refs y plan por fases en `docs/private/INFORME-ANALISIS-2026-11-01.md` (privado, no commitear).
@@ -50,8 +61,6 @@
 - **No hecho:** medir en el celu real de Enzo (2.1) y reduced motion → `frameloop="demand"` (el informe lo proponía; lo dejé porque el CameraRig necesita frames).
 
 **Fase 2.5 identidad Mendoza en prod (2026-11-02, `2545c85`, pusheado con OK de Enzo, verificado en vivo; opción A elegida por Enzo: todo en código, sin malbec):** en la ventana, Andes con el Aconcagua nevado + precordillera + viñedo en perspectiva (de noche, luces de la ciudad en el llano; se fueron el Fuji y el torii); termo verde tipo Stanley + mate en la chabudai en lugar del juego de té; el bonsái del tokonoma pasa a ser una vid con racimo `#8273a3`. 0 KB de assets, 0 programas nuevos, +4 draw calls. Verificado en vivo: desktop de día y celu de noche, sin errores de consola. **Lighthouse prod `/` celu:** 6 corridas 80/95/93/96/94/94 (mediana 94); comparación intercalada contra el deploy solo-perf: 79/95/97 vs 93/98/95, **mediana 95 en los dos** = ruido, no regresión. Las corridas de 79–80 son primeras visitas (LCP 4,3 s, caché fría). Desktop 100×3; a11y/BP/SEO 100.
-
-**👉 EL próximo paso:** Enzo, a mano: abrir el cuarto en el celu real (`chrome://inspect`) y anotar click→visible para cerrar la 2.1. En código: Fase 3 (look desktop), con OK. Siguen pendientes de Enzo: pins, LinkedIn y sitemap en Search Console.
 
 **Fases del plan (resumen; detalle en el informe):** F1 alcance (sem. 1–2, ≈10 h) → F2 cuarto: precalentado con `compileAsync` durante el boot screen, menos programas, tiers, identidad Mendoza (sem. 3–4, ≈9 h) → F3 look desktop: Outlines, AccumulativeShadows en tatami, composer N8AO/Bloom/SMAA (sem. 5–7, ≈11 h) → F4 dominio + un artículo técnico (cuando Enzo decida).
 
