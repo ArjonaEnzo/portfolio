@@ -146,7 +146,7 @@ const copy: Record<Language, Record<string, ProjectCopy>> = {
       solution:
         "Multi-tenant platform where every receipt is an immutable snapshot of a real lease, generated as PDF and emailed. Tenants pay online through Mercado Pago and a signed webhook reconciles the payment. A daily cron drafts receipts and reminders. Tenant portal, roles per account, AI assistant and ES/EN UI.",
       impact:
-        "Live at myrent.lat with its first customers and in active development. Account isolation enforced with Postgres Row Level Security and covered by 500+ unit tests, 129 RLS tests and Playwright E2E in CI; security advisories found by those tests were fixed before shipping.",
+        "Live at myrent.lat with its first customers and in active development. Account isolation enforced with Postgres Row Level Security and covered by 500+ unit tests, 140+ RLS tests and Playwright E2E in CI.",
       decision:
         "Account isolation lives in the database, not only in the app. Every business table carries an account_id, and Postgres Row Level Security policies check membership and role (owner, admin, assistant, accountant, viewer) through a SECURITY DEFINER helper on every query, so a bug in a Server Action can't expose another account's data. Because RLS fails silently (a blocked query returns zero rows, not an error), the policies have their own integration suite: it signs in real test users against Supabase and tries to read, change and delete across accounts. It runs in CI next to 500+ unit tests and Playwright E2E.",
     },
@@ -205,7 +205,7 @@ const copy: Record<Language, Record<string, ProjectCopy>> = {
       solution:
         "Plataforma multi-tenant donde cada recibo es un snapshot inmutable de un contrato real, generado en PDF y enviado por email. El inquilino paga online por Mercado Pago y un webhook firmado concilia el pago. Un cron diario genera borradores y recordatorios. Portal del inquilino, roles por cuenta, asistente IA e interfaz ES/EN.",
       impact:
-        "En producción en myrent.lat con sus primeros clientes y en desarrollo activo. Aislamiento entre cuentas con Row Level Security de Postgres, cubierto por más de 500 tests unitarios, 129 tests de RLS y E2E con Playwright en CI; las vulnerabilidades que esos tests encontraron se corrigieron antes de salir.",
+        "En producción en myrent.lat con sus primeros clientes y en desarrollo activo. Aislamiento entre cuentas con Row Level Security de Postgres, cubierto por más de 500 tests unitarios, más de 140 tests de RLS y E2E con Playwright en CI.",
       decision:
         "El aislamiento entre cuentas vive en la base de datos, no solo en la app. Cada tabla de negocio tiene un account_id y las políticas de Row Level Security de Postgres verifican pertenencia y rol (owner, admin, assistant, accountant, viewer) con un helper SECURITY DEFINER en cada consulta, así que un bug en una Server Action no puede exponer datos de otra cuenta. Como RLS falla en silencio (una consulta bloqueada devuelve cero filas, no un error), las políticas tienen su propia suite de integración: inicia sesión con usuarios de prueba reales contra Supabase e intenta leer, modificar y borrar entre cuentas. Corre en CI junto a más de 500 tests unitarios y E2E con Playwright.",
     },
