@@ -71,6 +71,27 @@ const base: readonly ProjectBase[] = [
     ],
   },
   {
+    slug: "woocommerce-hubspot-sync",
+    stack: [
+      "n8n",
+      "HubSpot CRM API",
+      "HubSpot workflows & reports",
+      "WooCommerce REST API",
+      "Webhooks (HMAC)",
+      "Node.js",
+      "Docker",
+      "node:test",
+    ],
+    links: [{ kind: "repo", href: "https://github.com/ArjonaEnzo/woocommerce-hubspot-sync" }],
+    cover: "/projects/woo-hubspot/hubspot-dashboard.webp",
+    gallery: [
+      "/projects/woo-hubspot/hubspot-dashboard.webp",
+      "/projects/woo-hubspot/hubspot-pipeline.webp",
+      "/projects/woo-hubspot/hubspot-contact.webp",
+      "/projects/woo-hubspot/hubspot-error-ticket.webp",
+    ],
+  },
+  {
     slug: "wordpress-sites",
     stack: ["WordPress", "Elementor", "PHP", "CSS", "Local SEO"],
     links: [
@@ -150,6 +171,19 @@ const copy: Record<Language, Record<string, ProjectCopy>> = {
       decision:
         "Account isolation lives in the database, not only in the app. Every business table carries an account_id, and Postgres Row Level Security policies check membership and role (owner, admin, assistant, accountant, viewer) through a SECURITY DEFINER helper on every query, so a bug in a Server Action can't expose another account's data. Because RLS fails silently (a blocked query returns zero rows, not an error), the policies have their own integration suite: it signs in real test users against Supabase and tries to read, change and delete across accounts. It runs in CI next to 500+ unit tests and Playwright E2E.",
     },
+    "woocommerce-hubspot-sync": {
+      period: "2026",
+      title: "WooCommerce → HubSpot sync",
+      tagline: "An n8n integration that keeps a store's sales data in HubSpot accurate. Open-source demo, verified against a real HubSpot account.",
+      problem:
+        "A store sells on WooCommerce while sales and marketing work in HubSpot. Orders don't show up as deals, the same customer appears several times, refunds still count as revenue, and nobody trusts the reports.",
+      solution:
+        "Customers, orders and products sync into HubSpot as contacts, companies, deals and line items, in real time from signed webhooks and as a historical backfill. Every write is keyed so retries never duplicate anything, refunds move the deal, and bad data goes to a review list or a ticket instead of the CRM. HubSpot workflows segment customers (new, repeat, VIP) and flag the ones who haven't bought in 90 days; a dashboard tracks revenue, average order value and data quality.",
+      impact:
+        "217 orders and 128 customers synced with zero duplicates, even under bursts of simultaneous events; 18 records caught by validation. Every dashboard number matches an independent check script. Demo data, real HubSpot account.",
+      decision:
+        "Exactly-once comes from HubSpot, not from luck. Deals, companies and line items are upserted by unique properties HubSpot itself enforces, so two webhooks for the same new order can't create two records. A search-then-create version passed every test but duplicated companies under a real burst of 43 events, which the check script caught. Products can't have unique properties in HubSpot, so they are the one documented exception.",
+    },
     "autos-kbeza": {
       period: "2026",
       title: "Autos Kbeza",
@@ -208,6 +242,19 @@ const copy: Record<Language, Record<string, ProjectCopy>> = {
         "En producción en myrent.lat con sus primeros clientes y en desarrollo activo. Aislamiento entre cuentas con Row Level Security de Postgres, cubierto por más de 500 tests unitarios, más de 140 tests de RLS y E2E con Playwright en CI.",
       decision:
         "El aislamiento entre cuentas vive en la base de datos, no solo en la app. Cada tabla de negocio tiene un account_id y las políticas de Row Level Security de Postgres verifican pertenencia y rol (owner, admin, assistant, accountant, viewer) con un helper SECURITY DEFINER en cada consulta, así que un bug en una Server Action no puede exponer datos de otra cuenta. Como RLS falla en silencio (una consulta bloqueada devuelve cero filas, no un error), las políticas tienen su propia suite de integración: inicia sesión con usuarios de prueba reales contra Supabase e intenta leer, modificar y borrar entre cuentas. Corre en CI junto a más de 500 tests unitarios y E2E con Playwright.",
+    },
+    "woocommerce-hubspot-sync": {
+      period: "2026",
+      title: "Sync WooCommerce → HubSpot",
+      tagline: "Una integración en n8n que mantiene confiables en HubSpot los datos de venta de una tienda. Demo open source, verificada contra una cuenta real de HubSpot.",
+      problem:
+        "Una tienda vende en WooCommerce mientras ventas y marketing trabajan en HubSpot. Las órdenes no aparecen como negocios, el mismo cliente figura varias veces, los reembolsos siguen sumando como ingreso y nadie confía en los reportes.",
+      solution:
+        "Clientes, órdenes y productos se sincronizan en HubSpot como contactos, empresas, negocios y line items: en tiempo real con webhooks firmados y como carga histórica. Cada escritura tiene una clave, así que los reintentos nunca duplican nada; los reembolsos mueven el negocio y los datos sucios van a una lista de revisión o a un ticket en vez de ensuciar el CRM. Workflows de HubSpot segmentan clientes (nuevo, recurrente, VIP) y marcan a los que llevan 90 días sin comprar; un dashboard muestra ingresos, ticket promedio y calidad de datos.",
+      impact:
+        "217 órdenes y 128 clientes sincronizados sin duplicados, incluso con ráfagas de eventos simultáneos; 18 registros detectados por la validación. Cada número del dashboard coincide con un script de verificación independiente. Datos de demo, cuenta de HubSpot real.",
+      decision:
+        "El \"exactamente una vez\" lo garantiza HubSpot, no la suerte. Negocios, empresas y line items se cargan por propiedades únicas que HubSpot hace cumplir, así que dos webhooks de la misma orden nueva no pueden crear dos registros. Una versión que buscaba y después creaba pasó todos los tests, pero duplicó empresas con una ráfaga real de 43 eventos, y el script de verificación lo detectó. Los productos no admiten propiedades únicas en HubSpot: es la única excepción, y está documentada.",
     },
     "autos-kbeza": {
       period: "2026",
