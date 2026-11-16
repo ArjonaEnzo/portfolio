@@ -6,6 +6,8 @@
 
 ## 👉 AHORA
 
+**2026-11-16 — Dependabot (OK de Enzo).** #2 minimatch < 11.0.1 (moderada, solo dev vía `@typescript-eslint/typescript-estree`) → override `minimatch ^11.0.8` en `package.json` (`cbe9a0d`, pusheado); tsc, lint y build verdes. #1 deepmerge ≤ 4.3.1 (baja, runtime vía `@react-email/render` → `html-to-text`, **sin parche**) → **descartada en GitHub como tolerable_risk**: `html-to-text` solo mezcla sus opciones de config, el contenido del form nunca llega a `mergeObject`. Revisar cuando `@react-email/render` actualice `html-to-text`. Aviso de npm preexistente: `eslint@8.51.0` por debajo del peer de `@typescript-eslint/eslint-plugin@8.72` (no lo causa el override).
+
 **✅ 2026-11-16 — EN PROD.** Pusheado con OK de Enzo (`44057ff..35545a3`), deploy `portfolio-q68xc04r2` Ready (2 min). Verificado en prod: `/clasica` y `/` 200 con el proyecto, las 4 imágenes 200, meta `google-site-verification` intacta, CSP/HSTS/X-Frame-Options presentes. Prod = `main` `35545a3`. Nada pendiente acá.
 
 **2026-11-16 — Proyecto nuevo agregado.** `1d2cbc5` capturas en `public/projects/woo-hubspot/` (4 WebP, 43–88 KB) · `a36da37` entrada `woocommerce-hubspot-sync` en `lib/projects.ts` (2.º después de MyRent, copy ES/EN del caso de estudio, link al repo público, galería de 4). Verificado en `next dev`: `/clasica` desktop y celu 375 px (sin scroll horizontal), ES/EN, y el resumen SSR de `/` lo incluye. Gate: tsc, lint y `next build` verdes. **Próximo paso: push a `main` (deploy a prod) con OK de Enzo.**
