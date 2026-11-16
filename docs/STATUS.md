@@ -2,9 +2,12 @@
 
 > Estado vivo del proyecto. Leer al abrir una sesión, actualizar al cerrar. Fechas absolutas.
 
-**Última actualización:** 2026-11-03 (cierre: cara, seguridad en prod)
+**Última actualización:** 2026-11-16 (proyecto nuevo: WooCommerce → HubSpot sync)
 
 ## 👉 AHORA
+
+**2026-11-16 — Proyecto nuevo agregado, local (sin push).** `1d2cbc5` capturas en `public/projects/woo-hubspot/` (4 WebP, 43–88 KB) · `a36da37` entrada `woocommerce-hubspot-sync` en `lib/projects.ts` (2.º después de MyRent, copy ES/EN del caso de estudio, link al repo público, galería de 4). Verificado en `next dev`: `/clasica` desktop y celu 375 px (sin scroll horizontal), ES/EN, y el resumen SSR de `/` lo incluye. Gate: tsc, lint y `next build` verdes. **Próximo paso: push a `main` (deploy a prod) con OK de Enzo.**
+- Gotcha: `next dev` arrancado con otro directorio de trabajo genera CSS vacío (las rutas `content` de Tailwind son relativas al cwd) y lo deja en la caché de `.next`; además, un `.next` de dev rompe `next build` con `TypeError ... reading '1'` en `next/font`. Arreglo: mover `.next` y volver a arrancar desde la carpeta del repo.
 
 **✅ PORTFOLIO CERRADO (2026-11-03).** Prod = `main` `f6174b3`. Solo quedan tareas de Enzo, a mano: **pins de GitHub y LinkedIn** (textos en `docs/private/GITHUB-LINKEDIN-2026-11-01.md`). No reabrir el cuarto, sus pantallas ni la cara sin pedido explícito. No tocar la meta `google-site-verification`.
 
